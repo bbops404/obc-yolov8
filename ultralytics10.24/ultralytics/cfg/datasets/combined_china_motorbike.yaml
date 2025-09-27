@@ -1,0 +1,11 @@
+path: /home/ubuntu/obc-yolov8/OBC-YOLOv8/ultralytics10.24/dataset_root/combined
+train: ../train/images
+val: ../val/images
+test: ../test/images
+nc: 5
+names:
+- D00
+- D10
+- D20
+- D40
+- Repair
