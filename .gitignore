@@ -60,6 +60,6 @@ Thumbs.db
 **/labels.cache
 datasets/**/*.cache
 
-# Intentionally tracked: do NOT ignore training outputs directory
-# runs/
+# Training outputs directory (excluded to save LFS space)
+runs/
 
