@@ -1,6 +1,14 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+
+# Import safe conv2d call for quantized Conv2d support
+try:
+    from ultralytics.nn.modules.conv import _safe_conv2d_call
+except ImportError:
+    # Fallback if import fails
+    def _safe_conv2d_call(conv_module, x):
+        return conv_module(x)
  
  
 class h_sigmoid(nn.Module):
@@ -46,17 +54,17 @@ class CoordAtt(nn.Module):
         x_w = self.pool_w(x).permute(0, 1, 3, 2)
  
         y = torch.cat([x_h, x_w], dim=2)
-        y = self.conv1(y)
+        y = _safe_conv2d_call(self.conv1, y)
         y = self.bn1(y)
         y = self.act(y)
- 
+
         x_h, x_w = torch.split(y, [h, w], dim=2)
         x_w = x_w.permute(0, 1, 3, 2)
- 
+
        # a_h = F.tanh(self.conv_h(x_h))
         #a_w = F.tanh(self.conv_h(x_w))
-        a_h = self.conv_h(x_h).sigmoid()
-        a_w = self.conv_w(x_w).sigmoid()
+        a_h = _safe_conv2d_call(self.conv_h, x_h).sigmoid()
+        a_w = _safe_conv2d_call(self.conv_w, x_w).sigmoid()
  
         out = identity * a_w * a_h
  

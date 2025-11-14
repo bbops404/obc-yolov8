@@ -168,6 +168,10 @@ def convert_qat_checkpoint(
 
     ensure_module_bookkeeping(yolo.model, recursive=True)
     yolo.model.eval()
+    
+    # Convert model to float32 if it's in half precision (required for quantization)
+    LOGGER.info("   Converting model to float32 (required for quantization)...")
+    yolo.model = yolo.model.float()
 
     LOGGER.info("   Converting QAT model to INT8...")
     converted = yolo.model.convert_to_quantized()
@@ -816,7 +820,16 @@ def main():
                        help='Dataset configuration file')
     parser.add_argument('--imgsz', type=int, default=640, help='Image size')
     parser.add_argument('--batch', type=int, default=16, help='Batch size')
-    parser.add_argument('--device', type=int, default=0, help='Device (0 for GPU, cpu for CPU)')
+    def device_type(value):
+        """Convert device string to int or keep as 'cpu'."""
+        if value.lower() == 'cpu':
+            return 'cpu'
+        try:
+            return int(value)
+        except ValueError:
+            raise argparse.ArgumentTypeError(f"Device must be 'cpu' or an integer, got: {value}")
+    
+    parser.add_argument('--device', type=device_type, default=0, help='Device (0 for GPU, "cpu" for CPU)')
     parser.add_argument('--no-save-fixed', action='store_true', help='Disable writing repaired INT8 checkpoint')
     parser.add_argument('--qat-checkpoint', type=str, default=None,
                         help='Optional QAT checkpoint to convert to INT8 before evaluation')

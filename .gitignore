@@ -6,6 +6,7 @@ __pycache__/
 # Virtual environments
 .venv/
 venv/
+venv_backups/
 env/
 ENV/
 
@@ -30,6 +31,16 @@ tmp/
 temp/
 logs/
 *.log
+
+# Accidental files from command-line arguments
+--*
+
+# Generated reports and comparison files
+*_report.txt
+*_comparison.txt
+*_summary.txt
+*_list.txt
+*_explanation.txt
 
 # ML experiment tooling
 wandb/

@@ -1,8 +1,8 @@
 task: detect
 mode: train
-model: ultralytics/cfg/models/v8/yolov8-CA.yaml
-data: ultralytics/cfg/datasets/combined_china_motorbike.yaml
-epochs: 300
+model: obc-yolov8/ultralytics10.24/ultralytics/cfg/models/v8/yolov8-CA.yaml
+data: obc-yolov8/ultralytics10.24/ultralytics/cfg/datasets/combined_china_motorbike.yaml
+epochs: 10
 patience: 50
 batch: 16
 imgsz: 640

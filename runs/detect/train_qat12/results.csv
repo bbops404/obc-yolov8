@@ -1,0 +1,2 @@
+                  epoch,             train/Loss,   metrics/precision(B),      metrics/recall(B),       metrics/mAP50(B),    metrics/mAP50-95(B),               val/Loss,                 lr/pg0,                 lr/pg1,                 lr/pg2
+                      1,                 4.1837,                0.00088,                0.14135,                0.00056,                 0.0002,                 4.2609,             0.00036883,             0.00036883,             0.00036883

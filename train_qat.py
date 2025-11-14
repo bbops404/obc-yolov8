@@ -216,6 +216,13 @@ def train_qat(
     convert_to_int8: bool = True,
     use_manual_quantization: bool = False,
     resume: bool = False,
+    weights: Optional[str | Path] = None,
+    lr0: Optional[float] = None,
+    lrf: Optional[float] = None,
+    warmup_epochs: Optional[float] = None,
+    warmup_bias_lr: Optional[float] = None,
+    optimizer: Optional[str] = None,
+    pretrained: Optional[bool] = None,
     **train_kwargs: Any,
 ) -> Dict[str, Optional[Path]]:
     """Run QAT training and optionally export an INT8 model.
@@ -230,6 +237,16 @@ def train_qat(
 
     LOGGER.info("Preparing YOLO model for QAT...")
     model = YOLO(str(model_cfg))
+    if weights is not None:
+        weights_path = str(weights)
+        if not Path(weights_path).exists():
+            LOGGER.warning(f"Specified weights path does not exist: {weights_path}")
+        else:
+            LOGGER.info(f"Loading pretrained weights from {weights_path}")
+            try:
+                model.load(weights_path)
+            except Exception as load_err:
+                LOGGER.warning(f"Failed to load weights '{weights_path}': {load_err}")
 
     detection_model = model.model
     if not hasattr(detection_model, "prepare_for_qat"):
@@ -262,6 +279,18 @@ def train_qat(
         train_args["workers"] = workers
     if resume:
         train_args["resume"] = resume
+    if lr0 is not None:
+        train_args["lr0"] = lr0
+    if lrf is not None:
+        train_args["lrf"] = lrf
+    if warmup_epochs is not None:
+        train_args["warmup_epochs"] = warmup_epochs
+    if warmup_bias_lr is not None:
+        train_args["warmup_bias_lr"] = warmup_bias_lr
+    if optimizer is not None:
+        train_args["optimizer"] = optimizer
+    if pretrained is not None:
+        train_args["pretrained"] = pretrained
 
     overrides = {**model.overrides, **train_args}
     overrides["task"] = model.task
@@ -282,7 +311,10 @@ def train_qat(
     weights_dir.mkdir(parents=True, exist_ok=True)
 
     best_pt = Path(trainer.best) if getattr(trainer, "best", None) else weights_dir / "best.pt"
+    last_pt = Path(trainer.last) if getattr(trainer, "last", None) else weights_dir / "last.pt"
+    
     best_qat_path = None
+    last_qat_path = None
     if save_qat_checkpoint:
         best_qat_path = weights_dir / "best_qat.pt"
         ensure_module_bookkeeping(trainer.model, recursive=True)
@@ -294,23 +326,123 @@ def train_qat(
             LOGGER.warning("FP32 best.pt not found after training; only QAT checkpoint saved")
 
     int8_path = None
+    last_int8_path = None
+    int8_eval_results = None
+    
     if convert_to_int8:
-        fakequant_count = sum(1 for module in trainer.model.modules() if isinstance(module, FakeQuantize))
-        if fakequant_count == 0:
-            LOGGER.error("No FakeQuantize modules present after training; skipping INT8 conversion.")
+        # Check if last.pt exists and convert it to INT8
+        if last_pt.exists():
+            LOGGER.info(f"Loading last.pt checkpoint from {last_pt} for INT8 conversion...")
+            try:
+                checkpoint = torch.load(last_pt, map_location='cpu', weights_only=False)
+                model_state = checkpoint.get('model', checkpoint)
+                
+                # Load the model from checkpoint
+                # The checkpoint contains the full QAT model (with FakeQuantize modules)
+                LOGGER.info("Loading QAT model from last.pt checkpoint...")
+                if isinstance(model_state, dict):
+                    # State dict - need to load into fresh QAT model
+                    fresh_model = YOLO(str(model_cfg))
+                    example_input = torch.randn(1, fresh_model.model.yaml.get("ch", 3), imgsz, imgsz)
+                    fresh_qat_model = fresh_model.model.prepare_for_qat(
+                        backend=backend,
+                        example_input=example_input,
+                        use_fx=not use_manual_quantization,
+                    )
+                    fresh_qat_model.load_state_dict(model_state, strict=False)
+                else:
+                    # Full model object (this is what QATDetectionTrainer.save_model() saves)
+                    fresh_qat_model = model_state
+                    # Check if it's already a QAT model (has FakeQuantize modules)
+                    has_fake_quant = any(isinstance(m, FakeQuantize) for m in fresh_qat_model.modules())
+                    if not has_fake_quant or not hasattr(fresh_qat_model, "convert_to_quantized"):
+                        # Re-prepare if not in QAT mode
+                        LOGGER.info("Model not in QAT mode, re-preparing for QAT...")
+                        example_input = torch.randn(1, fresh_qat_model.yaml.get("ch", 3), imgsz, imgsz)
+                        fresh_qat_model = fresh_qat_model.prepare_for_qat(
+                            backend=backend,
+                            example_input=example_input,
+                            use_fx=not use_manual_quantization,
+                        )
+                    else:
+                        LOGGER.info("Model already in QAT mode (FakeQuantize modules detected)")
+                
+                # Save last_qat.pt
+                if save_qat_checkpoint:
+                    last_qat_path = weights_dir / "last_qat.pt"
+                    ensure_module_bookkeeping(fresh_qat_model, recursive=True)
+                    torch.save({"model": fresh_qat_model, "backend": backend, "qat": True}, last_qat_path)
+                    LOGGER.info(f"Saved last QAT checkpoint to {last_qat_path}")
+                
+                # Convert to INT8
+                fakequant_count = sum(1 for module in fresh_qat_model.modules() if isinstance(module, FakeQuantize))
+                if fakequant_count == 0:
+                    LOGGER.error("No FakeQuantize modules present in last.pt model; skipping INT8 conversion.")
+                else:
+                    LOGGER.info(f"Converting last.pt QAT model to INT8 (found {fakequant_count} FakeQuantize modules)...")
+                    fresh_qat_model.eval()
+                    fresh_qat_model = fresh_qat_model.float()
+                    quantized_model = fresh_qat_model.convert_to_quantized()
+                    ensure_module_bookkeeping(quantized_model, recursive=True)
+                    last_int8_path = weights_dir / "last_int8.pt"
+                    torch.save({"model": quantized_model, "backend": backend, "int8": True}, last_int8_path)
+                    LOGGER.info(f"Saved INT8 checkpoint to {last_int8_path}")
+                    
+                    # Evaluate INT8 model
+                    LOGGER.info("Evaluating INT8 model...")
+                    try:
+                        int8_yolo = YOLO(str(model_cfg))
+                        int8_yolo.model = quantized_model
+                        int8_yolo.model.eval()
+                        
+                        # Run evaluation using YOLO's val method
+                        int8_eval_results = int8_yolo.val(
+                            data=str(data_cfg),
+                            imgsz=imgsz,
+                            batch=train_args.get("batch", 16),
+                            device=device_str,
+                            plots=False,
+                            save=False,
+                            verbose=True
+                        )
+                        LOGGER.info("INT8 model evaluation completed")
+                        if int8_eval_results:
+                            LOGGER.info(f"INT8 mAP@0.5: {int8_eval_results.get('metrics/mAP50(B)', 'N/A')}")
+                            LOGGER.info(f"INT8 mAP@0.5:0.95: {int8_eval_results.get('metrics/mAP50-95(B)', 'N/A')}")
+                    except Exception as eval_err:
+                        LOGGER.warning(f"INT8 evaluation failed: {eval_err}")
+                        import traceback
+                        LOGGER.debug(traceback.format_exc())
+                        int8_eval_results = None
+            except Exception as conv_err:
+                LOGGER.error(f"Failed to convert last.pt to INT8: {conv_err}")
+                import traceback
+                LOGGER.error(traceback.format_exc())
         else:
-            LOGGER.info("Converting trained QAT model to INT8...")
-            trainer.model.eval()
-            quantized_model = trainer.model.convert_to_quantized()
-            ensure_module_bookkeeping(quantized_model, recursive=True)
-            int8_path = weights_dir / "best_int8.pt"
-            torch.save({"model": quantized_model, "backend": backend, "int8": True}, int8_path)
-            LOGGER.info(f"Saved INT8 checkpoint to {int8_path}")
+            LOGGER.warning(f"last.pt not found at {last_pt}; skipping INT8 conversion")
+        
+        # Also convert best.pt for backward compatibility (if it exists and is different from last.pt)
+        if best_pt.exists() and best_pt != last_pt:
+            fakequant_count = sum(1 for module in trainer.model.modules() if isinstance(module, FakeQuantize))
+            if fakequant_count == 0:
+                LOGGER.warning("No FakeQuantize modules present in trainer.model; skipping best.pt INT8 conversion.")
+            else:
+                LOGGER.info("Converting best.pt QAT model to INT8 (for backward compatibility)...")
+                trainer.model.eval()
+                trainer.model = trainer.model.float()
+                quantized_model = trainer.model.convert_to_quantized()
+                ensure_module_bookkeeping(quantized_model, recursive=True)
+                int8_path = weights_dir / "best_int8.pt"
+                torch.save({"model": quantized_model, "backend": backend, "int8": True}, int8_path)
+                LOGGER.info(f"Saved best INT8 checkpoint to {int8_path}")
 
     LOGGER.info("QAT run complete")
     return {
         "qat_path": best_qat_path,
+        "last_qat_path": last_qat_path,
         "int8_path": int8_path,
+        "last_int8_path": last_int8_path,
+        "int8_eval_results": int8_eval_results,
         "weights_dir": weights_dir,
         "results": results,
     }
@@ -344,6 +476,13 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--no-int8", dest="convert_to_int8", action="store_false")
     parser.add_argument("--manual", dest="use_manual_quantization", action="store_true")
     parser.add_argument("--resume", action="store_true")
+    parser.add_argument("--weights", type=str, default=None, help="Path to FP32 checkpoint to fine-tune from")
+    parser.add_argument("--lr0", type=float, default=None, help="Initial learning rate override")
+    parser.add_argument("--lrf", type=float, default=None, help="Final learning rate fraction override")
+    parser.add_argument("--warmup-epochs", type=float, default=None, dest="warmup_epochs", help="Warmup epochs override")
+    parser.add_argument("--warmup-bias-lr", type=float, default=None, dest="warmup_bias_lr", help="Warmup bias LR override")
+    parser.add_argument("--optimizer", type=str, default=None, help="Optimizer name (SGD, Adam, AdamW, etc.). Default: auto")
+    parser.add_argument("--pretrained", type=lambda x: x.lower() in ['true', '1', 'yes'], default=None, metavar='BOOL', help="Use pretrained weights (true/false/1/0). Default: True (YOLO default). Use --pretrained false to disable.")
     return parser.parse_args()
 
 
@@ -352,8 +491,17 @@ if __name__ == "__main__":
     outputs = train_qat(**vars(args))
     qat_path = outputs.get("qat_path")
     if qat_path is not None:
-        LOGGER.info(f"QAT checkpoint: {qat_path}")
+        LOGGER.info(f"Best QAT checkpoint: {qat_path}")
+    last_qat_path = outputs.get("last_qat_path")
+    if last_qat_path is not None:
+        LOGGER.info(f"Last QAT checkpoint: {last_qat_path}")
     int8_path = outputs.get("int8_path")
     if int8_path is not None:
-        LOGGER.info(f"INT8 checkpoint: {int8_path}")
+        LOGGER.info(f"Best INT8 checkpoint: {int8_path}")
+    last_int8_path = outputs.get("last_int8_path")
+    if last_int8_path is not None:
+        LOGGER.info(f"Last INT8 checkpoint: {last_int8_path}")
+    int8_eval_results = outputs.get("int8_eval_results")
+    if int8_eval_results is not None:
+        LOGGER.info(f"INT8 evaluation results: {int8_eval_results}")
 

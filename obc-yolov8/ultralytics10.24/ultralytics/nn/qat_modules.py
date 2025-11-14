@@ -239,13 +239,36 @@ def replace_with_qat_modules(model, qat_mode=True):
             c2 = module.cv3.conv.out_channels
             # Note: n, e, e2, w, h would need to be stored or inferred
             qat_module = QATBoTNet(c1, c2)
+            # Copy YOLO-specific attributes (f, i, type) if they exist
+            if hasattr(module, 'f'):
+                qat_module.f = module.f
+            if hasattr(module, 'i'):
+                qat_module.i = module.i
+            if hasattr(module, 'type'):
+                qat_module.type = module.type
             setattr(model, name, qat_module)
         
         # Replace CoordAtt with QATCoordAtt
         elif isinstance(module, CoordAtt):
             inp = module.conv1.in_channels
-            reduction = inp // max(8, inp // module.conv1.out_channels)
+            mip = module.conv1.out_channels
+            # Infer reduction: mip = max(8, inp // reduction)
+            # If mip >= 8 and mip < inp, then reduction = inp // mip
+            # Otherwise, use default reduction of 32
+            if mip >= 8 and mip < inp:
+                reduction = inp // mip
+            else:
+                reduction = 32  # Default reduction
             qat_module = QATCoordAtt(inp, reduction)
+            # Copy weights from original CoordAtt to QATCoordAtt's internal CoordAtt
+            qat_module.coordatt.load_state_dict(module.state_dict())
+            # Copy YOLO-specific attributes (f, i, type) if they exist
+            if hasattr(module, 'f'):
+                qat_module.f = module.f
+            if hasattr(module, 'i'):
+                qat_module.i = module.i
+            if hasattr(module, 'type'):
+                qat_module.type = module.type
             setattr(model, name, qat_module)
         
         # Replace ODConv with FP32ODConv
@@ -255,6 +278,13 @@ def replace_with_qat_modules(model, qat_mode=True):
             if in_planes:
                 out_planes = module[0].out_planes
                 qat_module = FP32ODConv(in_planes, out_planes)
+                # Copy YOLO-specific attributes (f, i, type) if they exist
+                if hasattr(module, 'f'):
+                    qat_module.f = module.f
+                if hasattr(module, 'i'):
+                    qat_module.i = module.i
+                if hasattr(module, 'type'):
+                    qat_module.type = module.type
                 setattr(model, name, qat_module)
     
     return model

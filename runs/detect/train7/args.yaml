@@ -1,8 +1,8 @@
 task: detect
 mode: train
-model: ultralytics/cfg/models/v8/yolov8-CA.yaml
-data: ultralytics/cfg/datasets/combined_china_motorbike.yaml
-epochs: 300
+model: obc-yolov8/ultralytics10.24/ultralytics/cfg/models/v8/yolov8-CA.yaml
+data: obc-yolov8/ultralytics10.24/ultralytics/cfg/datasets/combined_china_motorbike.yaml
+epochs: 10
 patience: 50
 batch: 16
 imgsz: 640
@@ -95,4 +95,4 @@ mixup: 0.0
 copy_paste: 0.0
 cfg: null
 tracker: botsort.yaml
-save_dir: /home/ubuntu/obc-yolov8/OBC-YOLOv8/runs/detect/train7
+save_dir: /home/ubuntu/obc-yolov8/runs/detect/train7
