@@ -1,0 +1,8 @@
+{
+  "venvPath": "/Users/user/.pyenv/versions",
+  "venv": "yolov8-py310",
+  "extraPaths": [
+    "./ultralytics10.24"
+  ]
+}
+

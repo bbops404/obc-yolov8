@@ -21,7 +21,13 @@ def evaluate_model(checkpoint_path: str, data_cfg: str, model_name: str):
     
     try:
         model = YOLO(checkpoint_path)
-        model.model.eval()
+        
+        # ------------------- FIX START -------------------
+        if model.model is None:
+            raise AttributeError("YOLO model failed to initialize its internal structure (model.model is None). This usually happens when loading a non-standard or manually quantized checkpoint. Please ensure your custom script's loading logic is incorporated if needed.")
+        # ------------------- FIX END -------------------
+        
+        model.model.eval() # Now safe to call
         
         # For INT8 models, ensure we're on CPU if using fbgemm
         if 'int8' in checkpoint_path.lower() or 'quantized' in checkpoint_path.lower():
@@ -50,9 +56,9 @@ def evaluate_model(checkpoint_path: str, data_cfg: str, model_name: str):
 if __name__ == "__main__":
     data_cfg = str(ULTRALYTICS_PATH / "ultralytics" / "cfg" / "datasets" / "combined_china_motorbike.yaml")
     
-    fp32_path = "runs/detect/train_qat14/weights/last.pt"
-    int8_path = "runs/detect/train_qat14/weights/last_int8.pt"
-    
+    fp32_path = "/Users/user/Documents/obc-yolov8/obc-yolov8/runs/detect/train7/weights/last.pt"
+    int8_path = "/Users/user/Documents/obc-yolov8/runs/detect/train_ptq/weights/best_int8.pt"
+
     LOGGER.info("Comparing FP32 vs INT8 Model Performance")
     LOGGER.info("="*80)
     

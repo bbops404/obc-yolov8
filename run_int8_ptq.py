@@ -8,6 +8,7 @@ Usage:
 
 import sys
 from pathlib import Path
+import time
 
 # Add ultralytics path to sys.path (same as train_ptq.py)
 REPO_ROOT = Path(__file__).parent.resolve()
@@ -19,6 +20,7 @@ if str(ULTRALYTICS_PATH) not in sys.path:
     sys.path.insert(0, str(ULTRALYTICS_PATH))
 
 import torch
+from torch.backends import quantized as torch_quantized_backends
 import argparse
 
 # Import YOLO - we'll patch the loader function when we need it
@@ -43,16 +45,21 @@ def load_ptq_int8_model(checkpoint_path, imgsz=640):
     
     print(f"Loading INT8 checkpoint from {checkpoint_path}...")
     
+    # Ensure some quantization engine is selected before torch.load tries to restore packed params
+    default_backend = 'qnnpack'
+    if default_backend in torch_quantized_backends.supported_engines:
+        torch_quantized_backends.engine = default_backend
+    
     # Load checkpoint metadata to get backend
     checkpoint = torch.load(checkpoint_path, map_location='cpu', weights_only=False)
     
     # Get backend from checkpoint and set it
-    backend = checkpoint.get('backend', 'fbgemm')
+    backend = checkpoint.get('backend', 'qnnpack')
     print(f"Backend: {backend}")
     
     # CRITICAL: Set quantization backend engine BEFORE any operations
-    if backend in torch.backends.quantized.supported_engines:
-        torch.backends.quantized.engine = backend
+    if backend in torch_quantized_backends.supported_engines:
+        torch_quantized_backends.engine = backend
         print(f"✓ Set quantization backend engine to {backend}")
     else:
         print(f"⚠️  Backend '{backend}' not supported, using default")
@@ -84,9 +91,14 @@ def load_ptq_int8_model(checkpoint_path, imgsz=640):
     # Repair bookkeeping for quantized modules
     print("Repairing quantized model bookkeeping...")
     try:
-        from ultralytics.nn.tasks import ensure_module_bookkeeping
+        from ultralytics.nn import tasks as ultralytics_tasks  # type: ignore[attr-defined]
+        ensure_module_bookkeeping = getattr(
+            ultralytics_tasks,
+            "ensure_module_bookkeeping",
+            lambda *args, **kwargs: None,
+        )
         ensure_module_bookkeeping(model.model, recursive=True)
-        
+
         # Fix hook attributes
         import torch.nn as nn
         hook_attrs = ('_forward_hooks', '_backward_hooks', '_forward_pre_hooks', '_backward_pre_hooks',
@@ -415,6 +427,7 @@ def main():
     
     args = parser.parse_args()
     
+    
     # Validate arguments based on mode
     if args.mode == 'predict' and not args.source:
         parser.error("--source is required when using --mode predict")
@@ -427,11 +440,16 @@ def main():
         os.environ['ENABLE_QUANT_STATS'] = '1'
         # Directly enable statistics tracking (module may already be imported)
         try:
-            from ultralytics.nn.modules.conv import _ENABLE_QUANT_STATS, _QUANTIZATION_STATS
-            # Set the flag directly (it's checked at runtime, not just at import)
-            import ultralytics.nn.modules.conv as conv_module
-            conv_module._ENABLE_QUANT_STATS = True
-            _QUANTIZATION_STATS.clear()
+            import ultralytics.nn.modules.conv as conv_module  # type: ignore[attr-defined]
+            _ENABLE_QUANT_STATS = getattr(conv_module, "_ENABLE_QUANT_STATS", None)
+            _QUANTIZATION_STATS = getattr(conv_module, "_QUANTIZATION_STATS", None)
+            if isinstance(_ENABLE_QUANT_STATS, dict):
+                _ENABLE_QUANT_STATS.clear()
+                _ENABLE_QUANT_STATS["enabled"] = True
+            if isinstance(_QUANTIZATION_STATS, dict):
+                _QUANTIZATION_STATS.clear()
+            else:
+                setattr(conv_module, "_QUANTIZATION_STATS", {})
             print("✓ Quantization statistics tracking enabled")
         except (ImportError, AttributeError) as e:
             print(f"⚠️  Warning: Could not enable quantization statistics: {e}")
@@ -478,10 +496,110 @@ def main():
         else:
             print(f"\n✓ Inference complete!")
     
+    # Set device (fbgemm/qnnpack backends require CPU)
+    if args.device != 'cpu':
+        print("⚠️  Warning: fbgemm/qnnpack backends require CPU, switching to CPU")
+        args.device = 'cpu'
+
+
+    # This attempts to trick YOLOv8's AutoBackend into not running fusion logic
+    if hasattr(model, 'is_fused'):
+        model.is_fused = True # Set a flag that prevents AutoBackend from fusing
+# ---
+    
+    # Run inference or evaluation
+    if args.mode == 'val':
+        # Evaluation mode (like ablation_ptq.py)
+        # ... (val code remains the same) ...
+        print(f"\nRunning evaluation on dataset: {args.data}...")
+        results = model.val(
+            data=args.data,
+            imgsz=args.imgsz,
+            batch=16,
+            device=args.device,
+            plots=False,
+            save=args.save,
+            verbose=True,
+        )
+        print(f"\n✓ Evaluation complete!")
+        if hasattr(results, 'map50'):
+            print(f"  mAP@0.5: {results.map50:.4f}")
+        if hasattr(results, 'map'):
+            print(f"  mAP@0.5:0.95: {results.map:.4f}")
+    else:
+        # Inference mode (default) - ADDING BENCHMARKING
+        print(f"\nRunning inference on {args.source} for speed test...")
+        
+        # 1. Load the first image/frame to process and warm up the model
+        print("Warming up model with one run...")
+        # Note: YOLO.predict returns a generator/list of results
+        warmup_results = model.predict(
+            source=args.source,
+            imgsz=args.imgsz,
+            conf=args.conf,
+            device=args.device,
+            save=False, # Don't save warmup output
+            stream=True, # Use stream mode for efficient single-image processing
+        )
+        # Process the results (need to iterate through generator)
+        try:
+            _ = next(iter(warmup_results))
+        except StopIteration:
+            print("⚠️  No detections found in warmup run. Cannot proceed with speed test.")
+            return
+
+        # 2. Run benchmark loop
+        start_time = time.perf_counter()
+        
+        # We need a predictable number of frames/images to process.
+        # This requires the source to be a single image or video file
+        total_runs = args.runs
+        
+        print(f"Benchmarking {total_runs} runs...")
+        for i in range(total_runs):
+             # Run prediction using stream mode for speed
+            results = model.predict(
+                source=args.source,
+                imgsz=args.imgsz,
+                conf=args.conf,
+                device=args.device,
+                save=False,
+                stream=True,
+            )
+            # Must iterate through the results generator to force execution
+            try:
+                _ = next(iter(results))
+            except StopIteration:
+                # This should not happen if the source is valid
+                print("Error: Generator stopped unexpectedly during benchmark.")
+                total_runs = i + 1
+                break
+        
+        end_time = time.perf_counter()
+        
+        # 3. Calculate metrics
+        total_time_s = end_time - start_time
+        avg_latency_ms = (total_time_s / total_runs) * 1000
+        fps = total_runs / total_time_s
+        
+        print("\n" + "="*50)
+        print("PERFORMANCE BENCHMARK RESULTS")
+        print("="*50)
+        print(f"Source: {args.source}")
+        print(f"Backend: {model.model.backend}")
+        print(f"Total runs: {total_runs}")
+        print(f"Total time: {total_time_s:.3f} seconds")
+        print("---")
+        print(f"🖼️  Average Latency: {avg_latency_ms:.2f} ms")
+        print(f"⏱️  Inference Speed (FPS): {fps:.2f} FPS")
+        print("="*50)
+
     # Print quantization statistics if enabled
     if args.quant_stats:
         try:
-            from ultralytics.nn.modules.conv import _QUANTIZATION_STATS, _ENABLE_QUANT_STATS
+            import ultralytics.nn.modules.conv as conv_module  # type: ignore[attr-defined]
+            _ENABLE_QUANT_STATS = getattr(conv_module, "_ENABLE_QUANT_STATS", {})
+            _QUANTIZATION_STATS = getattr(conv_module, "_QUANTIZATION_STATS", {})
             # Always print stats if enabled, even if empty (to show it's working)
             print("\n" + "="*60)
             print("QUANTIZATION OPERATION STATISTICS")

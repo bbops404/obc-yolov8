@@ -45,7 +45,6 @@ from ultralytics.nn.DSConv import DSConv,DySnakeConv,C2f_DySnakeConv,Bottleneck_
 from ultralytics.nn.Glod import  IFM,SimFusion_3in,SimFusion_4in,InjectionMultiSum_Auto_pool,PyramidPoolAgg,TopBasicLayer,AdvPoolFusion
 from ultralytics.nn.LSKA import C2f_LSKA_Attention,LSKA_Attention,LSKA
 from ultralytics.nn.EMA_attention import EMA_attention
-from ultralytics.nn.ODConv import ODConv
 
 
 

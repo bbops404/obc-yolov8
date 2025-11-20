@@ -13,6 +13,7 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 
 import torch
+from torch.backends import quantized as torch_quantized_backends
 from tqdm import tqdm
 
 
@@ -28,9 +29,15 @@ if str(ULTRALYTICS_PATH) not in sys.path:
     sys.path.insert(0, str(ULTRALYTICS_PATH))
 
 from ultralytics import YOLO, __version__  # type: ignore  # noqa: E402
-from ultralytics.nn.tasks import ensure_module_bookkeeping  # type: ignore  # noqa: E402
+from ultralytics.nn import tasks as ultralytics_tasks  # type: ignore  # noqa: E402
 from ultralytics.utils import LOGGER  # type: ignore  # noqa: E402
 from ultralytics.utils.torch_utils import de_parallel  # type: ignore  # noqa: E402
+
+ensure_module_bookkeeping = getattr(
+    ultralytics_tasks,
+    "ensure_module_bookkeeping",
+    lambda *args, **kwargs: None,
+)
 
 
 DEFAULT_PROJECT = REPO_ROOT / "runs" / "detect"
@@ -156,7 +163,24 @@ def print_quantized_layers(model, logger=None):
                 scale_str = f'{scale:.8f}' if scale is not None else 'N/A'
                 zp_str = f'{zp}' if zp is not None else 'N/A'
                 logger.info(f"  {i:3d}. {layer_name:50s}  [{layer_type:20s}]  scale={scale_str:12s}  zp={zp_str:4s}")
+
+                # --- ABILITY MODULE VERIFICATION ---
+        botnet_quantized = any(name.startswith('model.10.') for name, _, _, _ in quantized_layers)
+        coordatt_quantized = any(name.startswith('model.20.') or name.startswith('model.24.') for name, _, _, _ in quantized_layers)
         
+        logger.info("\n--- Ablation Module Status ---")
+        
+        if botnet_quantized:
+            logger.warning("⚠️  BoTNet (model.10) layers WERE FOUND in the quantized list!")
+        else:
+            logger.info("✓ BoTNet (model.10) layers successfully EXCLUDED (FP32).")
+            
+        if coordatt_quantized:
+            logger.warning("⚠️  CoordAtt (model.20/24) layers WERE FOUND in the quantized list!")
+        else:
+            logger.info("✓ CoordAtt (model.20/24) layers successfully EXCLUDED (FP32).")
+        
+        # --- END ABILITY MODULE VERIFICATION ---
         # Verify no ODConv wrapper layers are in the quantized list
         # Only check for exact matches, not substring matches (child layers are OK)
         odconv_in_quantized = [name for name, _, _, _ in quantized_layers if name in odconv_layers]
@@ -182,7 +206,7 @@ def train_ptq(
     batch: Optional[int] = None,
     workers: Optional[int] = None,
     device: Any = 0,
-    backend: str = "fbgemm",
+    backend: str = "qnnpack",
     save_dir: Optional[Path] = None,
     run_name: Optional[str] = None,
     convert_to_int8: bool = True,
@@ -190,6 +214,9 @@ def train_ptq(
     num_calibration_batches: Optional[int] = None,
     calibration_split: str = "val",  # 'val' or 'train'
     evaluate: bool = False,  # Skip evaluation by default (can cause segfaults with quantized models)
+
+    quantize_botnet: bool = True,
+    quantize_coordatt: bool = True,
     **kwargs: Any,
 ) -> Dict[str, Optional[Path]]:
     """Run PTQ calibration and optionally export an INT8 model.
@@ -234,7 +261,19 @@ def train_ptq(
     model = YOLO(str(weights_path))
     LOGGER.info(f"Loaded model from {weights_path}")
 
-    detection_model = model.model
+    detection_model = getattr(model, "model", None)
+    if detection_model is None:
+        LOGGER.warning("Loaded checkpoint did not expose a DetectionModel. Rebuilding from model config...")
+        model = YOLO(str(model_cfg))
+        model.load(str(weights_path))
+        detection_model = getattr(model, "model", None)
+
+    if detection_model is None:
+        raise RuntimeError(
+            "Failed to build a DetectionModel from the provided weights/config. "
+            "Ensure the weights file is a training checkpoint (.pt) and not an exported runtime."
+        )
+
     if not hasattr(detection_model, "prepare_for_ptq"):
         model_type = type(detection_model).__name__
         raise AttributeError(
@@ -248,10 +287,9 @@ def train_ptq(
     LOGGER.info(f"Preparing model for PTQ with backend '{backend}' and image size {imgsz}")
     
     # Get quantization configuration from kwargs (defaults to all True)
-    quantize_backbone = kwargs.get('quantize_backbone', True)
+    quantize_backbone = kwargs.get('quantize_backbone', True) # Still use kwargs for others
     quantize_neck = kwargs.get('quantize_neck', True)
-    quantize_botnet = kwargs.get('quantize_botnet', True)
-    quantize_coordatt = kwargs.get('quantize_coordatt', True)
+    quantize_odconv = kwargs.get('quantize_odconv', True)
     
     quantize_parts = []
     if quantize_backbone:
@@ -274,11 +312,71 @@ def train_ptq(
         use_fx=use_fx,
         quantize_backbone=quantize_backbone,
         quantize_neck=quantize_neck,
-        quantize_botnet=quantize_botnet,
-        quantize_coordatt=quantize_coordatt,
+        quantize_botnet=quantize_botnet, # Uses the new flag
+        quantize_coordatt=quantize_coordatt, # Uses the new 
     )
     model.model = prepared_model
+
+    # We must operate on the prepared_model object to find modules by index
+    model_for_manual_skip = model.model
     
+    
+    if not quantize_botnet:
+        LOGGER.info("!!! MANUAL SKIP: Excluding BoTNet (model.10) from INT8 quantization.")
+        try:
+            # 1. Access the BoTNet module
+            layer_list = model_for_manual_skip.model # Access the Sequential module
+            botnet_module = layer_list.get_submodule('10') 
+            
+            # 2. Recursively clear qconfig for the BoTNet module and all its children
+            cleared_count = 0
+            
+            # Set parent qconfig to None (in case it matters for the overall conversion)
+            if hasattr(botnet_module, 'qconfig'):
+                botnet_module.qconfig = None
+            
+            # Iterate through all named sub-modules and clear their qconfig
+            for name, module in botnet_module.named_modules():
+                if hasattr(module, 'qconfig') and module.qconfig is not None:
+                    module.qconfig = None
+                    cleared_count += 1
+            
+            if cleared_count > 0:
+                LOGGER.info(f"!!! BoTNet (model.10) qconfig successfully cleared for {cleared_count} sub-modules (FP32 retention).")
+            else:
+                LOGGER.warning("!!! BoTNet module (model.10) found, but no qconfig attributes needed clearing.")
+
+        except AttributeError as e:
+            LOGGER.error(f"!!! Could not find module at path '10' (BoTNet) for manual skip. Error: {e}")
+
+
+    if not quantize_coordatt:
+        LOGGER.info("!!! MANUAL SKIP: Excluding CoordAtt (model.20 and model.24) from INT8 quantization.")
+        layer_list = model_for_manual_skip.model # Access the Sequential module
+        for index_str in ['19','23','20', '24']: 
+            try:
+                ca_module = layer_list.get_submodule(index_str)
+                cleared_count = 0
+                
+                # Recursively clear qconfig for the CoordAtt module and all its children
+                if hasattr(ca_module, 'qconfig'):
+                    ca_module.qconfig = None
+                
+                for name, module in ca_module.named_modules():
+                    if hasattr(module, 'qconfig') and module.qconfig is not None:
+                        module.qconfig = None
+                        cleared_count += 1
+                
+                if cleared_count > 0:
+                     LOGGER.info(f"!!! CoordAtt (model.{index_str}) qconfig successfully cleared for {cleared_count} sub-modules (FP32 retention).")
+                else:
+                    LOGGER.warning(f"!!! CoordAtt module (model.{index_str}) found, but no qconfig attributes needed clearing.")
+                    
+            except AttributeError as e:
+                LOGGER.error(f"!!! Could not find module at path '{index_str}' (CoordAtt) for manual skip. Error: {e}")
+                
+    # --- END: MANUAL PTQ SKIP IMPLEMENTATION ---
+
     # CRITICAL: Update detection_model to point to prepared_model so calibration works on the right model
     # The prepared model has observers, but we need to ensure calibrate_ptq works on it
     # Check if prepared_model has calibrate_ptq method (it should if it's still a DetectionModel)
@@ -311,7 +409,7 @@ def train_ptq(
     
     # CRITICAL: For fbgemm/qnnpack backends, quantized operations MUST run on CPU
     # So we keep the model on CPU even if CUDA is requested
-    if backend in ['fbgemm', 'qnnpack']:
+    if backend in ['qnnpack']:
         LOGGER.info(f"Backend {backend} requires CPU - keeping model on CPU throughout PTQ")
         torch_device = torch.device("cpu")
         device_str = "cpu"
@@ -334,11 +432,11 @@ def train_ptq(
     
     # CRITICAL: Set quantization backend engine EARLY, before any quantized operations
     # This must be set before prepare_for_ptq() creates any quantized infrastructure
-    if backend in torch.backends.quantized.supported_engines:
-        torch.backends.quantized.engine = backend
+    if backend in torch_quantized_backends.supported_engines:
+        torch_quantized_backends.engine = backend
         LOGGER.info(f"Set quantization backend engine to {backend} (before PTQ preparation)")
     else:
-        LOGGER.warning(f"Backend '{backend}' not supported, using default: {torch.backends.quantized.engine}")
+        LOGGER.warning(f"Backend '{backend}' not supported, using default: {torch_quantized_backends.engine}")
 
     # Load calibration data
     LOGGER.info(f"Loading calibration data from {data_cfg} (split: {calibration_split})...")
@@ -428,6 +526,7 @@ def train_ptq(
 
     # Convert to INT8
     int8_path = None
+    weights_dir: Optional[Path] = None
     if convert_to_int8:
         LOGGER.info("Converting calibrated model to INT8...")
         # Pass backend to ensure it's set correctly during conversion
@@ -440,7 +539,7 @@ def train_ptq(
         weights_dir = save_dir_path / "weights"
         weights_dir.mkdir(parents=True, exist_ok=True)
 
-        int8_path = weights_dir / "best_int8.pt"
+        int8_path = weights_dir / "int8.pt"
         LOGGER.info(f"Saving INT8 model to {int8_path}")
         
         # Check if forward is a local function (can't be pickled)
@@ -488,16 +587,14 @@ def train_ptq(
         try:
             # CRITICAL: Set quantization backend engine BEFORE evaluation
             # This must match the backend used during conversion
-            if backend in torch.backends.quantized.supported_engines:
-                torch.backends.quantized.engine = backend
+            if backend in torch_quantized_backends.supported_engines:
+                torch_quantized_backends.engine = backend
                 LOGGER.info(f"Set quantization backend engine to {backend} for evaluation")
             else:
-                LOGGER.warning(f"Backend '{backend}' not supported, using default: {torch.backends.quantized.engine}")
+                LOGGER.warning(f"Backend '{backend}' not supported, using default: {torch_quantized_backends.engine}")
             
             # The model has already been repaired in convert_ptq_to_int8, so we can use it directly
             # But we need to ensure it's in eval mode and test forward pass
-            from ultralytics.nn.tasks import ensure_module_bookkeeping
-            
             LOGGER.info("Preparing model for evaluation...")
             int8_model = model.model
             
@@ -519,7 +616,7 @@ def train_ptq(
             
             # Run evaluation using YOLO's val method
             # For fbgemm/qnnpack backends, must use CPU
-            eval_device = "cpu" if backend in ['fbgemm', 'qnnpack'] else device_str
+            eval_device = "cpu" if backend in ['qnnpack'] else device_str
             if eval_device != device_str:
                 LOGGER.info(f"Using CPU for evaluation (required for {backend} backend)")
             
@@ -639,8 +736,8 @@ def main():
     parser.add_argument(
         "--backend",
         type=str,
-        default="fbgemm",
-        choices=["fbgemm", "qnnpack"],
+        default="qnnpack",
+        choices=["qnnpack"],
         help="Quantization backend",
     )
     parser.add_argument(
@@ -683,8 +780,29 @@ def main():
         action="store_true",
         help="Evaluate INT8 model after conversion (may cause segfaults - use with caution)",
     )
+    # --- ADD NEW ARGUMENTS FOR ABLATION STUDY ---
+    parser.add_argument(
+        "--skip-botnet-quant",
+        action="store_true",
+        help="Skip INT8 quantization for BoTNet modules (Case 2)."
+    )
+    parser.add_argument(
+        "--skip-ca-quant",
+        action="store_true",
+        help="Skip INT8 quantization for CoordAtt modules (Case 3)."
+    )
+    parser.add_argument(
+        "--skip-odconv-quant",
+        action="store_true",
+        help="Skip INT8 quantization for ODConv modules (Case 4)."
+    )
+    # ---------------------------------------------
 
     args = parser.parse_args()
+
+    quantize_botnet_flag = not args.skip_botnet_quant
+    quantize_coordatt_flag = not args.skip_ca_quant
+    quantize_odconv_flag = not args.skip_odconv_quant
 
     results = train_ptq(
         model_cfg=args.model_cfg,
@@ -702,6 +820,8 @@ def main():
         num_calibration_batches=args.num_calibration_batches,
         calibration_split=args.calibration_split,
         evaluate=args.evaluate,
+
+ 
     )
 
     print("\n" + "=" * 80)

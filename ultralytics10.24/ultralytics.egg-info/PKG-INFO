@@ -1,4 +1,4 @@
-Metadata-Version: 2.4
+Metadata-Version: 2.1
 Name: ultralytics
 Version: 8.0.164
 Summary: Ultralytics YOLOv8 for SOTA object detection, multi-object tracking, instance segmentation, pose estimation and image classification.
@@ -29,49 +29,9 @@ Classifier: Operating System :: MacOS
 Classifier: Operating System :: Microsoft :: Windows
 Requires-Python: >=3.8
 Description-Content-Type: text/markdown
-License-File: LICENSE
-Requires-Dist: matplotlib>=3.2.2
-Requires-Dist: numpy>=1.22.2
-Requires-Dist: opencv-python>=4.6.0
-Requires-Dist: pillow>=7.1.2
-Requires-Dist: pyyaml>=5.3.1
-Requires-Dist: requests>=2.23.0
-Requires-Dist: scipy>=1.4.1
-Requires-Dist: torch>=1.8.0
-Requires-Dist: torchvision>=0.9.0
-Requires-Dist: tqdm>=4.64.0
-Requires-Dist: pandas>=1.1.4
-Requires-Dist: seaborn>=0.11.0
-Requires-Dist: psutil
-Requires-Dist: py-cpuinfo
 Provides-Extra: dev
-Requires-Dist: ipython; extra == "dev"
-Requires-Dist: check-manifest; extra == "dev"
-Requires-Dist: pytest; extra == "dev"
-Requires-Dist: pytest-cov; extra == "dev"
-Requires-Dist: coverage; extra == "dev"
-Requires-Dist: mkdocs-material; extra == "dev"
-Requires-Dist: mkdocstrings[python]; extra == "dev"
-Requires-Dist: mkdocs-redirects; extra == "dev"
-Requires-Dist: mkdocs-ultralytics-plugin>=0.0.26; extra == "dev"
 Provides-Extra: export
-Requires-Dist: coremltools>=7.0.b1; extra == "export"
-Requires-Dist: openvino-dev>=2023.0; extra == "export"
-Requires-Dist: tensorflowjs; extra == "export"
-Dynamic: author
-Dynamic: author-email
-Dynamic: classifier
-Dynamic: description
-Dynamic: description-content-type
-Dynamic: home-page
-Dynamic: keywords
-Dynamic: license
-Dynamic: license-file
-Dynamic: project-url
-Dynamic: provides-extra
-Dynamic: requires-dist
-Dynamic: requires-python
-Dynamic: summary
+License-File: LICENSE
 
 <div align="center">
   <p>
