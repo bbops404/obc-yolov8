@@ -96,16 +96,37 @@ def _repair_quantized_bookkeeping(root_module):
         except Exception:
             needs_fix = True
 
-        for hook_attr in ('_forward_hooks', '_backward_hooks', '_forward_pre_hooks', '_state_dict_hooks', '_load_state_dict_pre_hooks'):
+        # CRITICAL: Fix hook attributes - these must exist as dicts, not just be checked
+        # PyTorch's _call_impl checks for these and raises AttributeError if missing
+        hook_attrs = ('_forward_hooks', '_backward_hooks', '_forward_pre_hooks', '_backward_pre_hooks',
+                     '_state_dict_hooks', '_load_state_dict_pre_hooks')
+        
+        for hook_attr in hook_attrs:
             try:
-                if not _is_dict_like(getattr(module, hook_attr, None)):
+                attr_value = getattr(module, hook_attr)
+                if not _is_dict_like(attr_value):
+                    # Exists but not a dict - fix it
+                    object.__setattr__(module, hook_attr, {})
                     needs_fix = True
+            except AttributeError:
+                # Attribute doesn't exist - create it using object.__setattr__ to bypass __setattr__
+                object.__setattr__(module, hook_attr, {})
+                needs_fix = True
             except Exception:
                 needs_fix = True
 
-        if not hasattr(module, '_non_persistent_buffers_set') or not isinstance(getattr(module, '_non_persistent_buffers_set'), set):
+        # Fix _non_persistent_buffers_set
+        try:
+            if not hasattr(module, '_non_persistent_buffers_set') or not isinstance(getattr(module, '_non_persistent_buffers_set'), set):
+                object.__setattr__(module, '_non_persistent_buffers_set', set())
+                needs_fix = True
+        except Exception:
+            object.__setattr__(module, '_non_persistent_buffers_set', set())
             needs_fix = True
+        
+        # Fix training attribute
         if not hasattr(module, 'training'):
+            object.__setattr__(module, 'training', False)
             needs_fix = True
 
         if needs_fix:
@@ -584,11 +605,25 @@ def evaluate_int8_model(
     try:
         LOGGER.info("   Testing model forward pass capability...")
         test_input = torch.randn(1, 3, imgsz, imgsz)
+        
+        # For quantized models, check if quant/dequant stubs exist
+        has_quant_stub = hasattr(model.model, 'quant') and isinstance(model.model.quant, torch.ao.quantization.QuantStub)
+        has_dequant_stub = hasattr(model.model, 'dequant') and isinstance(model.model.dequant, torch.ao.quantization.DeQuantStub)
+        
         with torch.no_grad():
-            _ = model.model(test_input)
+            if has_quant_stub and has_dequant_stub:
+                # PTQ model with quant/dequant stubs - use them properly
+                LOGGER.info("   Using QuantStub/DeQuantStub for quantized model...")
+                x_quant = model.model.quant(test_input)
+                output = model.model(x_quant)
+                _ = model.model.dequant(output)
+            else:
+                # Try direct forward (might work for some quantized models)
+                _ = model.model(test_input)
+        
         LOGGER.info("   ✓ Forward pass test succeeded")
         forward_pass_works = True
-    except (AttributeError, RuntimeError, TypeError) as e:
+    except (AttributeError, RuntimeError, TypeError, NotImplementedError) as e:
         # Print full error for debugging
         import traceback
         error_msg = str(e)
@@ -609,6 +644,23 @@ def evaluate_int8_model(
             LOGGER.warning("   Weight access issue - may be from QuantizedConv or other quantized modules")
             LOGGER.info("   Will skip INT8 evaluation and use QAT fallback instead")
             forward_pass_works = False
+        elif "quantized::" in error_msg or "QuantizedCPU" in error_msg or "NotImplementedError" in error_type:
+            # Quantized operation backend issue - this is a known PyTorch limitation
+            # The quantized Conv2d operations require QuantizedCPU backend but tensors are on CPU backend
+            LOGGER.warning("   ⚠️  Quantized operations backend mismatch detected")
+            LOGGER.warning("   This is a known issue with PyTorch quantized operations:")
+            LOGGER.warning("   - Quantized Conv2d requires QuantizedCPU backend")
+            LOGGER.warning("   - But intermediate tensors may be on regular CPU backend")
+            LOGGER.warning("   - This can happen even with CPU-only PyTorch builds")
+            LOGGER.warning("   ")
+            LOGGER.warning("   Possible causes:")
+            LOGGER.warning("   1. Model conversion issue - quantized ops not properly set up")
+            LOGGER.warning("   2. PyTorch version bug with quantized backend dispatch")
+            LOGGER.warning("   3. Model saved/loaded incorrectly, losing backend context")
+            LOGGER.warning("   ")
+            LOGGER.warning("   Workaround: Skip forward pass test, try evaluation directly")
+            LOGGER.warning("   (Evaluation uses model.val() which may handle quantization differently)")
+            forward_pass_works = True  # Try evaluation anyway - model.val() might work
         else:
             # Different error - might still work for evaluation
             LOGGER.warning(f"   Forward pass test failed with unexpected error")
@@ -619,6 +671,9 @@ def evaluate_int8_model(
         LOGGER.info("\n   Skipping INT8 evaluation (model structure incompatible)")
         int8_results = None
     else:
+        # Even if forward pass test failed, try evaluation - model.val() might use different code path
+        LOGGER.info("\n   Attempting INT8 model evaluation (forward pass test was skipped/failed)...")
+        LOGGER.info("   Note: If this fails, the model may need to be re-converted with PTQ")
         try:
             int8_results = model.val(
                 data=data_cfg,

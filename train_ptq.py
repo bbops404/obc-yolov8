@@ -285,10 +285,26 @@ def train_ptq(
     if hasattr(prepared_model, 'calibrate_ptq'):
         # Prepared model is still a DetectionModel, use it directly
         detection_model = prepared_model
+        LOGGER.info("✓ Using prepared model for calibration (has calibrate_ptq method)")
     else:
-        # Prepared model is wrapped, we need to use the original but update it
-        # This shouldn't happen with eager mode, but handle it just in case
-        LOGGER.warning("Prepared model doesn't have calibrate_ptq method - this may cause issues")
+        # Prepared model is wrapped or doesn't have calibrate_ptq
+        # CRITICAL: We MUST use prepared_model for calibration because it has the observers!
+        # Even if it doesn't have calibrate_ptq, we can call calibrate_ptq on the original
+        # but we need to make sure the observers are in prepared_model
+        LOGGER.warning("⚠️  Prepared model doesn't have calibrate_ptq method")
+        LOGGER.warning("   This means prepare() returned a wrapped model")
+        LOGGER.warning("   We'll use prepared_model for calibration to ensure observers are triggered")
+        
+        # Try to add calibrate_ptq to prepared_model by binding it from detection_model
+        if hasattr(detection_model, 'calibrate_ptq'):
+            import types
+            prepared_model.calibrate_ptq = types.MethodType(detection_model.calibrate_ptq, prepared_model)
+            detection_model = prepared_model
+            LOGGER.info("✓ Bound calibrate_ptq method to prepared model")
+        else:
+            # Last resort: use prepared_model directly and hope observers work
+            detection_model = prepared_model
+            LOGGER.warning("   Using prepared_model directly - calibration may not work correctly")
 
     # Move model to device
     device_str = _resolve_device(device)
@@ -389,7 +405,22 @@ def train_ptq(
     else:
         LOGGER.info("Using all available batches for calibration")
     
-    calibrated_model = detection_model.calibrate_ptq(
+    # CRITICAL: Use prepared_model (which has observers) for calibration, not detection_model
+    # Even if detection_model was updated, ensure we're using the model with observers
+    model_for_calibration = prepared_model if hasattr(prepared_model, 'calibrate_ptq') else detection_model
+    
+    # Verify we're using the right model
+    from torch.ao.quantization import ObserverBase
+    obs_count = sum(1 for name, module in model_for_calibration.named_modules() if isinstance(module, ObserverBase))
+    activation_obs_count = sum(1 for name, module in model_for_calibration.named_modules() if hasattr(module, 'activation_post_process') and module.activation_post_process is not None)
+    LOGGER.info(f"Model for calibration has {obs_count} ObserverBase modules and {activation_obs_count} activation_post_process observers")
+    
+    if obs_count == 0 and activation_obs_count == 0:
+        LOGGER.error("⚠️  ERROR: Model for calibration has NO observers! This will cause calibration to fail!")
+        LOGGER.error("   Using prepared_model instead...")
+        model_for_calibration = prepared_model
+    
+    calibrated_model = model_for_calibration.calibrate_ptq(
         calibration_data=calibration_dataloader,
         num_batches=num_calibration_batches,
     )
@@ -412,18 +443,38 @@ def train_ptq(
         int8_path = weights_dir / "best_int8.pt"
         LOGGER.info(f"Saving INT8 model to {int8_path}")
         
-        # Save model - save both state_dict and full model for flexibility
-        # Full model object is needed for proper evaluation without segfaults
-        torch.save({
-            "model": int8_model,  # Save full model object (safer for evaluation)
-            "model_state_dict": int8_model.state_dict(),  # Also save state_dict for loading flexibility
-            "yaml": detection_model.yaml,
-            "epoch": -1,  # PTQ doesn't have epochs
-            "best_fitness": None,
-            "date": datetime.now().isoformat(),
-            "ptq": True,
-            "backend": backend,
-        }, int8_path)
+        # Check if forward is a local function (can't be pickled)
+        # If so, we'll save only state_dict to avoid pickling issues
+        forward_is_local = hasattr(int8_model, 'forward') and (
+            hasattr(int8_model.forward, '__qualname__') and 
+            '<locals>' in str(int8_model.forward.__qualname__)
+        )
+        
+        if forward_is_local:
+            LOGGER.info("  Forward method is a local function - saving state_dict only to avoid pickling issues")
+            # Save only state_dict and metadata (model can be reconstructed from yaml)
+            torch.save({
+                "model_state_dict": int8_model.state_dict(),
+                "yaml": detection_model.yaml,
+                "epoch": -1,  # PTQ doesn't have epochs
+                "best_fitness": None,
+                "date": datetime.now().isoformat(),
+                "ptq": True,
+                "backend": backend,
+            }, int8_path)
+        else:
+            # Save model - save both state_dict and full model for flexibility
+            # Full model object is needed for proper evaluation without segfaults
+            torch.save({
+                "model": int8_model,  # Save full model object (safer for evaluation)
+                "model_state_dict": int8_model.state_dict(),  # Also save state_dict for loading flexibility
+                "yaml": detection_model.yaml,
+                "epoch": -1,  # PTQ doesn't have epochs
+                "best_fitness": None,
+                "date": datetime.now().isoformat(),
+                "ptq": True,
+                "backend": backend,
+            }, int8_path)
         
         LOGGER.info(f"✓ INT8 model saved to {int8_path}")
         

@@ -2298,79 +2298,33 @@ class DetectionModel(BaseModel):
             # We need to manually add it to ensure quantized operations receive quantized inputs
             from torch.ao.quantization import QuantStub, DeQuantStub
             
-            # Check if QuantStub already exists (from previous preparation)
-            has_quant_stub = any(isinstance(m, QuantStub) for m in self.named_modules())
-            if not has_quant_stub:
-                LOGGER.info("  Adding QuantStub for input quantization...")
-                # Store original forward method
-                original_forward = self.forward
-                
-                # Create QuantStub and DeQuantStub modules
-                self.quant = QuantStub()
-                self.dequant = DeQuantStub()
-                
-                # Wrap forward to add quantization/dequantization
-                def quantized_forward(x, *args, **kwargs):
-                    # Quantize input
-                    x = self.quant(x)
-                    # Call original forward
-                    out = original_forward(x, *args, **kwargs)
-                    # Dequantize output (if needed)
-                    if isinstance(out, torch.Tensor):
-                        out = self.dequant(out)
-                    elif isinstance(out, (list, tuple)):
-                        out = tuple(self.dequant(o) if isinstance(o, torch.Tensor) else o for o in out)
-                    return out
-                
-                # Replace forward method
-                self.forward = quantized_forward
-                LOGGER.info("  ✓ QuantStub/DeQuantStub added for input/output quantization")
+            # CRITICAL: Don't add QuantStub before prepare() - it gets lost
+            # Instead, we'll add it AFTER prepare() and ensure it's properly integrated
+            # The key is to NOT wrap forward - we'll call quant() manually during calibration
+            LOGGER.info("  Note: QuantStub will be added after prepare() to preserve observer hooks")
             
             # Prepare for PTQ in eager mode
             LOGGER.info("  Calling prepare()...")
             model_prepared = prepare(self, inplace=False)
             
-            # CRITICAL: Ensure QuantStub is preserved in prepared model
-            # prepare() might create a new model that doesn't preserve the QuantStub/forward wrapper
-            LOGGER.info("  Checking QuantStub preservation after prepare()...")
-            has_quant_in_original = hasattr(self, 'quant') and isinstance(self.quant, QuantStub)
+            # CRITICAL: Add QuantStub/DeQuantStub to prepared model WITHOUT wrapping forward
+            # This preserves the hook system so observers can collect statistics
+            # We'll call quant() manually during calibration instead of wrapping forward
+            LOGGER.info("  Adding QuantStub/DeQuantStub to prepared model (no forward wrapper)...")
+            
+            # Check if QuantStub already exists in prepared model
             has_quant_in_prepared = any(isinstance(m, QuantStub) for m in model_prepared.named_modules())
             
-            LOGGER.info(f"  - QuantStub in original model: {has_quant_in_original}")
-            LOGGER.info(f"  - QuantStub in prepared model: {has_quant_in_prepared}")
-            
-            if hasattr(self, 'quant') and hasattr(self, 'dequant'):
-                if not has_quant_in_prepared:
-                    LOGGER.info("  ⚠️  QuantStub missing in prepared model - adding it...")
-                    # Add QuantStub to prepared model
-                    model_prepared.quant = self.quant
-                    model_prepared.dequant = self.dequant
-                    # Update forward method if it exists
-                    if hasattr(self, 'forward') and callable(getattr(self, 'forward', None)):
-                        # Check if self.forward is the quantized_forward wrapper
-                        if hasattr(self.forward, '__code__'):
-                            # Store original forward from prepared model
-                            original_prepared_forward = model_prepared.forward
-                            # Create new forward that uses QuantStub
-                            def quantized_forward_wrapper(x, *args, **kwargs):
-                                x = model_prepared.quant(x)
-                                out = original_prepared_forward(x, *args, **kwargs)
-                                if isinstance(out, torch.Tensor):
-                                    out = model_prepared.dequant(out)
-                                elif isinstance(out, (list, tuple)):
-                                    out = tuple(model_prepared.dequant(o) if isinstance(o, torch.Tensor) else o for o in out)
-                                return out
-                            model_prepared.forward = quantized_forward_wrapper
-                            LOGGER.info("  ✓ QuantStub/forward wrapper added to prepared model")
-                            # Verify it was added
-                            has_quant_after = any(isinstance(m, QuantStub) for m in model_prepared.named_modules())
-                            has_quant_attr = hasattr(model_prepared, 'quant') and isinstance(model_prepared.quant, QuantStub)
-                            LOGGER.info(f"  - QuantStub verified in prepared model: {has_quant_after or has_quant_attr}")
-                else:
-                    LOGGER.info("  ✓ QuantStub preserved in prepared model")
+            if not has_quant_in_prepared:
+                # Add QuantStub/DeQuantStub as module attributes (like QAT does)
+                # But DON'T wrap forward - we'll call quant() manually during calibration
+                model_prepared.quant = QuantStub()
+                model_prepared.dequant = DeQuantStub()
+                LOGGER.info("  ✓ QuantStub/DeQuantStub added as module attributes")
+                LOGGER.info("  ✓ Forward method NOT wrapped - observers will work correctly")
+                LOGGER.info("  ✓ QuantStub will be called manually during calibration")
             else:
-                # No QuantStub in original - this might be a problem
-                LOGGER.warning("  ⚠️  No QuantStub found in original model - observers may not trigger correctly")
+                LOGGER.info("  ✓ QuantStub already exists in prepared model")
             
             # Diagnostics: Check if observers were inserted
             from torch.ao.quantization import ObserverBase
@@ -2406,6 +2360,23 @@ class DetectionModel(BaseModel):
         # Ensure model is in eval mode (required for PTQ)
         self.eval()
         
+        # CRITICAL: In eager mode, observers must be explicitly enabled
+        # Even though they're enabled above, we need to ensure they're actually observing
+        # PyTorch observers collect statistics via forward hooks, which are triggered during __call__
+        from torch.ao.quantization import ObserverBase
+        from torch.ao.quantization.observer import _ObserverBase
+        
+        # Ensure all observers are in observing mode
+        for name, module in self.named_modules():
+            if hasattr(module, 'activation_post_process') and module.activation_post_process is not None:
+                obs = module.activation_post_process
+                # Ensure observer is enabled and will observe
+                if isinstance(obs, _ObserverBase):
+                    obs.training = False  # Observers should be in eval mode
+                    # Some observers need to be explicitly enabled
+                    if hasattr(obs, '_observer_enabled'):
+                        obs._observer_enabled = True
+        
         # DEBUG: Check if QuantStub exists
         from torch.ao.quantization import QuantStub, DeQuantStub
         has_quant_stub = hasattr(self, 'quant') and isinstance(self.quant, QuantStub)
@@ -2431,34 +2402,81 @@ class DetectionModel(BaseModel):
             LOGGER.info("  ✓ QuantStub added to model for calibration")
         
         # CRITICAL: Ensure observers are enabled for calibration
-        # Observers need to be active to collect statistics during forward pass
+        # In PyTorch eager mode, observers should be enabled by default in eval mode
+        # But we need to explicitly enable them for calibration
         from torch.ao.quantization import ObserverBase
+        from torch.ao.quantization.observer import _ObserverBase
+        
         observer_count = 0
         observers_enabled = 0
+        
+        # Enable all ObserverBase modules
         for name, module in self.named_modules():
             if isinstance(module, ObserverBase):
                 observer_count += 1
-                # Enable observer if it has enable method
-                if hasattr(module, 'enable_observer'):
-                    try:
+                # Try multiple ways to enable observers
+                try:
+                    # Method 1: enable_observer() if available
+                    if hasattr(module, 'enable_observer'):
                         module.enable_observer()
                         observers_enabled += 1
-                    except Exception:
-                        pass  # Some observers might not have this method
+                    # Method 2: Set _observer_enabled flag if it exists
+                    elif hasattr(module, '_observer_enabled'):
+                        module._observer_enabled = True
+                        observers_enabled += 1
+                    # Method 3: For _ObserverBase, ensure it's enabled
+                    elif isinstance(module, _ObserverBase):
+                        # Observers should be enabled by default in eval mode
+                        # But explicitly set training=False to ensure they're active
+                        module.training = False
+                        observers_enabled += 1
+                except Exception as e:
+                    LOGGER.debug(f"Could not enable observer {name}: {e}")
         
-        # Also enable activation_post_process observers
+        # Enable activation_post_process observers (these are the main ones)
         activation_observer_count = 0
         activation_observers_enabled = 0
         for name, module in self.named_modules():
             if hasattr(module, 'activation_post_process') and module.activation_post_process is not None:
                 activation_observer_count += 1
                 obs = module.activation_post_process
-                if hasattr(obs, 'enable_observer'):
-                    try:
+                try:
+                    # Method 1: enable_observer() if available
+                    if hasattr(obs, 'enable_observer'):
                         obs.enable_observer()
                         activation_observers_enabled += 1
-                    except Exception:
-                        pass
+                    # Method 2: Set _observer_enabled flag
+                    elif hasattr(obs, '_observer_enabled'):
+                        obs._observer_enabled = True
+                        activation_observers_enabled += 1
+                    # Method 3: Ensure observer is in eval mode (not training)
+                    elif isinstance(obs, _ObserverBase):
+                        obs.training = False
+                        obs.eval()
+                        activation_observers_enabled += 1
+                    # Method 4: For MinMaxObserver and similar, check if they have activation_post_process
+                    elif hasattr(obs, 'activation_post_process'):
+                        # This is a nested observer, enable it too
+                        nested_obs = obs.activation_post_process
+                        if hasattr(nested_obs, 'enable_observer'):
+                            nested_obs.enable_observer()
+                        activation_observers_enabled += 1
+                except Exception as e:
+                    LOGGER.debug(f"Could not enable activation_post_process observer for {name}: {e}")
+        
+        # DEBUG: Check observer state
+        sample_obs_info = []
+        for name, module in list(self.named_modules())[:5]:  # Check first 5 modules
+            if hasattr(module, 'activation_post_process') and module.activation_post_process is not None:
+                obs = module.activation_post_process
+                obs_type = type(obs).__name__
+                has_min = hasattr(obs, 'min_val')
+                has_max = hasattr(obs, 'max_val')
+                is_enabled = getattr(obs, '_observer_enabled', None)
+                sample_obs_info.append(f"{name}: type={obs_type}, enabled={is_enabled}, has_min={has_min}, has_max={has_max}")
+        
+        if sample_obs_info:
+            LOGGER.debug(f"Sample observer states:\n  " + "\n  ".join(sample_obs_info))
         
         if observer_count > 0 or activation_observer_count > 0:
             LOGGER.info(f"Enabled {observers_enabled}/{observer_count} ObserverBase modules and {activation_observers_enabled}/{activation_observer_count} activation_post_process observers for calibration")
@@ -2501,15 +2519,20 @@ class DetectionModel(BaseModel):
                     test_images = test_images.to(device=device, dtype=torch.float32)
                     
                     # Run test forward pass
+                    # CRITICAL: Use __call__ (self()) not forward() to ensure hooks fire
                     with torch.no_grad():
                         if hasattr(self, 'quant') and isinstance(self.quant, QuantStub):
+                            # Quantize input first
                             x_quant = self.quant(test_images)
-                            _ = self.forward(x_quant)
+                            # Use __call__ to trigger hooks (observers are triggered via hooks)
+                            _ = self(x_quant)
                         else:
+                            # No QuantStub, just call normally
                             _ = self(test_images)
                     
                     # Check if any observers collected statistics after test pass
                     test_observers_with_stats = 0
+                    test_observers_details = []
                     for name, module in self.named_modules():
                         if isinstance(module, ObserverBase):
                             if hasattr(module, 'min_val') and hasattr(module, 'max_val'):
@@ -2520,28 +2543,69 @@ class DetectionModel(BaseModel):
                                         if isinstance(max_val, torch.Tensor) and max_val.numel() > 0:
                                             if max_val.max() > min_val.min():
                                                 test_observers_with_stats += 1
+                                                test_observers_details.append(f"{name}: min={min_val.min().item():.4f}, max={max_val.max().item():.4f}")
                     
-                    # Also check activation_post_process observers
+                    # Also check activation_post_process observers (these are the main ones)
                     test_activation_observers_with_stats = 0
+                    test_activation_details = []
                     for name, module in self.named_modules():
                         if hasattr(module, 'activation_post_process') and module.activation_post_process is not None:
                             obs = module.activation_post_process
+                            # Check various ways observers store statistics
+                            min_val = None
+                            max_val = None
+                            
+                            # Method 1: Direct min_val/max_val attributes
                             if hasattr(obs, 'min_val') and hasattr(obs, 'max_val'):
                                 min_val = obs.min_val
                                 max_val = obs.max_val
-                                if min_val is not None and max_val is not None:
-                                    if isinstance(min_val, torch.Tensor) and min_val.numel() > 0:
-                                        if isinstance(max_val, torch.Tensor) and max_val.numel() > 0:
-                                            if max_val.max() > min_val.min():
-                                                test_activation_observers_with_stats += 1
+                            # Method 2: Check if observer has _min_val/_max_val
+                            elif hasattr(obs, '_min_val') and hasattr(obs, '_max_val'):
+                                min_val = obs._min_val
+                                max_val = obs._max_val
+                            # Method 3: Check if observer uses a different attribute name
+                            elif hasattr(obs, 'activation_post_process'):
+                                nested_obs = obs.activation_post_process
+                                if hasattr(nested_obs, 'min_val') and hasattr(nested_obs, 'max_val'):
+                                    min_val = nested_obs.min_val
+                                    max_val = nested_obs.max_val
+                            
+                            if min_val is not None and max_val is not None:
+                                # Handle both tensor and scalar values
+                                if isinstance(min_val, torch.Tensor):
+                                    if min_val.numel() > 0:
+                                        min_val_scalar = min_val.min().item() if min_val.numel() > 1 else min_val.item()
+                                        max_val_scalar = max_val.max().item() if max_val.numel() > 1 else max_val.item()
+                                        if max_val_scalar > min_val_scalar:
+                                            test_activation_observers_with_stats += 1
+                                            test_activation_details.append(f"{name}: min={min_val_scalar:.4f}, max={max_val_scalar:.4f}")
+                                else:
+                                    # Scalar values
+                                    if max_val > min_val:
+                                        test_activation_observers_with_stats += 1
+                                        test_activation_details.append(f"{name}: min={min_val:.4f}, max={max_val:.4f}")
                     
                     total_test_with_stats = test_observers_with_stats + test_activation_observers_with_stats
                     if total_test_with_stats > 0:
                         LOGGER.info(f"✓ Test forward pass successful: {total_test_with_stats} observers collected statistics")
+                        if test_activation_details:
+                            LOGGER.debug(f"Sample observers with stats:\n  " + "\n  ".join(test_activation_details[:5]))
                     else:
                         LOGGER.warning(f"⚠️  Test forward pass completed but 0 observers collected statistics!")
                         LOGGER.warning("   This indicates observers are not being triggered during forward pass")
                         LOGGER.warning("   Check if QuantStub is being used and observers are enabled")
+                        
+                        # DEBUG: Print detailed observer state
+                        LOGGER.debug("DEBUG: Checking observer state after test forward pass...")
+                        for name, module in list(self.named_modules())[:10]:  # Check first 10
+                            if hasattr(module, 'activation_post_process') and module.activation_post_process is not None:
+                                obs = module.activation_post_process
+                                obs_type = type(obs).__name__
+                                has_min = hasattr(obs, 'min_val') or hasattr(obs, '_min_val')
+                                has_max = hasattr(obs, 'max_val') or hasattr(obs, '_max_val')
+                                min_val = getattr(obs, 'min_val', getattr(obs, '_min_val', None))
+                                max_val = getattr(obs, 'max_val', getattr(obs, '_max_val', None))
+                                LOGGER.debug(f"  {name}: type={obs_type}, has_min={has_min}, has_max={has_max}, min={min_val}, max={max_val}")
         except Exception as e:
             LOGGER.warning(f"Test forward pass failed: {e}")
             import traceback
@@ -2591,41 +2655,31 @@ class DetectionModel(BaseModel):
                     images = images.to(device=device, dtype=torch.float32)
                     
                     # Forward pass - observers will collect statistics
-                    # CRITICAL: Ensure forward pass goes through QuantStub to trigger input observer
+                    # CRITICAL: In eager mode, observers collect stats via forward hooks
+                    # We must use __call__ (self()) not forward() to ensure hooks fire
+                    # If QuantStub exists, quantize input first, then call model normally
                     try:
-                        # Check if forward method is already wrapped with QuantStub
-                        # If forward is wrapped, it will call quant() internally, so just call forward()
-                        # If forward is NOT wrapped, we need to explicitly call quant() first
-                        forward_is_wrapped = False
-                        if hasattr(self, 'forward') and callable(self.forward):
-                            # Check if forward method uses self.quant (it's wrapped)
-                            try:
-                                import inspect
-                                forward_source = inspect.getsource(self.forward) if hasattr(inspect, 'getsource') else None
-                                if forward_source and 'self.quant' in forward_source:
-                                    forward_is_wrapped = True
-                            except:
-                                # Can't inspect, try a different approach
-                                # If quant exists and forward is a function (not method), it might be wrapped
-                                if hasattr(self, 'quant') and not hasattr(type(self).forward, '__func__'):
-                                    # forward might be a wrapper function
-                                    forward_is_wrapped = True
+                        # Check if QuantStub exists and forward is wrapped
+                        has_quant = hasattr(self, 'quant') and isinstance(self.quant, QuantStub)
                         
-                        if forward_is_wrapped:
-                            # Forward is already wrapped, just call it - it will use QuantStub internally
-                            _ = self(images)
-                        elif hasattr(self, 'quant') and isinstance(self.quant, QuantStub):
-                            # Forward is NOT wrapped, explicitly use QuantStub
+                        if has_quant:
+                            # Quantize input first
                             x_quant = self.quant(images)
-                            out = self.forward(x_quant)
+                            # CRITICAL: Use __call__ to trigger forward hooks (observers are hooked to forward)
+                            # This ensures observers collect statistics during forward pass
+                            out = self(x_quant)
+                            
+                            # Dequantize output if DeQuantStub exists
                             if hasattr(self, 'dequant') and isinstance(self.dequant, DeQuantStub):
                                 if isinstance(out, torch.Tensor):
                                     out = self.dequant(out)
                                 elif isinstance(out, (list, tuple)):
                                     out = tuple(self.dequant(o) if isinstance(o, torch.Tensor) else o for o in out)
                         else:
-                            # No QuantStub, use regular forward (may not trigger observers correctly)
+                            # No QuantStub, just call model normally
+                            # Observers should still work if they're properly attached
                             _ = self(images)
+                        
                         batch_count += 1
                     except Exception as e:
                         LOGGER.warning(f"Error during calibration batch {batch_idx}: {e}")
@@ -2669,20 +2723,21 @@ class DetectionModel(BaseModel):
                                 if hasattr(self, 'quant') and not hasattr(type(self).forward, '__func__'):
                                     forward_is_wrapped = True
                         
-                        if forward_is_wrapped:
-                            # Forward is already wrapped, just call it
-                            _ = self(data)
-                        elif hasattr(self, 'quant') and isinstance(self.quant, QuantStub):
-                            # Forward is NOT wrapped, explicitly use QuantStub
+                        # CRITICAL: Always use __call__ (self()) not forward() to ensure hooks fire
+                        # This is essential for observers to collect statistics
+                        if hasattr(self, 'quant') and isinstance(self.quant, QuantStub):
+                            # QuantStub exists - quantize input first, then call model normally
                             x_quant = self.quant(data)
-                            out = self.forward(x_quant)
+                            # Use __call__ to trigger forward hooks (observers are hooked to forward)
+                            out = self(x_quant)
+                            # Dequantize output if DeQuantStub exists
                             if hasattr(self, 'dequant') and isinstance(self.dequant, DeQuantStub):
                                 if isinstance(out, torch.Tensor):
                                     out = self.dequant(out)
                                 elif isinstance(out, (list, tuple)):
                                     out = tuple(self.dequant(o) if isinstance(o, torch.Tensor) else o for o in out)
                         else:
-                            # No QuantStub, use regular forward
+                            # No QuantStub, just call model normally (hooks will still fire)
                             _ = self(data)
                     except Exception as e:
                         LOGGER.warning(f"Error during calibration sample {idx}: {e}")
@@ -3410,7 +3465,7 @@ def torch_safe_load(weight):
                 'ultralytics.yolo.utils': 'ultralytics.utils',
                 'ultralytics.yolo.v8': 'ultralytics.models.yolo',
                 'ultralytics.yolo.data': 'ultralytics.data'}):  # for legacy 8.0 Classify and Pose models
-            return torch.load(file, map_location='cpu'), file  # load
+            return torch.load(file, map_location='cpu', weights_only=False), file  # load
 
     except ModuleNotFoundError as e:  # e.name is missing module name
         if e.name == 'models':
@@ -3426,7 +3481,7 @@ def torch_safe_load(weight):
                        f"run a command with an official YOLOv8 model, i.e. 'yolo predict model=yolov8n.pt'")
         check_requirements(e.name)  # install missing module
 
-        return torch.load(file, map_location='cpu'), file  # load
+        return torch.load(file, map_location='cpu', weights_only=False), file  # load
 
 
 def attempt_load_weights(weights, device=None, inplace=True, fuse=False):

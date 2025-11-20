@@ -4,6 +4,8 @@ Convolution modules
 """
 
 import math
+import os
+from collections import defaultdict
 
 import numpy as np
 import torch
@@ -11,6 +13,10 @@ import torch.nn as nn
 
 __all__ = ('Conv', 'Conv2', 'LightConv', 'DWConv', 'DWConvTranspose2d', 'ConvTranspose', 'Focus', 'GhostConv',
            'ChannelAttention', 'SpatialAttention', 'CBAM', 'Concat', 'RepConv')
+
+# Global tracking for quantized vs FP32 fallback operations
+_QUANTIZATION_STATS = defaultdict(int)
+_ENABLE_QUANT_STATS = os.getenv('ENABLE_QUANT_STATS', '0') == '1'
 
 
 def autopad(k, p=None, d=1):  # kernel, padding, dilation
@@ -57,13 +63,14 @@ def _is_quantized_conv2d(module):
     return False
 
 
-def _safe_conv2d_call(conv_module, x):
+def _safe_conv2d_call(conv_module, x, module_name=None):
     """
     Safely call a Conv2d module, handling both regular and quantized Conv2d.
     
     Args:
         conv_module: Conv2d module (regular or quantized)
         x: Input tensor (FP32 or quantized)
+        module_name: Optional name for tracking/statistics
         
     Returns:
         Output tensor (FP32)
@@ -71,7 +78,10 @@ def _safe_conv2d_call(conv_module, x):
     # Try normal call first (for regular Conv2d)
     # If it fails with AttributeError about _backward_hooks, it's likely quantized
     try:
-        return conv_module(x)
+        result = conv_module(x)
+        if _ENABLE_QUANT_STATS:
+            _QUANTIZATION_STATS['regular_conv2d'] += 1
+        return result
     except AttributeError as e:
         msg = str(e)
         if (
@@ -81,25 +91,26 @@ def _safe_conv2d_call(conv_module, x):
             or '_forward_pre_hooks' in msg
         ):
             # This is a quantized Conv2d - need to handle input quantization
-            return _call_quantized_conv2d(conv_module, x)
+            return _call_quantized_conv2d(conv_module, x, module_name)
         # Different AttributeError - re-raise
         raise
     except (NotImplementedError, RuntimeError) as e:
         # If we get NotImplementedError about quantized ops, try to quantize input first
         error_str = str(e)
         if 'quantized::' in error_str or 'QuantizedCPU' in error_str:
-            return _call_quantized_conv2d(conv_module, x)
+            return _call_quantized_conv2d(conv_module, x, module_name)
         else:
             raise
 
 
-def _call_quantized_conv2d(conv_module, x):
+def _call_quantized_conv2d(conv_module, x, module_name=None):
     """
     Call a quantized Conv2d module with proper input quantization.
     
     Args:
         conv_module: Quantized Conv2d module
         x: Input tensor (FP32 or quantized)
+        module_name: Optional name for tracking/statistics
         
     Returns:
         Output tensor (FP32, dequantized)
@@ -160,10 +171,56 @@ def _call_quantized_conv2d(conv_module, x):
     # Call quantized Conv2d forward with quantized input
     try:
         output = conv_module.forward(x_quantized)
-    except Exception as forward_error:
-        # If forward fails with quantized input, the issue might be with the quantized Conv2d itself
-        # This could indicate the model wasn't properly converted
+        # Successfully used quantized operation
+        if _ENABLE_QUANT_STATS:
+            _QUANTIZATION_STATS['quantized_conv2d_success'] += 1
+            if module_name:
+                _QUANTIZATION_STATS[f'quantized_success_{module_name}'] += 1
+        # Dequantize output to FP32 before returning (activations need FP32)
+        if hasattr(output, 'q_scale') and hasattr(output, 'q_zero_point'):
+            return output.dequantize()
+        return output
+    except (NotImplementedError, RuntimeError) as forward_error:
+        # Check if it's a backend dispatch error
         error_msg = str(forward_error)
+        if ('quantized::conv2d' in error_msg or 'quantized::conv' in error_msg) and ('CPU' in error_msg or 'backend' in error_msg.lower()):
+            # Backend dispatch error - fallback to FP32 convolution
+            if _ENABLE_QUANT_STATS:
+                _QUANTIZATION_STATS['quantized_conv2d_fallback'] += 1
+                if module_name:
+                    _QUANTIZATION_STATS[f'quantized_fallback_{module_name}'] += 1
+            
+            input_fp32 = x_quantized.dequantize() if hasattr(x_quantized, 'q_scale') else x_quantized
+            
+            # Extract weights and bias from quantized Conv2d
+            if hasattr(conv_module, '_packed_params') and conv_module._packed_params is not None:
+                weight, bias = conv_module._packed_params
+                weight_fp32 = weight.dequantize()
+                bias_fp32 = bias.dequantize() if bias is not None else None
+                
+                # Perform FP32 convolution
+                output_fp32 = torch.nn.functional.conv2d(
+                    input_fp32, weight_fp32, bias_fp32,
+                    stride=conv_module.stride, padding=conv_module.padding,
+                    dilation=conv_module.dilation, groups=conv_module.groups
+                )
+                return output_fp32
+            else:
+                # If packed_params not available, try to get weight directly
+                if hasattr(conv_module, 'weight'):
+                    weight_fp32 = conv_module.weight.dequantize() if hasattr(conv_module.weight, 'q_scale') else conv_module.weight.float()
+                    bias_fp32 = None
+                    if hasattr(conv_module, 'bias') and conv_module.bias is not None:
+                        bias_fp32 = conv_module.bias.dequantize() if hasattr(conv_module.bias, 'q_scale') else conv_module.bias.float()
+                    
+                    output_fp32 = torch.nn.functional.conv2d(
+                        input_fp32, weight_fp32, bias_fp32,
+                        stride=conv_module.stride, padding=conv_module.padding,
+                        dilation=conv_module.dilation, groups=conv_module.groups
+                    )
+                    return output_fp32
+        
+        # If it's a different error, check for other known issues
         if 'Quantize only works on Float Tensor' in error_msg:
             # The quantized Conv2d is receiving a non-float tensor internally
             # This suggests the module structure might be incorrect
@@ -172,6 +229,7 @@ def _call_quantized_conv2d(conv_module, x):
                 f"This may indicate the model wasn't properly converted to INT8. "
                 f"Original error: {forward_error}"
             )
+        # Re-raise other errors
         raise RuntimeError(f"Failed to call quantized Conv2d forward: {forward_error}")
     
     # Output is quantized, dequantize it to FP32

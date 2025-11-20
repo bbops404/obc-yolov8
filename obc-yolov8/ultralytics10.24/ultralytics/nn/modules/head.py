@@ -12,7 +12,7 @@ from torch.nn.init import constant_, xavier_uniform_
 from ultralytics.utils.tal import TORCH_1_10, dist2bbox, make_anchors
 
 from .block import DFL, Proto
-from .conv import Conv
+from .conv import Conv, _safe_conv2d_call
 from .transformer import MLP, DeformableTransformerDecoder, DeformableTransformerDecoderLayer
 from .utils import bias_init_with_prob, linear_init_
 
@@ -40,11 +40,77 @@ class Detect(nn.Module):
         self.cv3 = nn.ModuleList(nn.Sequential(Conv(x, c3, 3), Conv(c3, c3, 3), nn.Conv2d(c3, self.nc, 1)) for x in ch)
         self.dfl = DFL(self.reg_max) if self.reg_max > 1 else nn.Identity()
 
+    def _forward_sequential_safe(self, seq_module, x):
+        """
+        Forward pass through a Sequential module, handling quantized Conv2d layers.
+        
+        Args:
+            seq_module: nn.Sequential module
+            x: Input tensor
+            
+        Returns:
+            Output tensor
+        """
+        for module in seq_module:
+            # Check if module is a direct Conv2d (regular or quantized)
+            is_conv2d = isinstance(module, nn.Conv2d) or (
+                hasattr(module, '__class__') and 
+                ('Conv2d' in module.__class__.__name__ or 'conv2d' in str(type(module)).lower())
+            )
+            
+            if is_conv2d:
+                # Direct Conv2d - use safe wrapper for quantized Conv2d
+                x = _safe_conv2d_call(module, x)
+            elif hasattr(module, 'conv') and hasattr(module.conv, '__call__'):
+                # It's a Conv module (or similar) - always use safe wrapper for inner conv
+                # This handles both regular and quantized Conv2d
+                try:
+                    conv_out = _safe_conv2d_call(module.conv, x)
+                    # Apply BN and activation if they exist
+                    if hasattr(module, 'bn'):
+                        conv_out = module.bn(conv_out)
+                    if hasattr(module, 'act'):
+                        conv_out = module.act(conv_out)
+                    x = conv_out
+                except Exception as e:
+                    # If safe wrapper fails, fall back to calling module normally
+                    # This will trigger the error handling below
+                    x = module(x)
+            else:
+                # Other modules - call with error handling as fallback
+                try:
+                    x = module(x)
+                except (NotImplementedError, RuntimeError) as e:
+                    error_msg = str(e)
+                    if ('quantized::' in error_msg or 'QuantizedCPU' in error_msg) and ('CPU' in error_msg or 'backend' in error_msg.lower()):
+                        # Backend dispatch error - try to handle it
+                        if hasattr(module, 'conv') and hasattr(module.conv, '__call__'):
+                            # It's a Conv module - try using _safe_conv2d_call directly on its inner conv
+                            inner_conv = module.conv
+                            conv_out = _safe_conv2d_call(inner_conv, x)
+                            # Apply BN and activation if they exist
+                            if hasattr(module, 'bn'):
+                                conv_out = module.bn(conv_out)
+                            if hasattr(module, 'act'):
+                                conv_out = module.act(conv_out)
+                            x = conv_out
+                        else:
+                            # Unknown module type - re-raise
+                            raise
+                    else:
+                        # Different error - re-raise
+                        raise
+        return x
+
     def forward(self, x):
         """Concatenates and returns predicted bounding boxes and class probabilities."""
         shape = x[0].shape  # BCHW
         for i in range(self.nl):
-            x[i] = torch.cat((self.cv2[i](x[i]), self.cv3[i](x[i])), 1)
+            # Handle quantized Conv2d in Sequential modules
+            # self.cv2[i] and self.cv3[i] are nn.Sequential containing Conv and nn.Conv2d
+            cv2_out = self._forward_sequential_safe(self.cv2[i], x[i])
+            cv3_out = self._forward_sequential_safe(self.cv3[i], x[i])
+            x[i] = torch.cat((cv2_out, cv3_out), 1)
         if self.training:
             return x
         elif self.dynamic or self.shape != shape:
