@@ -523,7 +523,34 @@ def train_ptq(
         num_batches=num_calibration_batches,
     )
     model.model = calibrated_model
+    
+    # --- START: Custom Code to Save Calibrated Model for QAT ---
+    
+    # Create necessary directories
+    save_dir_path = project_dir / run_name
+    save_dir_path.mkdir(parents=True, exist_ok=True)
+    weights_dir = save_dir_path / "weights"
+    weights_dir.mkdir(parents=True, exist_ok=True)
 
+    # Define the save path for the prepared/calibrated model (e.g., for QAT)
+    prepared_path = weights_dir / "prepared_for_qat.pt"
+    LOGGER.info(f"Saving calibrated model (prepared for QAT) to {prepared_path}")
+    
+    # Save the calibrated model state dictionary
+    # This state_dict includes the populated min/max statistics in the Observer modules
+    torch.save({
+        "model_state_dict": calibrated_model.state_dict(),
+        "yaml": detection_model.yaml,
+        "epoch": -1,  # PTQ doesn't have epochs
+        "best_fitness": None,
+        "date": datetime.now().isoformat(),
+        "ptq": True,
+        "backend": backend,
+        # IMPORTANT: Add a flag to easily identify this as a prepared QAT model
+        "qat_prepared": True, 
+    }, prepared_path)
+    
+    LOGGER.info(f"✓ Calibrated model saved to {prepared_path}")
     # Convert to INT8
     int8_path = None
     weights_dir: Optional[Path] = None
