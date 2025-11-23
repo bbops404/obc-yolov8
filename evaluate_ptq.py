@@ -463,7 +463,45 @@ def evaluate_int8_model(
     
     LOGGER.info("=" * 80)
     
-    return eval_results
+    # Extract speed information if available
+    speed_info = None
+    if eval_results:
+        # Try to get speed from results - YOLO returns results with .speed attribute
+        if hasattr(eval_results, 'speed'):
+            speed_info = eval_results.speed
+        elif isinstance(eval_results, dict):
+            speed_info = eval_results.get('speed', None)
+        # Speed is usually a dict with 'preprocess', 'inference', 'loss', 'postprocess' in ms
+    
+    # Calculate model size from quant_stats
+    model_size_mb = None
+    quantized_pct = 0
+    if quant_stats:
+        # Try to get estimated total size (INT8 + FP32)
+        model_size_mb = quant_stats.get('estimated_quantized_mb', None)
+        if model_size_mb is None:
+            # Fallback: calculate from quantized and FP32 weights
+            quantized_mb = quant_stats.get('quantized_params', 0) / 1e6  # INT8: 1 byte per param
+            fp32_mb = quant_stats.get('fp32_params', 0) * 4 / 1e6  # FP32: 4 bytes per param
+            if quantized_mb > 0 or fp32_mb > 0:
+                model_size_mb = quantized_mb + fp32_mb
+        
+        # Calculate quantization percentage
+        # Note: total_params in stats only counts FP32, effective total is quantized + fp32
+        quantized_params = quant_stats.get('quantized_params', 0)
+        fp32_params = quant_stats.get('fp32_params', 0)
+        effective_total = quantized_params + fp32_params
+        if effective_total > 0:
+            quantized_pct = (quantized_params / effective_total) * 100
+    
+    # Return results with additional metadata
+    return {
+        'eval_results': eval_results,
+        'quant_stats': quant_stats,
+        'speed': speed_info,
+        'model_size_mb': model_size_mb,
+        'quantized_pct': quantized_pct
+    }
 
 
 def main():

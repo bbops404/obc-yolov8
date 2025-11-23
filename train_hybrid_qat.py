@@ -1,8 +1,8 @@
 """Hybrid Quantization: PTQ + Targeted QAT Fine-tuning.
 
 This script loads a PTQ-calibrated model and applies Quantization-Aware Training
-(QAT) fine-tuning to sensitive modules only (BoTNet, CoordAtt). This is a short
-fine-tuning phase (1-5 epochs) that recovers accuracy lost during PTQ.
+(QAT) fine-tuning to sensitive modules only (default: BoTNet + CoordAtt). 
+This is a short fine-tuning phase (1-5 epochs) that recovers accuracy lost during PTQ.
 """
 
 from __future__ import annotations
@@ -738,7 +738,7 @@ def train_hybrid_qat(
     weight_decay: float = 1e-4,
     warmup_epochs: int = 0,
     sensitive_modules: Optional[List[str]] = None,
-    evaluate_before: bool = True,
+    evaluate_before: bool = False,
     evaluate_after: bool = True,
     save_best: bool = True,
     patience: int = 10,  # Early stopping patience
@@ -764,7 +764,7 @@ def train_hybrid_qat(
         momentum: SGD momentum (default: 0.9)
         weight_decay: Weight decay (default: 1e-4)
         warmup_epochs: Number of warmup epochs (default: 0)
-        sensitive_modules: List of module patterns to fine-tune (default: ['model.10', 'model.19', 'model.20', 'model.23', 'model.24'])
+        sensitive_modules: List of module patterns to fine-tune (default: ['model.10', 'model.19', 'model.23'] for BoTNet + CoordAtt)
         evaluate_before: Evaluate PTQ model before fine-tuning
         evaluate_after: Evaluate after each epoch
         save_best: Save best model based on mAP
@@ -779,9 +779,11 @@ def train_hybrid_qat(
     run_name = run_name or DEFAULT_NAME
     project_dir.mkdir(parents=True, exist_ok=True)
     
-    # Default sensitive modules (BoTNet and CoordAtt)
+    # Default sensitive modules (BoTNet + CoordAtt)
+    # CoordAtt modules are at model.20 and model.24
+    # BoTNet is at model.10
     if sensitive_modules is None:
-        sensitive_modules = ['model.10']  # BoTNet + CoordAtt indices
+        sensitive_modules = ['model.10', 'model.20', 'model.24']  # BoTNet + CoordAtt (default)
     
     LOGGER.info("=" * 80)
     LOGGER.info("HYBRID QAT: PTQ + Targeted Fine-tuning")
@@ -800,10 +802,12 @@ def train_hybrid_qat(
         raise FileNotFoundError(f"PTQ weights file not found: {ptq_weights_path}")
     
     # Check if int8.pt was provided - if so, try to use calibrated.pt instead for QAT
+    original_weights_path = ptq_weights_path
     if ptq_weights_path.name == "int8.pt":
         calibrated_path = ptq_weights_path.parent / "calibrated.pt"
         if calibrated_path.exists():
             LOGGER.info(f"⚠️  Detected int8.pt - switching to calibrated.pt for QAT (required for FakeQuantize)")
+            LOGGER.info(f"   Original path: {original_weights_path}")
             LOGGER.info(f"   Using: {calibrated_path}")
             ptq_weights_path = calibrated_path
         else:
@@ -811,13 +815,41 @@ def train_hybrid_qat(
             LOGGER.warning("   QAT requires calibrated model (with FakeQuantize), not INT8 model")
             LOGGER.warning("   Will attempt to use int8.pt but may encounter issues with GPU")
     
+    LOGGER.info(f"Loading checkpoint from: {ptq_weights_path}")
+    
     # Load checkpoint
     # Note: weights_only=False is needed for custom model classes (DetectionModel, etc.)
     checkpoint = torch.load(ptq_weights_path, map_location='cpu', weights_only=False)
     
+    # Explicit logging for checkpoint type detection
+    LOGGER.info("Checkpoint metadata:")
+    checkpoint_keys = list(checkpoint.keys())
+    LOGGER.info(f"  Checkpoint keys: {checkpoint_keys[:10]}..." if len(checkpoint_keys) > 10 else f"  Checkpoint keys: {checkpoint_keys}")
+    
+    is_ptq = checkpoint.get('ptq', False)
+    is_calibrated = checkpoint.get('calibrated', False)
+    is_qat_prepared = checkpoint.get('qat_prepared', False)
+    is_int8 = checkpoint.get('int8', False)
+    is_hybrid_qat = checkpoint.get('hybrid_qat', False)
+    
+    LOGGER.info(f"  PTQ flag:        {is_ptq}")
+    LOGGER.info(f"  Calibrated flag: {is_calibrated}")
+    LOGGER.info(f"  QAT prepared:    {is_qat_prepared}")
+    LOGGER.info(f"  INT8 flag:       {is_int8}")
+    LOGGER.info(f"  Hybrid QAT flag: {is_hybrid_qat}")
+    
     # Check if this is a PTQ checkpoint
-    if not checkpoint.get('ptq', False):
+    if not is_ptq:
         LOGGER.warning("⚠️  Warning: Checkpoint doesn't have 'ptq' flag. Are you sure this is a PTQ model?")
+    
+    # Verify checkpoint type matches expectations
+    if is_int8 and not is_calibrated:
+        LOGGER.warning("⚠️  Warning: Checkpoint is marked as INT8 but not calibrated!")
+        LOGGER.warning("   This may cause issues - INT8 models cannot be used for QAT training")
+        LOGGER.warning("   Expected: calibrated=True, int8=False (calibrated.pt)")
+    
+    if is_calibrated:
+        LOGGER.info("✓ Checkpoint is calibrated - suitable for hybrid QAT")
     
     # Load model - build a base YOLO model from the config and then attach
     # or load weights depending on what the checkpoint contains. Be explicit
@@ -932,10 +964,10 @@ def train_hybrid_qat(
             else:
                 LOGGER.info("✓ Verified: No real quantized Conv2d modules after loading state_dict")
             
-            # Now selectively convert only sensitive modules (BoTNet) from Observers to FakeQuantize
+            # Now selectively convert only sensitive modules (BoTNet + CoordAtt) from Observers to FakeQuantize
             # Default sensitive modules if not provided
             if sensitive_modules is None:
-                sensitive_modules = ['model.10']  # BoTNet
+                sensitive_modules = ['model.10', 'model.20', 'model.24']  # BoTNet + CoordAtt (default)
             
             LOGGER.info(f"  Converting Observers to FakeQuantize for sensitive modules: {sensitive_modules}")
             converted = convert_observers_to_fakequantize_selectively(
@@ -996,6 +1028,72 @@ def train_hybrid_qat(
             LOGGER.info("✓ Hybrid QAT setup complete:")
             LOGGER.info(f"  - {len(converted)} modules converted to QAT (FakeQuantize) for training")
             LOGGER.info("  - Other modules remain as PTQ (Observers with frozen scales)")
+            
+            # CRITICAL: Validate model after Observer→FakeQuantize conversion
+            # This establishes baseline mAP before training to detect conversion issues
+            LOGGER.info("\n" + "=" * 80)
+            LOGGER.info("Validating model after Observer→FakeQuantize conversion...")
+            LOGGER.info("=" * 80)
+            try:
+                # Temporarily set model to eval mode for validation
+                detection_model.eval()
+                with torch.no_grad():
+                    LOGGER.info("Running validation to establish post-conversion baseline...")
+                    validation_results = model.val(
+                        data=str(data_cfg),
+                        imgsz=imgsz,
+                        batch=1,  # Use batch=1 for quick validation
+                        device=device_str,
+                        plots=False,
+                        save=False,
+                        verbose=False
+                    )
+                    
+                    if validation_results:
+                        # Extract mAP from validation results
+                        post_conv_map = None
+                        post_conv_map50 = None
+                        
+                        if hasattr(validation_results, 'box'):
+                            post_conv_map = getattr(validation_results.box, 'map', None)
+                            post_conv_map50 = getattr(validation_results.box, 'map50', None)
+                        elif hasattr(validation_results, 'map'):
+                            post_conv_map = validation_results.map
+                            post_conv_map50 = getattr(validation_results, 'map50', None)
+                        elif hasattr(validation_results, 'metrics'):
+                            metrics = validation_results.metrics
+                            if isinstance(metrics, dict):
+                                post_conv_map = metrics.get('map', None) or metrics.get('mAP50-95(B)', None)
+                                post_conv_map50 = metrics.get('map50', None) or metrics.get('mAP50(B)', None)
+                        
+                        if post_conv_map is not None:
+                            LOGGER.info(f"Post-conversion mAP@0.5:0.95: {post_conv_map:.4f} ({post_conv_map*100:.2f}%)")
+                            if post_conv_map50 is not None:
+                                LOGGER.info(f"Post-conversion mAP@0.5:      {post_conv_map50:.4f} ({post_conv_map50*100:.2f}%)")
+                            
+                            # Warn if mAP is significantly lower than expected
+                            if post_conv_map < 0.5:
+                                LOGGER.warning(f"⚠️  Post-conversion mAP ({post_conv_map:.4f}) is unexpectedly low!")
+                                LOGGER.warning("   Expected mAP should be close to PTQ baseline (~0.80)")
+                                LOGGER.warning("   This may indicate an issue with Observer→FakeQuantize conversion")
+                            else:
+                                LOGGER.info(f"✓ Post-conversion mAP looks reasonable (expected ~0.80 from PTQ)")
+                        else:
+                            LOGGER.warning("Could not extract mAP from validation results")
+                    else:
+                        LOGGER.warning("Validation returned no results")
+                
+                # CRITICAL: Set model back to train mode immediately after validation
+                detection_model.train()
+                LOGGER.info("✓ Model set back to train mode after validation")
+                
+            except Exception as e:
+                LOGGER.warning(f"Post-conversion validation failed: {e}")
+                LOGGER.warning("Continuing with training anyway...")
+                import traceback
+                LOGGER.debug(traceback.format_exc())
+                # Ensure model is in train mode even if validation failed
+                detection_model.train()
         else:
             # Not a calibrated model - just prepare for QAT normally
             LOGGER.info("Preparing model for QAT before loading state_dict...")
@@ -1199,9 +1297,9 @@ def train_hybrid_qat(
         # INT8 models are already on CPU (loaded with map_location='cpu')
         LOGGER.info(f"Model kept on CPU (INT8 models cannot use GPU)")
     # Evaluate PTQ baseline (before fine-tuning)
-    # DISABLED: Evaluation causes inference tensor issues and is not needed for QAT
+    # Re-enabled with proper state management to establish ground truth
     ptq_map = None
-    if False and evaluate_before:  # Disabled to avoid inference tensor issues
+    if evaluate_before:
         LOGGER.info("\n" + "=" * 80)
         LOGGER.info("Evaluating PTQ baseline (before fine-tuning)...")
         LOGGER.info("=" * 80)
@@ -1213,20 +1311,49 @@ def train_hybrid_qat(
             for k, v in detection_model.state_dict().items()
         }
         
+        # Use CPU for PTQ baseline evaluation (required for qnnpack backend compatibility)
+        eval_device = "cpu"
+        if eval_device != device_str:
+            LOGGER.info(f"Using {eval_device} for PTQ baseline evaluation (required for quantized model inference)")
+        
         try:
             eval_results = model.val(
                 data=str(data_cfg),
                 imgsz=imgsz,
                 batch=batch or 1,
-                device=device_str,
+                device=eval_device,
                 plots=False,
                 save=False,
                 verbose=True
             )
             
             if eval_results:
-                ptq_map = getattr(eval_results, 'map', None) or getattr(eval_results, 'metrics', {}).get('map', None)
-                map50 = getattr(eval_results, 'map50', None) or getattr(eval_results, 'metrics', {}).get('map50', None)
+                # Try multiple ways to extract mAP metrics
+                ptq_map = None
+                map50 = None
+                
+                # Method 1: Check if it has a 'box' attribute (most common for DetMetrics)
+                if hasattr(eval_results, 'box'):
+                    ptq_map = getattr(eval_results.box, 'map', None)
+                    map50 = getattr(eval_results.box, 'map50', None)
+                
+                # Method 2: Direct attributes
+                if ptq_map is None and hasattr(eval_results, 'map'):
+                    ptq_map = eval_results.map
+                if map50 is None and hasattr(eval_results, 'map50'):
+                    map50 = eval_results.map50
+                
+                # Method 3: Metrics dictionary
+                if ptq_map is None and hasattr(eval_results, 'metrics'):
+                    metrics = eval_results.metrics
+                    if isinstance(metrics, dict):
+                        ptq_map = metrics.get('map', None) or metrics.get('mAP50-95(B)', None)
+                        map50 = metrics.get('map50', None) or metrics.get('mAP50(B)', None)
+                
+                # Method 4: Try accessing as dict
+                if ptq_map is None and isinstance(eval_results, dict):
+                    ptq_map = eval_results.get('map', None) or eval_results.get('mAP50-95(B)', None)
+                    map50 = eval_results.get('map50', None) or eval_results.get('mAP50(B)', None)
                 
                 LOGGER.info("\nPTQ Baseline Metrics:")
                 if map50 is not None:
@@ -1235,6 +1362,8 @@ def train_hybrid_qat(
                     LOGGER.info(f"  mAP@0.5:0.95: {ptq_map:.4f} ({ptq_map*100:.2f}%)")
                     LOGGER.info(f"\nTarget: Recover at least 2-3% mAP through fine-tuning")
                     LOGGER.info(f"Expected final mAP: ~{(ptq_map + 0.025):.4f} ({(ptq_map + 0.025)*100:.2f}%)")
+                else:
+                    LOGGER.warning("Could not extract mAP from PTQ baseline evaluation")
         except Exception as e:
             LOGGER.warning(f"PTQ baseline evaluation failed: {e}")
             LOGGER.info("Continuing with fine-tuning anyway...")
@@ -1242,15 +1371,22 @@ def train_hybrid_qat(
             # CRITICAL: Reload model state to clear inference tensors created during evaluation
             # We need to manually replace parameters (not copy inplace) to avoid inference tensor issues
             LOGGER.info("Reloading model state to clear inference tensors...")
+            
+            # CRITICAL: Explicitly exit any inference mode context
+            torch.set_grad_enabled(True)
+            
             with torch.enable_grad():
                 # Manually replace each parameter to avoid inplace updates to inference tensors
                 # We need to replace the Parameter object itself, not just the data
+                replaced_params = 0
                 for name, param in detection_model.named_parameters():
                     if name in model_state_before_eval:
                         saved_param = model_state_before_eval[name]
                         if isinstance(saved_param, torch.Tensor):
-                            # Clone the saved parameter
+                            # Clone the saved parameter - ensure it's detached from inference mode
                             cloned_param = saved_param.clone().detach()
+                            # Preserve requires_grad setting
+                            cloned_param.requires_grad_(param.requires_grad)
                             # Create a new Parameter object to replace the inference tensor
                             new_param = nn.Parameter(cloned_param, requires_grad=param.requires_grad)
                             
@@ -1261,9 +1397,16 @@ def train_hybrid_qat(
                             for part in parts[:-1]:
                                 module = getattr(module, part)
                             param_name = parts[-1]
-                            module._parameters[param_name] = new_param
+                            if hasattr(module, '_parameters') and param_name in module._parameters:
+                                module._parameters[param_name] = new_param
+                                replaced_params += 1
+                            else:
+                                # Try direct assignment if _parameters dict doesn't exist
+                                setattr(module, param_name, new_param)
+                                replaced_params += 1
                 
                 # Also handle buffers (like BatchNorm running_mean, running_var)
+                replaced_buffers = 0
                 for name, buffer in detection_model.named_buffers():
                     if name in model_state_before_eval:
                         saved_buffer = model_state_before_eval[name]
@@ -1275,11 +1418,33 @@ def train_hybrid_qat(
                             for part in parts[:-1]:
                                 module = getattr(module, part)
                             buffer_name = parts[-1]
-                            module._buffers[buffer_name] = cloned_buffer
+                            if hasattr(module, '_buffers') and buffer_name in module._buffers:
+                                module._buffers[buffer_name] = cloned_buffer
+                                replaced_buffers += 1
+                            else:
+                                # Try direct assignment if _buffers dict doesn't exist
+                                setattr(module, buffer_name, cloned_buffer)
+                                replaced_buffers += 1
+                
+                if replaced_params > 0 or replaced_buffers > 0:
+                    LOGGER.info(f"  Replaced {replaced_params} parameters and {replaced_buffers} buffers")
                             
-            detection_model.train()  # Ensure training mode
-            torch.set_grad_enabled(True)  # Ensure gradients enabled
-            LOGGER.info("✓ Model state reloaded - ready for QAT training")
+            # CRITICAL: Ensure model is in training mode and gradients are enabled
+            detection_model.train()
+            torch.set_grad_enabled(True)
+            
+            # Verify no inference tensors remain
+            inference_count = 0
+            for name, param in detection_model.named_parameters():
+                is_inference = getattr(param, 'is_inference', False)
+                if is_inference:
+                    inference_count += 1
+                    LOGGER.warning(f"  ⚠️  Parameter {name} is still an inference tensor after cleanup")
+            
+            if inference_count == 0:
+                LOGGER.info("✓ Model state reloaded - no inference tensors detected - ready for QAT training")
+            else:
+                LOGGER.warning(f"⚠️  {inference_count} inference tensors still detected - may cause issues")
 
     # Prepare model for QAT fine-tuning
     LOGGER.info("\n" + "=" * 80)
@@ -1378,7 +1543,7 @@ def train_hybrid_qat(
     
     # Selectively freeze observers - keep enabled only for QAT modules
     # Use the same patterns as sensitive_modules for consistency
-    qat_modules = sensitive_modules if sensitive_modules else ['model.10']  # BoTNet
+    qat_modules = sensitive_modules if sensitive_modules else ['model.10', 'model.20', 'model.24']  # BoTNet + CoordAtt (default)
     LOGGER.info(f"Selectively freezing observers - keeping enabled for QAT modules: {qat_modules}")
     LOGGER.info("  (All other modules will have frozen PTQ scales)")
     disabled_count, enabled_count = freeze_observers_selectively(
@@ -1389,7 +1554,7 @@ def train_hybrid_qat(
     LOGGER.info(f"  Disabled observers: {disabled_count} modules (PTQ scales frozen)")
     LOGGER.info(f"  Enabled observers:  {enabled_count} modules (QAT will update scales)")
     
-    # CRITICAL: Verify hybrid setup - BoTNet should have FakeQuantize, others should have Observers
+    # CRITICAL: Verify hybrid setup - Sensitive modules (CoordAtt/BoTNet) should have FakeQuantize, others should have Observers
     LOGGER.info("\n" + "=" * 80)
     LOGGER.info("Verifying Hybrid QAT Setup...")
     LOGGER.info("=" * 80)
@@ -1446,28 +1611,36 @@ def train_hybrid_qat(
         if len(ptq_modules_list) > 10:
             LOGGER.info(f"  ... and {len(ptq_modules_list) - 10} more")
     
-    # CRITICAL: Verify query/key/value Conv2d modules are QAT Conv2d, not regular Conv2d
-    LOGGER.info("\nVerifying query/key/value Conv2d modules are QAT Conv2d...")
+    # CRITICAL: Verify query/key/value Conv2d modules in sensitive modules are QAT Conv2d
+    # Only check modules within sensitive_modules - others should remain PTQ
+    LOGGER.info(f"\nVerifying query/key/value Conv2d modules in sensitive modules {sensitive_modules} are QAT Conv2d...")
     query_key_value_issues = []
     for name, module in detection_model.named_modules():
         if ('query' in name or 'key' in name or 'value' in name) and isinstance(module, nn.Conv2d):
-            # Check if it's QAT Conv2d (has weight_fake_quant)
-            is_qat = hasattr(module, 'weight_fake_quant')
-            is_real_quantized = (
-                hasattr(module, '_packed_params') or
-                ('quantized' in type(module).__module__.lower() and 'qat' not in type(module).__module__.lower())
-            )
+            # Only check if this module is within one of the sensitive module patterns
+            is_in_sensitive = any(name.startswith(pattern) for pattern in sensitive_modules)
             
-            if not is_qat:
-                if is_real_quantized:
-                    query_key_value_issues.append(f"{name} (❌ real quantized Conv2d, should be QAT Conv2d)")
+            if is_in_sensitive:
+                # Check if it's QAT Conv2d (has weight_fake_quant)
+                is_qat = hasattr(module, 'weight_fake_quant')
+                is_real_quantized = (
+                    hasattr(module, '_packed_params') or
+                    ('quantized' in type(module).__module__.lower() and 'qat' not in type(module).__module__.lower())
+                )
+                
+                if not is_qat:
+                    if is_real_quantized:
+                        query_key_value_issues.append(f"{name} (❌ real quantized Conv2d, should be QAT Conv2d)")
+                    else:
+                        query_key_value_issues.append(f"{name} (❌ regular Conv2d, should be QAT Conv2d with weight_fake_quant)")
                 else:
-                    query_key_value_issues.append(f"{name} (❌ regular Conv2d, should be QAT Conv2d with weight_fake_quant)")
+                    LOGGER.debug(f"  ✓ {name} is QAT Conv2d (has weight_fake_quant)")
             else:
-                LOGGER.debug(f"  ✓ {name} is QAT Conv2d (has weight_fake_quant)")
+                # Module is not in sensitive modules - it should remain PTQ (regular Conv2d is fine)
+                LOGGER.debug(f"  ✓ {name} is PTQ (not in sensitive modules, regular Conv2d is correct)")
     
     if query_key_value_issues:
-        LOGGER.error(f"\n❌ Found {len(query_key_value_issues)} query/key/value Conv2d modules that are NOT QAT Conv2d:")
+        LOGGER.error(f"\n❌ Found {len(query_key_value_issues)} query/key/value Conv2d modules in sensitive modules that are NOT QAT Conv2d:")
         for issue in query_key_value_issues:
             LOGGER.error(f"  {issue}")
         LOGGER.error("  These modules must be QAT Conv2d (torch.ao.nn.qat.modules.conv.Conv2d) for QAT training")
@@ -1476,16 +1649,17 @@ def train_hybrid_qat(
             "These must be converted to QAT Conv2d for proper QAT training."
         )
     else:
-        LOGGER.info("✓ All query/key/value Conv2d modules are QAT Conv2d")
+        LOGGER.info(f"✓ All query/key/value Conv2d modules in sensitive modules {sensitive_modules} are QAT Conv2d")
+        LOGGER.info("  (Query/key/value modules outside sensitive modules correctly remain PTQ)")
     
-    # CRITICAL: Comprehensive verification - List ALL QAT Conv2d modules and verify they are only in BoTNet
+    # CRITICAL: Comprehensive verification - List ALL QAT Conv2d modules and verify they are only in sensitive modules
     LOGGER.info("\n" + "=" * 80)
     LOGGER.info("Comprehensive QAT Module Verification")
     LOGGER.info("=" * 80)
-    LOGGER.info("Verifying that ONLY BoTNet (model.10) modules are QAT...")
+    LOGGER.info(f"Verifying that ONLY sensitive modules {sensitive_modules} are QAT...")
     
     all_qat_conv2d_modules = []
-    qat_modules_outside_botnet = []
+    qat_modules_outside_sensitive = []
     
     for name, module in detection_model.named_modules():
         # Check if it's a Conv2d module
@@ -1505,28 +1679,29 @@ def train_hybrid_qat(
             
             if is_qat_conv2d:
                 all_qat_conv2d_modules.append(name)
-                # Verify it's within model.10 (BoTNet)
-                if not name.startswith('model.10'):
-                    qat_modules_outside_botnet.append(name)
+                # Verify it's within one of the sensitive module patterns
+                is_in_sensitive = any(name.startswith(pattern) for pattern in sensitive_modules)
+                if not is_in_sensitive:
+                    qat_modules_outside_sensitive.append(name)
     
     LOGGER.info(f"\nFound {len(all_qat_conv2d_modules)} QAT Conv2d modules:")
     for mod_name in all_qat_conv2d_modules:
-        is_in_botnet = mod_name.startswith('model.10')
-        status = "✓" if is_in_botnet else "❌"
+        is_in_sensitive = any(mod_name.startswith(pattern) for pattern in sensitive_modules)
+        status = "✓" if is_in_sensitive else "❌"
         LOGGER.info(f"  {status} {mod_name}")
     
-    if qat_modules_outside_botnet:
-        LOGGER.error(f"\n❌ ERROR: Found {len(qat_modules_outside_botnet)} QAT Conv2d modules OUTSIDE of BoTNet (model.10):")
-        for mod_name in qat_modules_outside_botnet:
+    if qat_modules_outside_sensitive:
+        LOGGER.error(f"\n❌ ERROR: Found {len(qat_modules_outside_sensitive)} QAT Conv2d modules OUTSIDE of sensitive modules {sensitive_modules}:")
+        for mod_name in qat_modules_outside_sensitive:
             LOGGER.error(f"  - {mod_name}")
-        LOGGER.error("  These modules should NOT be QAT - only BoTNet (model.10) should be QAT!")
+        LOGGER.error(f"  These modules should NOT be QAT - only {sensitive_modules} should be QAT!")
         raise RuntimeError(
-            f"Found {len(qat_modules_outside_botnet)} QAT Conv2d modules outside of BoTNet. "
-            f"Only model.10 (BoTNet) should be QAT. QAT modules found: {qat_modules_outside_botnet}"
+            f"Found {len(qat_modules_outside_sensitive)} QAT Conv2d modules outside of sensitive modules. "
+            f"Only {sensitive_modules} should be QAT. QAT modules found: {qat_modules_outside_sensitive}"
         )
     else:
-        LOGGER.info(f"\n✓ Verification passed: All {len(all_qat_conv2d_modules)} QAT Conv2d modules are within BoTNet (model.10)")
-        LOGGER.info("  This confirms that ONLY BoTNet is using QAT, all other modules are PTQ (Observers)")
+        LOGGER.info(f"\n✓ Verification passed: All {len(all_qat_conv2d_modules)} QAT Conv2d modules are within sensitive modules {sensitive_modules}")
+        LOGGER.info("  This confirms that ONLY sensitive modules are using QAT, all other modules are PTQ (Observers)")
     
     LOGGER.info("=" * 80)
     
@@ -1700,6 +1875,35 @@ def train_hybrid_qat(
     best_epoch = -1
     epochs_without_improvement = 0
     
+    # CRITICAL: Before training starts, ensure ALL parameters are not inference tensors
+    # This is essential - any inference tensors will cause "cannot be saved for backward" errors
+    LOGGER.info("\n" + "=" * 80)
+    LOGGER.info("Pre-training Parameter Check: Replacing Inference Tensors")
+    LOGGER.info("=" * 80)
+    inference_param_count = 0
+    with torch.enable_grad():
+        for name, param in detection_model.named_parameters():
+            # Check if parameter is an inference tensor
+            is_inference = getattr(param, 'is_inference', False)
+            if is_inference:
+                inference_param_count += 1
+                # Replace with a regular parameter
+                cloned_param = param.clone().detach().requires_grad_(param.requires_grad)
+                parts = name.split('.')
+                module = detection_model
+                for part in parts[:-1]:
+                    module = getattr(module, part)
+                param_name = parts[-1]
+                module._parameters[param_name] = nn.Parameter(cloned_param, requires_grad=param.requires_grad)
+                if inference_param_count <= 10:  # Log first 10
+                    LOGGER.info(f"  Replaced inference tensor: {name}")
+    
+    if inference_param_count > 0:
+        LOGGER.info(f"✓ Replaced {inference_param_count} inference tensor parameters before training")
+    else:
+        LOGGER.info("✓ No inference tensor parameters found - all parameters ready for training")
+    LOGGER.info("=" * 80)
+    
     for epoch in range(epochs):
         LOGGER.info(f"\n{'='*80}")
         LOGGER.info(f"Epoch {epoch+1}/{epochs}")
@@ -1707,12 +1911,76 @@ def train_hybrid_qat(
         
         # Training phase
         detection_model.train()
+        
+        # CRITICAL: Before each epoch, ensure all parameters are not inference tensors
+        # This is necessary because evaluation might have created inference tensors
+        # Run this check every epoch, not just the first one
+        if epoch == 0:
+            LOGGER.info("Checking and replacing any inference tensor parameters...")
+        else:
+            LOGGER.debug("Checking for inference tensor parameters...")
+        
+        inference_param_count = 0
+        inference_buffer_count = 0
+        with torch.enable_grad():
+            # Check and replace inference tensor parameters
+            for name, param in detection_model.named_parameters():
+                # Check if parameter is an inference tensor
+                # Inference tensors have is_inference attribute (PyTorch 2.0+)
+                is_inference = getattr(param, 'is_inference', False)
+                if is_inference:
+                    inference_param_count += 1
+                    # Replace with a regular parameter
+                    cloned_param = param.clone().detach().requires_grad_(param.requires_grad)
+                    parts = name.split('.')
+                    module = detection_model
+                    for part in parts[:-1]:
+                        module = getattr(module, part)
+                    param_name = parts[-1]
+                    if hasattr(module, '_parameters') and param_name in module._parameters:
+                        module._parameters[param_name] = nn.Parameter(cloned_param, requires_grad=param.requires_grad)
+                    else:
+                        # Fallback: try direct assignment
+                        setattr(module, param_name, nn.Parameter(cloned_param, requires_grad=param.requires_grad))
+            
+            # Also check and replace inference tensor buffers
+            for name, buffer in detection_model.named_buffers():
+                is_inference = getattr(buffer, 'is_inference', False)
+                if is_inference:
+                    inference_buffer_count += 1
+                    cloned_buffer = buffer.clone().detach()
+                    parts = name.split('.')
+                    module = detection_model
+                    for part in parts[:-1]:
+                        module = getattr(module, part)
+                    buffer_name = parts[-1]
+                    if hasattr(module, '_buffers') and buffer_name in module._buffers:
+                        module._buffers[buffer_name] = cloned_buffer
+                    else:
+                        # Fallback: try direct assignment
+                        setattr(module, buffer_name, cloned_buffer)
+        
+        if inference_param_count > 0 or inference_buffer_count > 0:
+            if epoch == 0:
+                LOGGER.info(f"  Replaced {inference_param_count} inference tensor parameters and {inference_buffer_count} buffers")
+            else:
+                LOGGER.warning(f"  ⚠️  Found and replaced {inference_param_count} inference tensor parameters and {inference_buffer_count} buffers in epoch {epoch+1}")
+        else:
+            if epoch == 0:
+                LOGGER.info("  No inference tensor parameters found")
+        
         running_loss = 0.0
         num_batches = 0
         
         pbar = tqdm(train_loader, desc=f"Training Epoch {epoch+1}/{epochs}")
         for batch_idx, batch_data in enumerate(pbar):
+            # CRITICAL: Ensure we're not in inference mode BEFORE any tensor operations
+            # This prevents tensors from becoming inference tensors during .to() or .float() operations
+            torch.set_grad_enabled(True)
+            detection_model.train()
+            
             # Move batch data to device
+            # Note: Even with grad enabled, we still clone to ensure clean tensors
             images = batch_data['img'].to(torch_device, non_blocking=True).float() / 255.0
             
             # Move other batch data to device if needed
@@ -1727,7 +1995,55 @@ def train_hybrid_qat(
             try:
                 # CRITICAL: Clone input images to ensure they're not inference tensors
                 # This prevents "Inference tensors cannot be saved for backward" errors
+                # Always clone and detach to break any inference tensor links, then require grad
+                # This ensures we have a fresh tensor that can participate in autograd
+                # 
+                # Note: We always clone regardless of inference tensor status because:
+                # 1. Cloning is cheap and ensures clean tensors
+                # 2. The is_inference check may not be reliable across different PyTorch versions
+                # 3. Some model architectures (like CoordAtt) may be more sensitive to inference tensors
+                #    than others (like BoTNet), even with the same data loader
+                # 
+                # Check if images are inference tensors for logging purposes only
+                # (We clone anyway, so this is just informational)
+                is_inference_tensor = False
+                if isinstance(images, torch.Tensor):
+                    # More robust check: verify it's actually a PyTorch tensor with the attribute
+                    try:
+                        is_inference_tensor = getattr(images, 'is_inference', False)
+                    except (AttributeError, RuntimeError):
+                        is_inference_tensor = False
+                
+                if is_inference_tensor and batch_idx == 0:
+                    LOGGER.warning(f"Input images detected as inference tensors (will clone them - this is normal after evaluation)...")
+                
                 images = images.clone().detach().requires_grad_(True)
+                
+                # CRITICAL: Also ensure other batch data tensors are properly detached
+                # (They don't need gradients, but should not be inference tensors)
+                if 'cls' in batch_data and isinstance(batch_data['cls'], torch.Tensor):
+                    if hasattr(batch_data['cls'], 'is_inference') and batch_data['cls'].is_inference:
+                        batch_data['cls'] = batch_data['cls'].clone().detach()
+                if 'bboxes' in batch_data and isinstance(batch_data['bboxes'], torch.Tensor):
+                    if hasattr(batch_data['bboxes'], 'is_inference') and batch_data['bboxes'].is_inference:
+                        batch_data['bboxes'] = batch_data['bboxes'].clone().detach()
+                
+                # CRITICAL: Check and replace any inference tensor parameters right before forward pass
+                # This is a safety check in case parameters became inference tensors during the epoch
+                if batch_idx % 50 == 0:  # Check every 50 batches to avoid performance hit
+                    with torch.enable_grad():
+                        for name, param in detection_model.named_parameters():
+                            if param.requires_grad:  # Only check trainable parameters
+                                is_inference = getattr(param, 'is_inference', False)
+                                if is_inference:
+                                    # Replace with a regular parameter
+                                    cloned_param = param.clone().detach().requires_grad_(True)
+                                    parts = name.split('.')
+                                    module = detection_model
+                                    for part in parts[:-1]:
+                                        module = getattr(module, part)
+                                    param_name = parts[-1]
+                                    module._parameters[param_name] = nn.Parameter(cloned_param, requires_grad=True)
                 
                 # CRITICAL: Before forward pass, verify model still has FakeQuantize, not INT8
                 # The "derivative for dequantize" error means real quantized ops are in the graph
@@ -1875,7 +2191,49 @@ def train_hybrid_qat(
                         LOGGER.info("  Patched tensor.dequantize() to detect real quantized tensors")
                 
                 # YOLO forward pass
-                outputs = detection_model(images)
+                # CRITICAL: Use _predict_once directly to avoid inference mode in predict()
+                # This bypasses the predict() method which might use inference mode
+                # We're in training mode, so this is safe
+                try:
+                    with torch.enable_grad():
+                        outputs = detection_model._predict_once(images, profile=False, visualize=False)
+                except RuntimeError as e:
+                    error_msg = str(e)
+                    if "Inference tensors cannot be saved for backward" in error_msg:
+                        LOGGER.warning(f"Batch {batch_idx} failed: Inference tensor error detected")
+                        LOGGER.warning("  Attempting to fix by cloning input and cleaning parameters...")
+                        
+                        # Try to fix by ensuring images are properly cloned
+                        images = images.clone().detach().requires_grad_(True)
+                        
+                        # Also try to clean up any inference tensor parameters
+                        with torch.enable_grad():
+                            for name, param in detection_model.named_parameters():
+                                if param.requires_grad:
+                                    is_inference = getattr(param, 'is_inference', False)
+                                    if is_inference:
+                                        # Replace with a regular parameter
+                                        cloned_param = param.clone().detach().requires_grad_(True)
+                                        parts = name.split('.')
+                                        module = detection_model
+                                        for part in parts[:-1]:
+                                            module = getattr(module, part)
+                                        param_name = parts[-1]
+                                        if hasattr(module, '_parameters') and param_name in module._parameters:
+                                            module._parameters[param_name] = nn.Parameter(cloned_param, requires_grad=True)
+                        
+                        # Retry forward pass
+                        try:
+                            with torch.enable_grad():
+                                outputs = detection_model._predict_once(images, profile=False, visualize=False)
+                            LOGGER.info(f"  ✓ Successfully recovered from inference tensor error")
+                        except RuntimeError as e2:
+                            LOGGER.error(f"  ✗ Failed to recover: {e2}")
+                            LOGGER.error(f"Batch {batch_idx} failed: {error_msg}")
+                            continue
+                    else:
+                        # Re-raise if it's not an inference tensor error
+                        raise
                 
                 # Check if real quantize was called (log on first batch, but keep checking)
                 if batch_idx == 0 and epoch == 0:
@@ -2025,7 +2383,7 @@ def train_hybrid_qat(
                 LOGGER.info("  Monitor loss trend (should decrease over epochs)")
             
             LOGGER.info("\nQAT fine-tuning context:")
-            LOGGER.info("  - Only BoTNet (model.10) modules are being fine-tuned")
+            LOGGER.info(f"  - Only sensitive modules {sensitive_modules} are being fine-tuned")
             LOGGER.info("  - Other modules remain frozen (PTQ with Observers)")
             LOGGER.info("  - Loss may be higher initially but should stabilize/decrease")
             LOGGER.info("=" * 80)
@@ -2069,15 +2427,29 @@ def train_hybrid_qat(
         # Enable evaluation after each epoch to track mAP progress
         if evaluate_after:
             LOGGER.info(f"\nEvaluating epoch {epoch+1}...")
+            
+            # CRITICAL: Save model state before evaluation to reload after (avoids inference tensor issues)
+            # Clone all tensors in state_dict to avoid inference tensor issues
+            model_state_before_eval = {
+                k: v.clone().detach() if isinstance(v, torch.Tensor) else v
+                for k, v in detection_model.state_dict().items()
+            }
+            
             try:
                 # Ensure model is in eval mode for evaluation
                 detection_model.eval()
                 with torch.no_grad():
+                    # Use GPU for evaluation (faster than CPU)
+                    # Note: Even with qnnpack/fbgemm backends, evaluation can run on GPU
+                    # as the model is still in FakeQuantize mode (not converted to INT8 yet)
+                    eval_device = device_str
+                    LOGGER.info(f"Using {eval_device} for evaluation")
+                    
                     eval_results = model.val(
                         data=str(data_cfg),
                         imgsz=imgsz,
                         batch=batch or 16,
-                        device=device_str,
+                        device=eval_device,
                         plots=False,
                         save=False,
                         verbose=False
@@ -2159,11 +2531,105 @@ def train_hybrid_qat(
                             LOGGER.debug(f"  eval_results attributes: {list(eval_results.__dict__.keys())}")
                 else:
                     LOGGER.warning(f"Evaluation returned None or empty results")
+                
+                # CRITICAL: Set model back to train mode immediately after evaluation
+                # This is essential - FakeQuantize behaves differently in train vs eval mode
+                detection_model.train()
+                LOGGER.debug("Model set back to train mode after evaluation")
+                
+                # CRITICAL: Restore FakeQuantize state for QAT modules
+                # Ensure fake_quant_enabled and observer_enabled are correct for training
+                from torch.ao.quantization import FakeQuantize
+                fakequant_state_restored = 0
+                for name, module in detection_model.named_modules():
+                    if isinstance(module, FakeQuantize):
+                        # Check if this is a QAT module (should have observer enabled)
+                        is_qat_module = any(pattern in name for pattern in qat_modules)
+                        
+                        try:
+                            # Ensure fake quantization is enabled (required for training)
+                            if hasattr(module, 'enable_fake_quant'):
+                                module.enable_fake_quant()
+                            elif hasattr(module, 'fake_quant_enabled'):
+                                module.fake_quant_enabled = True
+                            
+                            # For QAT modules, ensure observer is enabled (to update scales during training)
+                            if is_qat_module:
+                                if hasattr(module, 'enable_observer'):
+                                    module.enable_observer()
+                                elif hasattr(module, 'observer_enabled'):
+                                    module.observer_enabled = True
+                            
+                            fakequant_state_restored += 1
+                        except Exception as e:
+                            LOGGER.debug(f"Could not restore FakeQuantize state for {name}: {e}")
+                
+                if fakequant_state_restored > 0:
+                    LOGGER.debug(f"Restored FakeQuantize state for {fakequant_state_restored} modules")
+                
+                # CRITICAL: Clean up inference tensors created during evaluation
+                # Reload model state from before evaluation to clear inference tensors
+                LOGGER.debug("Cleaning up inference tensors after evaluation...")
+                
+                # CRITICAL: Explicitly exit any inference mode context
+                torch.set_grad_enabled(True)
+                
+                with torch.enable_grad():
+                    # Manually replace each parameter to avoid inplace updates to inference tensors
+                    # We need to replace the Parameter object itself, not just the data
+                    replaced_params = 0
+                    for name, param in detection_model.named_parameters():
+                        if name in model_state_before_eval:
+                            saved_param = model_state_before_eval[name]
+                            if isinstance(saved_param, torch.Tensor):
+                                # Clone the saved parameter - ensure it's detached from inference mode
+                                cloned_param = saved_param.clone().detach()
+                                # Preserve requires_grad setting
+                                cloned_param.requires_grad_(param.requires_grad)
+                                # Create a new Parameter object to replace the inference tensor
+                                new_param = nn.Parameter(cloned_param, requires_grad=param.requires_grad)
+                                
+                                # Replace the parameter in the module's _parameters dict
+                                parts = name.split('.')
+                                module = detection_model
+                                for part in parts[:-1]:
+                                    module = getattr(module, part)
+                                param_name = parts[-1]
+                                if hasattr(module, '_parameters') and param_name in module._parameters:
+                                    module._parameters[param_name] = new_param
+                                    replaced_params += 1
+                    
+                    # Also handle buffers (like BatchNorm running_mean, running_var)
+                    replaced_buffers = 0
+                    for name, buffer in detection_model.named_buffers():
+                        if name in model_state_before_eval:
+                            saved_buffer = model_state_before_eval[name]
+                            if isinstance(saved_buffer, torch.Tensor):
+                                cloned_buffer = saved_buffer.clone().detach()
+                                # Replace buffer in module's _buffers dict
+                                parts = name.split('.')
+                                module = detection_model
+                                for part in parts[:-1]:
+                                    module = getattr(module, part)
+                                buffer_name = parts[-1]
+                                if hasattr(module, '_buffers') and buffer_name in module._buffers:
+                                    module._buffers[buffer_name] = cloned_buffer
+                                    replaced_buffers += 1
+                    
+                    if replaced_params > 0 or replaced_buffers > 0:
+                        LOGGER.debug(f"  Replaced {replaced_params} parameters and {replaced_buffers} buffers")
+                
+                # CRITICAL: Ensure model is in training mode and gradients are enabled
+                detection_model.train()
+                torch.set_grad_enabled(True)
                     
             except Exception as e:
                 LOGGER.warning(f"Evaluation failed: {e}")
                 import traceback
                 LOGGER.debug(traceback.format_exc())
+                # CRITICAL: Even if evaluation failed, ensure model is in train mode
+                detection_model.train()
+                LOGGER.debug("Model set back to train mode after evaluation failure")
         
         # Save last checkpoint
         last_path = weights_dir / "last.pt"
@@ -2183,12 +2649,6 @@ def train_hybrid_qat(
     LOGGER.info("\n" + "=" * 80)
     LOGGER.info("QAT Fine-tuning Complete!")
     LOGGER.info("=" * 80)
-    if ptq_map is not None and best_map > 0:
-        improvement = (best_map - ptq_map) * 100
-        LOGGER.info(f"PTQ baseline:  {ptq_map:.4f} ({ptq_map*100:.2f}%)")
-        LOGGER.info(f"Best QAT:      {best_map:.4f} ({best_map*100:.2f}%)")
-        LOGGER.info(f"Improvement:   {improvement:+.2f}%")
-        LOGGER.info(f"Best epoch:    {best_epoch}")
     
     if save_best:
         LOGGER.info(f"\nBest model saved to: {weights_dir / 'best.pt'}")
@@ -2241,8 +2701,8 @@ def train_hybrid_qat(
                                 hasattr(module.activation_post_process, '__class__') and
                                 'Observer' in module.activation_post_process.__class__.__name__)
             
-            LOGGER.info(f"  Found {fakequant_count} FakeQuantize modules (QAT layers)")
-            LOGGER.info(f"  Found {observer_count} Observer modules (PTQ layers)")
+            total_quantized_modules = fakequant_count + observer_count
+            LOGGER.info(f"  Found {total_quantized_modules} quantized modules ({fakequant_count} FakeQuantize, {observer_count} Observers)")
             
             if fakequant_count == 0 and observer_count == 0:
                 LOGGER.warning("No FakeQuantize or Observer modules found; skipping INT8 conversion.")
@@ -2325,17 +2785,97 @@ def train_hybrid_qat(
                                     if is_uncalibrated:
                                         uncalibrated_count += 1
                                         LOGGER.warning(f"    ⚠️  Uncalibrated FakeQuantize at {name}: min_val={min_val}, max_val={max_val}")
+                                        
+                                        # Fix uncalibrated FakeQuantize by initializing with default statistics
+                                        # Use a reasonable default range based on typical activation values
+                                        try:
+                                            # Try to find a similar calibrated FakeQuantize to copy statistics from
+                                            calibrated_min = None
+                                            calibrated_max = None
+                                            
+                                            # Search for a calibrated FakeQuantize in the same module (e.g., weight_fake_quant)
+                                            parent_name = '.'.join(name.split('.')[:-1])
+                                            for other_name, other_module in qat_model.named_modules():
+                                                if isinstance(other_module, FakeQuantize) and other_name != name:
+                                                    if parent_name in other_name or other_name in parent_name:
+                                                        # Check if this one is calibrated
+                                                        if hasattr(other_module, 'activation_post_process'):
+                                                            other_obs = other_module.activation_post_process
+                                                            if hasattr(other_obs, 'min_val') and hasattr(other_obs, 'max_val'):
+                                                                try:
+                                                                    other_min = other_obs.min_val
+                                                                    other_max = other_obs.max_val
+                                                                    if isinstance(other_min, torch.Tensor):
+                                                                        if not torch.any(torch.isinf(other_min)) and not torch.any(torch.isinf(other_max)):
+                                                                            calibrated_min = other_min.clone()
+                                                                            calibrated_max = other_max.clone()
+                                                                            break
+                                                                except:
+                                                                    pass
+                                            
+                                            # If no calibrated module found, use default range
+                                            if calibrated_min is None or calibrated_max is None:
+                                                # Initialize with default range for activations (typically 0-1 after normalization)
+                                                default_min = torch.tensor(0.0)
+                                                default_max = torch.tensor(1.0)
+                                                
+                                                # Handle per-channel vs per-tensor
+                                                if hasattr(observer, 'qscheme'):
+                                                    qscheme = observer.qscheme
+                                                    if qscheme == torch.per_channel_symmetric or qscheme == torch.per_channel_affine:
+                                                        # Per-channel: try to infer dimension from module
+                                                        # For Linear layers, check if there's a weight to infer channels
+                                                        if 'fc' in name.lower() or 'linear' in name.lower():
+                                                            # Try to find the parent Linear module
+                                                            parent_parts = name.split('.')
+                                                            if len(parent_parts) > 1:
+                                                                parent_module_name = '.'.join(parent_parts[:-1])
+                                                                for mod_name, mod in qat_model.named_modules():
+                                                                    if mod_name == parent_module_name and hasattr(mod, 'out_features'):
+                                                                        num_channels = mod.out_features
+                                                                        default_min = torch.zeros(num_channels)
+                                                                        default_max = torch.ones(num_channels)
+                                                                        break
+                                                        elif hasattr(module, 'scale') and isinstance(module.scale, torch.Tensor):
+                                                            num_channels = module.scale.numel()
+                                                            default_min = torch.zeros(num_channels)
+                                                            default_max = torch.ones(num_channels)
+                                                
+                                                calibrated_min = default_min
+                                                calibrated_max = default_max
+                                            
+                                            # Set default values
+                                            if hasattr(observer, 'min_val'):
+                                                observer.min_val = calibrated_min.clone() if isinstance(calibrated_min, torch.Tensor) else calibrated_min
+                                            if hasattr(observer, 'max_val'):
+                                                observer.max_val = calibrated_max.clone() if isinstance(calibrated_max, torch.Tensor) else calibrated_max
+                                            
+                                            # Recalculate qparams with new min/max
+                                            if hasattr(observer, 'calculate_qparams'):
+                                                try:
+                                                    scale, zero_point = observer.calculate_qparams()
+                                                    if hasattr(observer, 'scale'):
+                                                        observer.scale = scale
+                                                    if hasattr(observer, 'zero_point'):
+                                                        observer.zero_point = zero_point
+                                                except:
+                                                    pass
+                                            
+                                            LOGGER.info(f"    ✓ Initialized uncalibrated FakeQuantize at {name} with default statistics")
+                                        except Exception as fix_e:
+                                            LOGGER.warning(f"    Could not fix uncalibrated FakeQuantize at {name}: {fix_e}")
                                 except Exception as e:
                                     # Some observers might not have min_val/max_val accessible
                                     pass
                 
-                LOGGER.info(f"  Found {len(fakequant_modules)} FakeQuantize modules")
+                total_modules = len(fakequant_modules) + observer_count
+                LOGGER.info(f"  Total quantized modules: {total_modules} ({len(fakequant_modules)} FakeQuantize, {observer_count} Observers)")
                 LOGGER.info(f"  Enabled fake_quant for {enabled_count} modules")
                 LOGGER.info(f"  Disabled observers for {disabled_observer_count} modules")
                 if uncalibrated_count > 0:
-                    LOGGER.warning(f"  ⚠️  {uncalibrated_count} FakeQuantize modules appear uncalibrated (may use default statistics)")
+                    LOGGER.warning(f"  ⚠️  {uncalibrated_count} FakeQuantize module(s) were uncalibrated (initialized with default statistics)")
                 else:
-                    LOGGER.info(f"  ✓ All FakeQuantize modules appear calibrated")
+                    LOGGER.info(f"  ✓ All quantized modules appear calibrated")
                 
                 # Convert to INT8 (handles both FakeQuantize and Observers)
                 LOGGER.info("  Calling convert_to_quantized()...")
@@ -2539,13 +3079,7 @@ def train_hybrid_qat(
     LOGGER.info("\n" + "=" * 80)
     LOGGER.info("Hybrid QAT Complete!")
     LOGGER.info("=" * 80)
-    if ptq_map is not None and best_map > 0:
-        improvement = (best_map - ptq_map) * 100
-        LOGGER.info(f"PTQ baseline:  {ptq_map:.4f} ({ptq_map*100:.2f}%)")
-        LOGGER.info(f"Best QAT:      {best_map:.4f} ({best_map*100:.2f}%)")
-        LOGGER.info(f"Improvement:   {improvement:+.2f}%")
-        LOGGER.info(f"Best epoch:    {best_epoch}")
-    elif int8_map is not None:
+    if int8_map is not None:
         LOGGER.info(f"INT8 mAP:      {int8_map:.4f} ({int8_map*100:.2f}%)")
         if int8_map50 is not None:
             LOGGER.info(f"INT8 mAP@0.5:  {int8_map50:.4f} ({int8_map50*100:.2f}%)")
@@ -2561,8 +3095,6 @@ def train_hybrid_qat(
         "best_path": weights_dir / "best.pt" if save_best else None,
         "last_path": last_path,
         "weights_dir": weights_dir,
-        "best_map": best_map,
-        "best_epoch": best_epoch,
         "int8_best_path": int8_best_path,
         "int8_last_path": int8_last_path,
         "int8_map": int8_map,
@@ -2649,9 +3181,9 @@ def main():
     parser.add_argument(
         "--backend",
         type=str,
-        default="fbgemm",
+        default="qnnpack",
         choices=["qnnpack", "fbgemm"],
-        help="Quantization backend",
+        help="Quantization backend (default: qnnpack)",
     )
     parser.add_argument(
         "--save-dir",
@@ -2700,12 +3232,12 @@ def main():
         type=str,
         nargs='+',
         default=None,
-        help="Module patterns to fine-tune (default: BoTNet and CoordAtt)",
+        help="Module patterns to fine-tune (default: BoTNet + CoordAtt ['model.10', 'model.20', 'model.24'])",
     )
     parser.add_argument(
-        "--no-eval-before",
+        "--eval-before",
         action="store_true",
-        help="Skip evaluation of PTQ baseline",
+        help="Evaluate PTQ baseline before fine-tuning (default: False)",
     )
     parser.add_argument(
         "--no-eval-after",
@@ -2748,7 +3280,7 @@ def main():
         weight_decay=args.weight_decay,
         warmup_epochs=args.warmup_epochs,
         sensitive_modules=args.sensitive_modules,
-        evaluate_before=not args.no_eval_before,
+        evaluate_before=args.eval_before,
         evaluate_after=not args.no_eval_after,
         convert_to_int8=not args.no_convert_int8,
         evaluate_int8=not args.no_eval_int8,
