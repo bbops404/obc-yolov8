@@ -524,7 +524,7 @@ def train_ptq(
     )
     model.model = calibrated_model
     
-    # --- START: Custom Code to Save Calibrated Model for QAT ---
+    # --- START: Save Calibrated Model (can be used for QAT if needed) ---
     
     # Create necessary directories
     save_dir_path = project_dir / run_name
@@ -532,9 +532,10 @@ def train_ptq(
     weights_dir = save_dir_path / "weights"
     weights_dir.mkdir(parents=True, exist_ok=True)
 
-    # Define the save path for the prepared/calibrated model (e.g., for QAT)
-    prepared_path = weights_dir / "prepared_for_qat.pt"
-    LOGGER.info(f"Saving calibrated model (prepared for QAT) to {prepared_path}")
+    # Define the save path for the calibrated model
+    # This calibrated model can optionally be used for QAT fine-tuning later
+    calibrated_path = weights_dir / "calibrated.pt"
+    LOGGER.info(f"Saving calibrated PTQ model to {calibrated_path}")
     
     # Save the calibrated model state dictionary
     # This state_dict includes the populated min/max statistics in the Observer modules
@@ -546,11 +547,10 @@ def train_ptq(
         "date": datetime.now().isoformat(),
         "ptq": True,
         "backend": backend,
-        # IMPORTANT: Add a flag to easily identify this as a prepared QAT model
-        "qat_prepared": True, 
-    }, prepared_path)
+        "calibrated": True,  # Flag to identify this as a calibrated PTQ model
+    }, calibrated_path)
     
-    LOGGER.info(f"✓ Calibrated model saved to {prepared_path}")
+    LOGGER.info(f"✓ Calibrated PTQ model saved to {calibrated_path}")
     # Convert to INT8
     int8_path = None
     weights_dir: Optional[Path] = None
@@ -847,8 +847,8 @@ def main():
         num_calibration_batches=args.num_calibration_batches,
         calibration_split=args.calibration_split,
         evaluate=args.evaluate,
-
- 
+        quantize_botnet=quantize_botnet_flag,
+        quantize_coordatt=quantize_coordatt_flag,
     )
 
     print("\n" + "=" * 80)

@@ -35,11 +35,15 @@ class Conv(nn.Module):
 
     def forward(self, x):
         """Apply convolution, batch normalization and activation to input tensor."""
-        return self.act(self.bn(self.conv(x)))
+        # Use _safe_conv2d_call to handle QAT, quantized, and regular Conv2d
+        conv_out = _safe_conv2d_call(self.conv, x)
+        return self.act(self.bn(conv_out))
 
     def forward_fuse(self, x):
         """Perform transposed convolution of 2D data."""
-        return self.act(self.conv(x))
+        # Use _safe_conv2d_call to handle QAT, quantized, and regular Conv2d
+        conv_out = _safe_conv2d_call(self.conv, x)
+        return self.act(conv_out)
 
 
 class Conv2(Conv):

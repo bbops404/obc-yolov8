@@ -65,16 +65,90 @@ def _is_quantized_conv2d(module):
 
 def _safe_conv2d_call(conv_module, x, module_name=None):
     """
-    Safely call a Conv2d module, handling both regular and quantized Conv2d.
+    Safely call a Conv2d module, handling regular, QAT, and quantized Conv2d.
     
     Args:
-        conv_module: Conv2d module (regular or quantized)
+        conv_module: Conv2d module (regular, QAT with FakeQuantize, or quantized)
         x: Input tensor (FP32 or quantized)
         module_name: Optional name for tracking/statistics
         
     Returns:
         Output tensor (FP32)
     """
+    # CRITICAL: Check if this is a QAT module (has FakeQuantize) first
+    # QAT modules should be called normally - FakeQuantize handles quantization during forward
+    # Real quantized modules (INT8) have _packed_params and should use _call_quantized_conv2d
+    # IMPORTANT: activation_post_process can be either FakeQuantize (QAT) or Observer (PTQ)
+    # We must check the TYPE, not just existence
+    from torch.ao.quantization import FakeQuantize
+    from torch.ao.quantization.observer import ObserverBase
+    
+    has_weight_fake_quant = hasattr(conv_module, 'weight_fake_quant') and conv_module.weight_fake_quant is not None
+    has_activation_fake_quant = (
+        hasattr(conv_module, 'activation_post_process') and 
+        conv_module.activation_post_process is not None and
+        isinstance(conv_module.activation_post_process, FakeQuantize)
+    )
+    has_activation_observer = (
+        hasattr(conv_module, 'activation_post_process') and 
+        conv_module.activation_post_process is not None and
+        isinstance(conv_module.activation_post_process, ObserverBase) and
+        not isinstance(conv_module.activation_post_process, FakeQuantize)
+    )
+    
+    is_qat_module = (
+        has_weight_fake_quant or
+        has_activation_fake_quant or
+        ('qat' in type(conv_module).__module__.lower() and 'quantized' not in type(conv_module).__module__.lower())
+    )
+    # Use the dedicated function to check for real quantized Conv2d
+    is_real_quantized = _is_quantized_conv2d(conv_module)
+    
+    # CRITICAL: During QAT training, NEVER call real quantized modules
+    # Real quantized operations cannot be backpropagated during training
+    if is_real_quantized and torch.is_grad_enabled():
+        raise RuntimeError(
+            f"❌ CRITICAL: Found real quantized Conv2d ({type(conv_module).__name__}) during QAT training!\n"
+            f"   Location: {module_name or 'unknown'}\n"
+            f"   Real quantized operations cannot be backpropagated.\n"
+            f"   The model must use QAT Conv2d (with FakeQuantize), not quantized Conv2d.\n"
+            f"   This indicates the model was not properly prepared for QAT, or quantized Conv2d layers\n"
+            f"   were loaded from the calibrated PTQ model instead of being converted to QAT Conv2d."
+        )
+    
+    # During evaluation (no gradients), allow INT8 models to use real quantized Conv2d
+    # INT8 models are expected to have real quantized modules - that's the whole point!
+    if is_real_quantized and not torch.is_grad_enabled():
+        # This is an INT8 model during evaluation - use _call_quantized_conv2d
+        return _call_quantized_conv2d(conv_module, x, module_name)
+    
+    # If it's a QAT module, call it normally (FakeQuantize will handle quantization)
+    if is_qat_module and not is_real_quantized:
+        try:
+            result = conv_module(x)
+            if _ENABLE_QUANT_STATS:
+                _QUANTIZATION_STATS['qat_conv2d'] = _QUANTIZATION_STATS.get('qat_conv2d', 0) + 1
+            return result
+        except Exception as e:
+            # If QAT module call fails, re-raise (don't try quantized path)
+            raise
+    
+    # CRITICAL: If we reach here and it's a real quantized module, we should have caught it above
+    # But double-check to be safe before attempting to call
+    if is_real_quantized:
+        # This should have been caught above, but if we reach here during training, raise error
+        if torch.is_grad_enabled():
+            raise RuntimeError(
+                f"❌ CRITICAL: Real quantized Conv2d detected during QAT training!\n"
+                f"   Module: {type(conv_module).__name__} at {module_name or 'unknown'}\n"
+                f"   Real quantized operations cannot be backpropagated.\n"
+                f"   The model must use QAT Conv2d (with FakeQuantize), not quantized Conv2d."
+            )
+        else:
+            # During evaluation, INT8 models should use _call_quantized_conv2d (handled above)
+            # If we reach here, something went wrong - try calling it anyway
+            return _call_quantized_conv2d(conv_module, x, module_name)
+    
     # Try normal call first (for regular Conv2d)
     # If it fails with AttributeError about _backward_hooks, it's likely quantized
     try:
@@ -90,17 +164,55 @@ def _safe_conv2d_call(conv_module, x, module_name=None):
             or '_backward_pre_hooks' in msg
             or '_forward_pre_hooks' in msg
         ):
-            # This is a quantized Conv2d - need to handle input quantization
-            return _call_quantized_conv2d(conv_module, x, module_name)
+            # Check if it's a real quantized module (INT8) - should have been caught above
+            # If we reach here, it means detection failed - handle appropriately
+            if is_real_quantized:
+                if torch.is_grad_enabled():
+                    raise RuntimeError(
+                        f"❌ CRITICAL: Real quantized Conv2d detected during QAT training!\n"
+                        f"   Module: {type(conv_module).__name__} at {module_name or 'unknown'}\n"
+                        f"   Real quantized operations cannot be backpropagated.\n"
+                        f"   The model must use QAT Conv2d (with FakeQuantize), not quantized Conv2d."
+                    )
+                else:
+                    # During evaluation, INT8 models should use _call_quantized_conv2d
+                    return _call_quantized_conv2d(conv_module, x, module_name)
+            else:
+                # Might be a QAT module that we missed - try calling normally
+                # This should work if FakeQuantize is properly set up
+                raise RuntimeError(
+                    f"Module {type(conv_module).__name__} raised AttributeError about hooks "
+                    f"but is not detected as QAT or quantized. This may indicate a problem "
+                    f"with the quantization setup."
+                ) from e
         # Different AttributeError - re-raise
         raise
     except (NotImplementedError, RuntimeError) as e:
         # If we get NotImplementedError about quantized ops, try to quantize input first
         error_str = str(e)
         if 'quantized::' in error_str or 'QuantizedCPU' in error_str:
-            return _call_quantized_conv2d(conv_module, x, module_name)
+            # This error indicates a real quantized module is being called
+            # Should have been caught above, but if we reach here, handle appropriately
+            if is_real_quantized:
+                if torch.is_grad_enabled():
+                    raise RuntimeError(
+                        f"❌ CRITICAL: Real quantized Conv2d detected during QAT training!\n"
+                        f"   Module: {type(conv_module).__name__} at {module_name or 'unknown'}\n"
+                        f"   Real quantized operations cannot be backpropagated.\n"
+                        f"   The model must use QAT Conv2d (with FakeQuantize), not quantized Conv2d."
+                    )
+                else:
+                    # During evaluation, INT8 models should use _call_quantized_conv2d
+                    return _call_quantized_conv2d(conv_module, x, module_name)
+            else:
+                raise RuntimeError(
+                    f"Module {type(conv_module).__name__} raised quantized operation error "
+                    f"but is not detected as quantized. This may indicate a problem with "
+                    f"the quantization setup."
+                ) from e
         else:
             raise
+
 
 
 def _call_quantized_conv2d(conv_module, x, module_name=None):
@@ -115,7 +227,48 @@ def _call_quantized_conv2d(conv_module, x, module_name=None):
     Returns:
         Output tensor (FP32, dequantized)
     """
+    # CRITICAL: NEVER call this function during training (when gradients are enabled)
+    # Real quantized operations cannot be backpropagated
+    if torch.is_grad_enabled():
+        raise RuntimeError(
+            f"❌ CRITICAL: _call_quantized_conv2d called during training!\n"
+            f"   Location: {module_name or 'unknown'}\n"
+            f"   Module type: {type(conv_module).__name__}\n"
+            f"   Real quantized operations cannot be backpropagated.\n"
+            f"   This function should only be called during inference (eval mode, no gradients)."
+        )
+    
     # Ensure input is FP32 - dequantize if needed
+    # CRITICAL: Never call this for QAT modules - they should use FakeQuantize, not real quantized ops
+    # This function creates REAL quantized operations (INT8) that do NOT support gradients
+    from torch.ao.quantization import FakeQuantize
+    
+    has_weight_fake_quant = hasattr(conv_module, 'weight_fake_quant') and conv_module.weight_fake_quant is not None
+    has_activation_fake_quant = (
+        hasattr(conv_module, 'activation_post_process') and 
+        conv_module.activation_post_process is not None and
+        isinstance(conv_module.activation_post_process, FakeQuantize)
+    )
+    
+    is_qat_module = (
+        has_weight_fake_quant or
+        has_activation_fake_quant or
+        ('qat' in type(conv_module).__module__.lower() and 'quantized' not in type(conv_module).__module__.lower())
+    )
+    if is_qat_module:
+        import traceback
+        print(f"ERROR: _call_quantized_conv2d called for QAT module: {type(conv_module).__name__}")
+        print(f"  Module type: {type(conv_module)}")
+        print(f"  Module module: {type(conv_module).__module__}")
+        print(f"  Has weight_fake_quant: {hasattr(conv_module, 'weight_fake_quant')}")
+        print(f"  Has activation_post_process: {hasattr(conv_module, 'activation_post_process')}")
+        traceback.print_stack()
+        raise RuntimeError(
+            f"_call_quantized_conv2d was called for a QAT module ({type(conv_module).__name__}). "
+            f"This should never happen - QAT modules should be called normally through _safe_conv2d_call. "
+            f"This indicates a bug in the QAT module detection logic."
+        )
+
     if hasattr(x, 'q_scale') and hasattr(x, 'q_zero_point'):
         # Input is already quantized, dequantize it first
         x = x.dequantize()

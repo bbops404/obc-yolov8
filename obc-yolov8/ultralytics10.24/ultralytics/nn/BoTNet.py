@@ -65,23 +65,103 @@ class MHSA(nn.Module):
         
         def _dequantize_if_needed(tensor):
             """Dequantize tensor if it's quantized, otherwise return as-is."""
-            if hasattr(tensor, 'q_scale') and hasattr(tensor, 'q_zero_point'):
-                return tensor.dequantize()
-            return tensor
+            # Check if tensor is quantized
+            if not (hasattr(tensor, 'q_scale') and hasattr(tensor, 'q_zero_point')):
+                # Not quantized, return as-is
+                return tensor
+            
+            # CRITICAL: During QAT training, NEVER dequantize - this creates real quantized operations
+            # However, we need to distinguish between:
+            # 1. Model initialization (before prepare_for_qat) - allow dequantization
+            # 2. Actual QAT training (after prepare_for_qat, with FakeQuantize) - block dequantization
+            # 
+            # The key indicator: if the module has FakeQuantize, we're in QAT mode.
+            # If it doesn't have FakeQuantize, we're in initialization (even if tensor.requires_grad is True
+            # during stride computation or other initialization steps).
+            has_fakequant = (
+                hasattr(self.query, 'weight_fake_quant') or
+                (hasattr(self.query, 'activation_post_process') and 
+                 self.query.activation_post_process is not None and
+                 'FakeQuantize' in type(self.query.activation_post_process).__name__)
+            )
+            
+            # Only block dequantization during actual QAT training (when FakeQuantize exists AND we're in training)
+            # During initialization (no FakeQuantize), always allow dequantization
+            if has_fakequant and torch.is_grad_enabled() and tensor.requires_grad:
+                raise RuntimeError(
+                    f"❌ CRITICAL: Attempted to dequantize real quantized tensor during QAT training!\n"
+                    f"   Location: BoTNet.MHSA.forward()\n"
+                    f"   Real quantized operations cannot be backpropagated.\n"
+                    f"   The model must use QAT Conv2d (with FakeQuantize), not quantized Conv2d.\n"
+                    f"   This indicates the Conv2d modules (query/key/value) are still quantized instead of QAT."
+                )
+            
+            # Dequantize (allowed during initialization or when FakeQuantize doesn't exist)
+            return tensor.dequantize()
         
-        # Check if query/key/value are quantized Conv2d
-        query_is_quantized = hasattr(self.query, '_packed_params') or 'quantized' in type(self.query).__module__.lower()
-        key_is_quantized = hasattr(self.key, '_packed_params') or 'quantized' in type(self.key).__module__.lower()
-        value_is_quantized = hasattr(self.value, '_packed_params') or 'quantized' in type(self.value).__module__.lower()
+        # Check if query/key/value are QAT modules (with FakeQuantize) or quantized Conv2d
+        def _is_qat_module(module):
+            """Check if module is QAT (has FakeQuantize)."""
+            return (
+                hasattr(module, 'weight_fake_quant') or
+                hasattr(module, 'activation_post_process') or
+                ('qat' in type(module).__module__.lower() and 'quantized' not in type(module).__module__.lower())
+            )
         
-        # Wrapper to safely call quantized Conv2d with backend error handling
+        def _is_real_quantized(module):
+            """Check if module is real quantized (INT8)."""
+            return (
+                hasattr(module, '_packed_params') or
+                ('quantized' in type(module).__module__.lower() and 'qat' not in type(module).__module__.lower())
+            )
+        
+        query_is_qat = _is_qat_module(self.query)
+        query_is_quantized = _is_real_quantized(self.query)
+        key_is_qat = _is_qat_module(self.key)
+        key_is_quantized = _is_real_quantized(self.key)
+        value_is_qat = _is_qat_module(self.value)
+        value_is_quantized = _is_real_quantized(self.value)
+        
+        # Wrapper to safely call QAT or quantized Conv2d
         def _safe_quantized_conv2d(conv_module, input_tensor):
-            """Safely call quantized Conv2d, handling backend dispatch errors."""
-            if not (hasattr(conv_module, '_packed_params') or 'quantized' in type(conv_module).__module__.lower()):
-                # Not quantized, call normally
+            """Safely call QAT or quantized Conv2d, handling backend dispatch errors."""
+            # Check if this is a QAT or quantized module first
+            # This check must happen before any early returns to handle INT8 evaluation correctly
+            is_qat = _is_qat_module(conv_module)
+            is_real_quantized = _is_real_quantized(conv_module)
+            
+            # CRITICAL: During initialization (input doesn't require_grad), check if module is quantized
+            # If module is NOT quantized, it's safe to call directly (FP32 during initialization)
+            # If module IS quantized, we must use error handling path even if requires_grad is False
+            # (This happens during INT8 model evaluation where requires_grad=False but module is quantized)
+            if not input_tensor.requires_grad and not is_real_quantized:
+                # During initialization with FP32 Conv2d - just call normally, no quantization logic needed
                 return conv_module(input_tensor)
             
-            # It's quantized - ensure input is quantized
+            # For training/inference (input requires_grad or in eval mode) OR quantized modules
+            # QAT modules should be called normally - FakeQuantize handles quantization during forward
+            
+            if is_qat and not is_real_quantized:
+                # QAT module - call normally (FakeQuantize will handle quantization)
+                return conv_module(input_tensor)
+            
+            # Not quantized, call normally (regular FP32 Conv2d)
+            if not is_real_quantized:
+                return conv_module(input_tensor)
+            
+            # It's quantized - check if we're in a training context
+            # CRITICAL: During QAT training (when input requires_grad), NEVER create real quantized tensors
+            if torch.is_grad_enabled() and input_tensor.requires_grad:
+                raise RuntimeError(
+                    f"❌ CRITICAL: Found real quantized Conv2d ({type(conv_module).__name__}) during QAT training!\n"
+                    f"   Location: BoTNet.MHSA.forward()\n"
+                    f"   Real quantized operations cannot be backpropagated.\n"
+                    f"   The model must use QAT Conv2d (with FakeQuantize), not quantized Conv2d.\n"
+                    f"   This indicates the Conv2d modules (query/key/value) are still quantized instead of QAT."
+                )
+            
+            # For inference with quantized Conv2d (input doesn't require_grad but we're in eval mode)
+            # Ensure input is quantized
             if not (hasattr(input_tensor, 'q_scale') and hasattr(input_tensor, 'q_zero_point')):
                 # Input is FP32, need to quantize
                 input_tensor = _quantize_if_needed(input_tensor)
@@ -93,7 +173,15 @@ class MHSA(nn.Module):
                 error_msg = str(e)
                 if 'quantized::conv2d' in error_msg and ('CPU' in error_msg or 'backend' in error_msg.lower()):
                     # Backend dispatch error - this is a known PyTorch limitation
-                    # Fallback: Extract weights from quantized Conv2d and perform FP32 convolution
+                    # CRITICAL: During QAT training (when input requires_grad), NEVER dequantize
+                    if torch.is_grad_enabled() and input_tensor.requires_grad:
+                        raise RuntimeError(
+                            f"❌ CRITICAL: Quantized Conv2d backend error during QAT training!\n"
+                            f"   Module: {type(conv_module).__name__} at BoTNet.MHSA.forward()\n"
+                            f"   Real quantized operations cannot be backpropagated.\n"
+                            f"   The model must use QAT Conv2d (with FakeQuantize), not quantized Conv2d."
+                        )
+                    # Fallback: Extract weights from quantized Conv2d and perform FP32 convolution (inference/initialization only)
                     input_fp32 = input_tensor.dequantize() if hasattr(input_tensor, 'q_scale') else input_tensor
                     
                     try:
@@ -106,13 +194,28 @@ class MHSA(nn.Module):
                                 bias = packed[1] if len(packed) > 1 else None
                                 
                                 # Dequantize weight (it's a quantized tensor)
+                                # CRITICAL: This should never happen during QAT training
                                 if hasattr(weight, 'q_scale'):
+                                    # Only block if we're in a training context (input requires_grad)
+                                    if torch.is_grad_enabled() and input_tensor.requires_grad:
+                                        raise RuntimeError(
+                                            f"❌ CRITICAL: Attempted to dequantize weight during QAT training!\n"
+                                            f"   Location: BoTNet.MHSA.forward() fallback path\n"
+                                            f"   Real quantized operations cannot be backpropagated."
+                                        )
                                     weight_fp32 = weight.dequantize()
                                 else:
                                     weight_fp32 = weight
                                 
                                 # Dequantize bias if present and quantized
                                 if bias is not None and hasattr(bias, 'q_scale'):
+                                    # Only block if we're in a training context (input requires_grad)
+                                    if torch.is_grad_enabled() and input_tensor.requires_grad:
+                                        raise RuntimeError(
+                                            f"❌ CRITICAL: Attempted to dequantize bias during QAT training!\n"
+                                            f"   Location: BoTNet.MHSA.forward() fallback path\n"
+                                            f"   Real quantized operations cannot be backpropagated."
+                                        )
                                     bias_fp32 = bias.dequantize()
                                 elif bias is not None:
                                     bias_fp32 = bias
@@ -154,10 +257,67 @@ class MHSA(nn.Module):
         k_raw = _safe_quantized_conv2d(self.key, x)
         v_raw = _safe_quantized_conv2d(self.value, x)
         
-        # Dequantize before view operations (view doesn't work well with quantized tensors)
-        q = _dequantize_if_needed(q_raw).view(n_batch, self.heads, C // self.heads, -1)
-        k = _dequantize_if_needed(k_raw).view(n_batch, self.heads, C // self.heads, -1)
-        v = _dequantize_if_needed(v_raw).view(n_batch, self.heads, C // self.heads, -1)
+        # CRITICAL: QAT Conv2d should return FP32 tensors (FakeQuantize simulates quantization but keeps FP32)
+        # Only dequantize if the tensor is actually quantized (which shouldn't happen for QAT)
+        # Check if modules are QAT - if so, outputs should already be FP32
+        query_is_qat = _is_qat_module(self.query)
+        key_is_qat = _is_qat_module(self.key)
+        value_is_qat = _is_qat_module(self.value)
+        
+        # For QAT modules, outputs should be FP32 - no dequantization needed
+        # For non-QAT modules (during initialization), dequantize if needed
+        # CRITICAL: FakeQuantize returns FP32 tensors with q_scale/q_zero_point attributes
+        # but they are NOT actually quantized (dtype is float32, not quint8/qint8)
+        # We need to check dtype, not just the presence of q_scale/q_zero_point
+        def is_real_quantized_tensor(tensor):
+            """Check if tensor is actually quantized (not just FakeQuantize output)."""
+            if not hasattr(tensor, 'dtype'):
+                return False
+            # Real quantized tensors have quantized dtypes (quint8, qint8, etc.)
+            # FakeQuantize outputs have float32 dtype even if they have q_scale/q_zero_point
+            return tensor.dtype in (torch.quint8, torch.qint8, torch.qint32)
+        
+        if query_is_qat:
+            # QAT module - output should be FP32 (FakeQuantize simulates quantization but keeps FP32)
+            if is_real_quantized_tensor(q_raw):
+                # This shouldn't happen - QAT should return FP32, not real quantized tensors
+                raise RuntimeError(
+                    f"❌ CRITICAL: QAT Conv2d (query) returned real quantized tensor during QAT training!\n"
+                    f"   Location: BoTNet.MHSA.forward()\n"
+                    f"   QAT Conv2d should return FP32 tensors (FakeQuantize simulates quantization but keeps FP32).\n"
+                    f"   Got dtype: {q_raw.dtype}, which is a real quantized dtype.\n"
+                    f"   This indicates the QAT Conv2d is not properly configured."
+                )
+            q = q_raw.view(n_batch, self.heads, C // self.heads, -1)
+        else:
+            # Non-QAT module (initialization) - dequantize if needed
+            q = _dequantize_if_needed(q_raw).view(n_batch, self.heads, C // self.heads, -1)
+        
+        if key_is_qat:
+            if is_real_quantized_tensor(k_raw):
+                raise RuntimeError(
+                    f"❌ CRITICAL: QAT Conv2d (key) returned real quantized tensor during QAT training!\n"
+                    f"   Location: BoTNet.MHSA.forward()\n"
+                    f"   QAT Conv2d should return FP32 tensors (FakeQuantize simulates quantization but keeps FP32).\n"
+                    f"   Got dtype: {k_raw.dtype}, which is a real quantized dtype.\n"
+                    f"   This indicates the QAT Conv2d is not properly configured."
+                )
+            k = k_raw.view(n_batch, self.heads, C // self.heads, -1)
+        else:
+            k = _dequantize_if_needed(k_raw).view(n_batch, self.heads, C // self.heads, -1)
+        
+        if value_is_qat:
+            if is_real_quantized_tensor(v_raw):
+                raise RuntimeError(
+                    f"❌ CRITICAL: QAT Conv2d (value) returned real quantized tensor during QAT training!\n"
+                    f"   Location: BoTNet.MHSA.forward()\n"
+                    f"   QAT Conv2d should return FP32 tensors (FakeQuantize simulates quantization but keeps FP32).\n"
+                    f"   Got dtype: {v_raw.dtype}, which is a real quantized dtype.\n"
+                    f"   This indicates the QAT Conv2d is not properly configured."
+                )
+            v = v_raw.view(n_batch, self.heads, C // self.heads, -1)
+        else:
+            v = _dequantize_if_needed(v_raw).view(n_batch, self.heads, C // self.heads, -1)
         
         # print('q shape:{},k shape:{},v shape:{}'.format(q.shape,k.shape,v.shape))  #1,4,64,256
         content_content = torch.matmul(q.permute(0, 1, 3, 2), k)  # 1,C,h*w,h*w

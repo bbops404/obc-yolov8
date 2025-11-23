@@ -1,4 +1,4 @@
-path: /mnt/c/Users/Christian Buenagua/Desktop/thesis/obc-yolov8/ultralytics10.24/dataset_root/combined
+path: /home/ubuntu/obc-yolov8/obc-yolov8/obc-yolov8/ultralytics10.24/dataset_root/combined
 train: ../train/images
 val: ../val/images
 test: ../test/images

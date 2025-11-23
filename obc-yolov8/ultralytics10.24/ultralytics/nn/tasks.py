@@ -1939,7 +1939,8 @@ class DetectionModel(BaseModel):
             Prepared model with observers inserted (ready for calibration)
         """
         import torch.ao.quantization as tq
-        from torch.ao.quantization import get_default_qconfig, prepare
+        from torch.ao.quantization import get_default_qconfig, prepare, QConfig
+        from torch.ao.quantization.observer import MinMaxObserver, PerChannelMinMaxObserver
         from ultralytics.nn.ODConv import ODConv
         from ultralytics.nn.BoTNet import BoTNet
         from ultralytics.nn.CA_Attention import CoordAtt
@@ -1952,9 +1953,34 @@ class DetectionModel(BaseModel):
         # Set backend
         torch.backends.quantized.engine = backend
         
-        # Get default PTQ qconfig for the backend (not QAT qconfig)
-        default_qconfig = get_default_qconfig(backend)
-        qconfig = default_qconfig
+        # Create per-channel symmetric qconfig for PTQ
+        # Per-channel symmetric: weights use per-channel symmetric quantization
+        # Activations remain per-tensor (standard)
+        LOGGER.info("Using per-channel symmetric quantization for weights...")
+        if backend == 'qnnpack':
+            # For qnnpack, use per-channel symmetric for weights
+            qconfig = QConfig(
+                activation=MinMaxObserver.with_args(
+                    dtype=torch.quint8,
+                    qscheme=torch.per_tensor_affine,
+                ),
+                weight=PerChannelMinMaxObserver.with_args(
+                    dtype=torch.qint8,
+                    qscheme=torch.per_channel_symmetric,
+                )
+            )
+        else:
+            # For fbgemm and other backends, also use per-channel symmetric
+            qconfig = QConfig(
+                activation=MinMaxObserver.with_args(
+                    dtype=torch.quint8,
+                    qscheme=torch.per_tensor_affine,
+                ),
+                weight=PerChannelMinMaxObserver.with_args(
+                    dtype=torch.qint8,
+                    qscheme=torch.per_channel_symmetric,
+                )
+            )
         
         # Identify backbone and neck layers from YAML structure
         backbone_layer_count = len(self.yaml.get('backbone', []))
