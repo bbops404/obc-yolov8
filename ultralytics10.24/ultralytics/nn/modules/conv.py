@@ -2,12 +2,17 @@
 """
 Convolution modules
 """
-
 import math
-
 import numpy as np
 import torch
 import torch.nn as nn
+
+def _safe_conv2d_call(conv, x):
+    if x.numel() == 0:
+        out_shape = (x.shape[0], conv.out_channels, x.shape[2], x.shape[3])
+        return torch.zeros(out_shape, device=x.device, dtype=x.dtype)
+    else:
+        return conv(x)
 
 __all__ = ('Conv', 'Conv2', 'LightConv', 'DWConv', 'DWConvTranspose2d', 'ConvTranspose', 'Focus', 'GhostConv',
            'ChannelAttention', 'SpatialAttention', 'CBAM', 'Concat', 'RepConv')

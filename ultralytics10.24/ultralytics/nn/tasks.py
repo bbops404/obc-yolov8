@@ -22,6 +22,7 @@ from ultralytics.nn.ContextAggregation import ContextAggregation
 from ultralytics.nn.Ghostnet import GGhostRegNet
 from ultralytics.nn.CBAM import CBAM
 from ultralytics.nn.BoTNet import BoTNet
+from ultralytics.nn.ODConv import ODConv
 
 from ultralytics.nn.DecoupledHead import DecoupledHead
 from ultralytics.nn.CARAFE import CARAFE
