@@ -401,7 +401,9 @@ def strip_optimizer(f: Union[str, Path] = 'best.pt', s: str = '') -> None:
     except ImportError:
         import pickle
 
-    x = torch.load(f, map_location=torch.device('cpu'))
+    # Explicitly set weights_only=False for compatibility with PyTorch >= 2.6,
+    # where the default changed to True and breaks loading older Ultralytics checkpoints.
+    x = torch.load(f, map_location=torch.device('cpu'), weights_only=False)
     if 'model' not in x:
         LOGGER.info(f'Skipping {f}, not a valid Ultralytics model.')
         return

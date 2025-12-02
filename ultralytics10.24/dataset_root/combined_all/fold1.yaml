@@ -1,6 +1,6 @@
-path: /Users/user/Documents/obc-yolov8/ultralytics10.24/dataset_root/combined_all/folds/fold1
-train: /Users/user/Documents/obc-yolov8/ultralytics10.24/dataset_root/combined_all/folds/fold1/train/images
-val: /Users/user/Documents/obc-yolov8/ultralytics10.24/dataset_root/combined_all/folds/fold1/val/images
+path: /home/ubuntu/obc-yolov8/obc-yolov8/ultralytics10.24/dataset_root/combined_all/folds/fold1
+train: train/images
+val: val/images
 
 
 nc: 5
