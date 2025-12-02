@@ -287,9 +287,8 @@ def train_ptq(
     LOGGER.info(f"Preparing model for PTQ with backend '{backend}' and image size {imgsz}")
     
     # Get quantization configuration from kwargs (defaults to all True)
-    quantize_backbone = kwargs.get('quantize_backbone', True) # Still use kwargs for others
+    quantize_backbone = kwargs.get('quantize_backbone', True)  # Still use kwargs for others
     quantize_neck = kwargs.get('quantize_neck', True)
-    quantize_odconv = kwargs.get('quantize_odconv', True)
     
     quantize_parts = []
     if quantize_backbone:
@@ -312,15 +311,14 @@ def train_ptq(
         use_fx=use_fx,
         quantize_backbone=quantize_backbone,
         quantize_neck=quantize_neck,
-        quantize_botnet=quantize_botnet, # Uses the new flag
-        quantize_coordatt=quantize_coordatt, # Uses the new 
+        quantize_botnet=quantize_botnet,      # Uses the new flag
+        quantize_coordatt=quantize_coordatt,  # Uses the new flag
     )
     model.model = prepared_model
 
     # We must operate on the prepared_model object to find modules by index
     model_for_manual_skip = model.model
-    
-    
+
     if not quantize_botnet:
         LOGGER.info("!!! MANUAL SKIP: Excluding BoTNet (model.10) from INT8 quantization.")
         try:
@@ -374,7 +372,50 @@ def train_ptq(
                     
             except AttributeError as e:
                 LOGGER.error(f"!!! Could not find module at path '{index_str}' (CoordAtt) for manual skip. Error: {e}")
-                
+
+    # --- BoTNet partial skip: keep fc1 and attention q/k/v in FP32 even if BoTNet is quantized ---
+    botnet_skip_names = {
+        "model.10.m.0.fc1",
+        "model.10.m.0.cv2.0.key",
+        "model.10.m.0.cv2.0.query",
+        "model.10.m.0.cv2.0.value",
+    }
+    botnet_cleared = 0
+    for name, module in model_for_manual_skip.named_modules():
+        if name in botnet_skip_names:
+            if hasattr(module, "qconfig") and module.qconfig is not None:
+                module.qconfig = None
+                botnet_cleared += 1
+            for child_name, child in module.named_modules():
+                if hasattr(child, "qconfig") and child.qconfig is not None:
+                    child.qconfig = None
+                    botnet_cleared += 1
+    if botnet_cleared > 0:
+        LOGGER.info(f"!!! BoTNet attention fc1/q/k/v qconfig cleared for {botnet_cleared} modules (kept FP32).")
+
+    # --- ODConv SKIP: ensure ALL ODConv-related modules stay FP32 ---
+    # The ODConv block is at index 1 in this architecture (model.1.*).
+    # We clear qconfig both based on type (ODConv) and by name prefix 'model.1.'
+    from ultralytics.nn.ODConv import ODConv
+    LOGGER.info("!!! MANUAL SKIP: Excluding ALL ODConv-related modules from INT8 quantization (keep FP32).")
+    odconv_cleared = 0
+    for name, module in model_for_manual_skip.named_modules():
+        is_odconv_block = isinstance(module, ODConv) or name.startswith("model.1.")
+        if is_odconv_block:
+            # Clear qconfig on this module
+            if hasattr(module, "qconfig") and module.qconfig is not None:
+                module.qconfig = None
+                odconv_cleared += 1
+            # Clear qconfig on all its children (internal attention convs, etc.)
+            for child_name, child in module.named_modules():
+                if hasattr(child, "qconfig") and child.qconfig is not None:
+                    child.qconfig = None
+                    odconv_cleared += 1
+    if odconv_cleared > 0:
+        LOGGER.info(f"!!! ODConv qconfig successfully cleared for {odconv_cleared} modules/sub-modules (ODConv kept in FP32).")
+    else:
+        LOGGER.info("ODConv-related modules found but no qconfig attributes needed clearing (already FP32).")
+
     # --- END: MANUAL PTQ SKIP IMPLEMENTATION ---
 
     # CRITICAL: Update detection_model to point to prepared_model so calibration works on the right model
