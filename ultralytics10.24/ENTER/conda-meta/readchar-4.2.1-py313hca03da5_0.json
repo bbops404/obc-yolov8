@@ -1,0 +1,61 @@
+{
+  "name": "readchar",
+  "version": "4.2.1",
+  "build": "py313hca03da5_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64",
+  "subdir": "osx-arm64",
+  "fn": "readchar-4.2.1-py313hca03da5_0.conda",
+  "md5": "65b12cc9b3773ba5fc8a6beb3c3d0938",
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/readchar-4.2.1-py313hca03da5_0.conda",
+  "sha256": "0d5e09acdaf98868658dd89212a4e626ee165b323ab0fb5e643f066d925e5830",
+  "arch": "arm64",
+  "platform": "darwin",
+  "depends": [
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313"
+  ],
+  "constrains": [],
+  "license": "MIT",
+  "license_family": "MIT",
+  "timestamp": 1760613321000,
+  "size": 20018,
+  "requested_spec": "pkgs/main/osx-arm64::readchar==4.2.1=py313hca03da5_0",
+  "package_tarball_full_path": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/readchar-4.2.1-py313hca03da5_0.conda",
+  "extracted_package_dir": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/readchar-4.2.1-py313hca03da5_0",
+  "files": [
+    "lib/python3.13/site-packages/readchar-4.2.1.dist-info/INSTALLER",
+    "lib/python3.13/site-packages/readchar-4.2.1.dist-info/METADATA",
+    "lib/python3.13/site-packages/readchar-4.2.1.dist-info/RECORD",
+    "lib/python3.13/site-packages/readchar-4.2.1.dist-info/REQUESTED",
+    "lib/python3.13/site-packages/readchar-4.2.1.dist-info/WHEEL",
+    "lib/python3.13/site-packages/readchar-4.2.1.dist-info/direct_url.json",
+    "lib/python3.13/site-packages/readchar-4.2.1.dist-info/licenses/LICENCE",
+    "lib/python3.13/site-packages/readchar-4.2.1.dist-info/top_level.txt",
+    "lib/python3.13/site-packages/readchar/__init__.py",
+    "lib/python3.13/site-packages/readchar/__pycache__/__init__.cpython-313.pyc",
+    "lib/python3.13/site-packages/readchar/__pycache__/_base_key.cpython-313.pyc",
+    "lib/python3.13/site-packages/readchar/__pycache__/_config.cpython-313.pyc",
+    "lib/python3.13/site-packages/readchar/__pycache__/_posix_key.cpython-313.pyc",
+    "lib/python3.13/site-packages/readchar/__pycache__/_posix_read.cpython-313.pyc",
+    "lib/python3.13/site-packages/readchar/__pycache__/_win_key.cpython-313.pyc",
+    "lib/python3.13/site-packages/readchar/__pycache__/_win_read.cpython-313.pyc",
+    "lib/python3.13/site-packages/readchar/__pycache__/key.cpython-313.pyc",
+    "lib/python3.13/site-packages/readchar/_base_key.py",
+    "lib/python3.13/site-packages/readchar/_config.py",
+    "lib/python3.13/site-packages/readchar/_posix_key.py",
+    "lib/python3.13/site-packages/readchar/_posix_read.py",
+    "lib/python3.13/site-packages/readchar/_win_key.py",
+    "lib/python3.13/site-packages/readchar/_win_read.py",
+    "lib/python3.13/site-packages/readchar/key.py",
+    "lib/python3.13/site-packages/readchar/py.typed"
+  ],
+  "paths_data": {
+    "paths_version": 1,
+    "paths": []
+  },
+  "link": {
+    "source": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/readchar-4.2.1-py313hca03da5_0",
+    "type": 1
+  }
+}

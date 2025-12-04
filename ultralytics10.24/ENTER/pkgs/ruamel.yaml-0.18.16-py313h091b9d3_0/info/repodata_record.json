@@ -1,0 +1,27 @@
+{
+  "arch": "arm64",
+  "build": "py313h091b9d3_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64/",
+  "constrains": [
+    "ruamel.yaml.jinja2 >=0.2"
+  ],
+  "depends": [
+    "__osx >=12.1",
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313",
+    "ruamel.yaml.clib >=0.2.7"
+  ],
+  "fn": "ruamel.yaml-0.18.16-py313h091b9d3_0.conda",
+  "license": "MIT",
+  "license_family": "MIT",
+  "md5": "b292e4688f8ac6f1c97f1f3e895f5cff",
+  "name": "ruamel.yaml",
+  "platform": "darwin",
+  "sha256": "1040a8e295c8b637eac191aee060ebbde881b75c6a1479ef0971bde031805350",
+  "size": 271430,
+  "subdir": "osx-arm64",
+  "timestamp": 1762535976000,
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/ruamel.yaml-0.18.16-py313h091b9d3_0.conda",
+  "version": "0.18.16"
+}

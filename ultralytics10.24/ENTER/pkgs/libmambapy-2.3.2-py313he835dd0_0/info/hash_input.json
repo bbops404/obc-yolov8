@@ -1,0 +1,13 @@
+{
+  "CONDA_BUILD_SYSROOT": "/Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk",
+  "channel_targets": "defaults",
+  "cxx_compiler": "clangxx",
+  "c_stdlib_version": "12.1",
+  "target_platform": "osx-arm64",
+  "c_stdlib": "macosx_deployment_target",
+  "libmambapy": "2.0",
+  "spdlog": "1",
+  "libmamba": "2.0",
+  "cxx_compiler_version": "19",
+  "__osx": "__osx >=12.1"
+}

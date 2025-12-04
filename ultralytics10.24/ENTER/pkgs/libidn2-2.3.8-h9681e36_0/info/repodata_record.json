@@ -1,0 +1,25 @@
+{
+  "arch": "arm64",
+  "build": "h9681e36_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64/",
+  "constrains": [],
+  "depends": [
+    "__osx >=12.1",
+    "gettext >=0.21.0,<1.0a0",
+    "libiconv >=1.16,<2.0a0",
+    "libunistring >=1,<2.0a0"
+  ],
+  "fn": "libidn2-2.3.8-h9681e36_0.conda",
+  "license": "LGPL-2.0 AND LGPL-3.0-or-later AND GPL-3.0-or-later",
+  "license_family": "OTHER",
+  "md5": "4caba2988c52534c6ba5e88afebba106",
+  "name": "libidn2",
+  "platform": "darwin",
+  "sha256": "bdd1c89fbb3b02907799131cb5a436200d134277cdb9dbebab77ebbd28a68e97",
+  "size": 114873,
+  "subdir": "osx-arm64",
+  "timestamp": 1760364408000,
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/libidn2-2.3.8-h9681e36_0.conda",
+  "version": "2.3.8"
+}

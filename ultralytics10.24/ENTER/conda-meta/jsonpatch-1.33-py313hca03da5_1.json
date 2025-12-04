@@ -1,0 +1,69 @@
+{
+  "name": "jsonpatch",
+  "version": "1.33",
+  "build": "py313hca03da5_1",
+  "build_number": 1,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64",
+  "subdir": "osx-arm64",
+  "fn": "jsonpatch-1.33-py313hca03da5_1.conda",
+  "md5": "9e1af96e93b8278ec9029f1bd38f4517",
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/jsonpatch-1.33-py313hca03da5_1.conda",
+  "sha256": "c36bf14810eb4e6d0cdfbdfae3495ed7e17f695196fa485a8aa0fb254ca39716",
+  "arch": "arm64",
+  "platform": "darwin",
+  "depends": [
+    "jsonpointer >=1.9",
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313"
+  ],
+  "constrains": [],
+  "license": "BSD-3-Clause",
+  "license_family": "BSD",
+  "timestamp": 1728594571000,
+  "size": 37185,
+  "requested_spec": "pkgs/main/osx-arm64::jsonpatch==1.33=py313hca03da5_1",
+  "package_tarball_full_path": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/jsonpatch-1.33-py313hca03da5_1.conda",
+  "extracted_package_dir": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/jsonpatch-1.33-py313hca03da5_1",
+  "files": [
+    "bin/jsondiff",
+    "bin/jsonpatch",
+    "lib/python3.13/site-packages/__pycache__/jsonpatch.cpython-313.pyc",
+    "lib/python3.13/site-packages/jsonpatch-1.33.dist-info/AUTHORS",
+    "lib/python3.13/site-packages/jsonpatch-1.33.dist-info/INSTALLER",
+    "lib/python3.13/site-packages/jsonpatch-1.33.dist-info/LICENSE",
+    "lib/python3.13/site-packages/jsonpatch-1.33.dist-info/METADATA",
+    "lib/python3.13/site-packages/jsonpatch-1.33.dist-info/RECORD",
+    "lib/python3.13/site-packages/jsonpatch-1.33.dist-info/REQUESTED",
+    "lib/python3.13/site-packages/jsonpatch-1.33.dist-info/WHEEL",
+    "lib/python3.13/site-packages/jsonpatch-1.33.dist-info/direct_url.json",
+    "lib/python3.13/site-packages/jsonpatch-1.33.dist-info/top_level.txt",
+    "lib/python3.13/site-packages/jsonpatch.py"
+  ],
+  "paths_data": {
+    "paths_version": 1,
+    "paths": [
+      {
+        "_path": "bin/jsondiff",
+        "prefix_placeholder": "/Users/builder/cbouss/perseverance-python-buildout/croot/jsonpatch_1728594556110/_h_env_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placeho",
+        "file_mode": "text",
+        "path_type": "hardlink",
+        "sha256": "40b2f3710d975dc7c86b7336d2a2bf56a48c109a154e8b73648907fa92dff2ed",
+        "size_in_bytes": 1447,
+        "sha256_in_prefix": "38011b935140472965dc318247cfa94360587072010cade353ab6c9c956da973"
+      },
+      {
+        "_path": "bin/jsonpatch",
+        "prefix_placeholder": "/Users/builder/cbouss/perseverance-python-buildout/croot/jsonpatch_1728594556110/_h_env_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placeho",
+        "file_mode": "text",
+        "path_type": "hardlink",
+        "sha256": "202af9ce99c9577fde8c5756bab96ea307693671c7b32c16db82490d050fc1d7",
+        "size_in_bytes": 4108,
+        "sha256_in_prefix": "ff11b1f9edeee269a3b44c6cd7ddc3fdd64af211c6d1592c9caac4105136347d"
+      }
+    ]
+  },
+  "link": {
+    "source": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/jsonpatch-1.33-py313hca03da5_1",
+    "type": 1
+  }
+}

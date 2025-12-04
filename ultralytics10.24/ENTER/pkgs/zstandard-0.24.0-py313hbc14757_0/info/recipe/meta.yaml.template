@@ -1,0 +1,65 @@
+{% set name = "zstandard" %}
+{% set version = "0.24.0" %}
+
+package:
+  name: {{ name }}
+  version: {{ version }}
+
+source:
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  sha256: fe3198b81c00032326342d973e526803f183f97aa9e9a98e3f897ebafe21178f
+  patches:
+    - use_system_zstd.patch
+
+build:
+  skip: true  # [py<39]
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  number: 0
+
+requirements:
+  build:
+    - {{ compiler('c') }}
+    - {{ stdlib('c') }}
+  host:
+    - python
+    - cffi >=1.17
+    - pip
+    - packaging
+    - setuptools
+    - wheel
+    - zstd 1.5.7
+  run:
+    - python
+    - cffi >=1.17
+    # The system zstd library and headers must match what python-zstandard is coded against exactly.
+    # https://github.com/indygreg/python-zstandard/blob/0.22.0/zstd/zstd.h#L110
+    # https://github.com/indygreg/python-zstandard/blob/0.22.0/setup_zstd.py#L38-L40
+    - {{ pin_compatible("zstd", max_pin="x.x.x") }}
+
+test:
+  requires:
+    - pip
+  commands:
+    - pip check
+  imports:
+    - zstandard
+
+about:
+  home: https://github.com/indygreg/python-zstandard
+  license: BSD-3-Clause
+  license_family: BSD
+  license_file:
+    - LICENSE
+    - zstd/LICENSE
+  summary: Zstandard bindings for Python
+  description: |
+    This project provides Python bindings for interfacing with the
+    Zstandard compression library. A C extension and CFFI interface are
+    provided.
+  doc_url: https://python-zstandard.readthedocs.io
+  dev_url: https://github.com/indygreg/python-zstandard
+
+extra:
+  recipe-maintainers:
+    - rmax
+    - xhochy

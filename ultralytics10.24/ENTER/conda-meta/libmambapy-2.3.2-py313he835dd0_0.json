@@ -1,0 +1,62 @@
+{
+  "name": "libmambapy",
+  "version": "2.3.2",
+  "build": "py313he835dd0_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64",
+  "subdir": "osx-arm64",
+  "fn": "libmambapy-2.3.2-py313he835dd0_0.conda",
+  "md5": "c73ce6f0a79b465da1d165b09a35bcc5",
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/libmambapy-2.3.2-py313he835dd0_0.conda",
+  "sha256": "b91cc9325f71806bf7fa25ccd144176821f20dfe12b8ffd162ff757e73e74eb8",
+  "arch": "arm64",
+  "platform": "darwin",
+  "depends": [
+    "__osx >=12.1",
+    "fmt >=11.2.0,<12.0a0",
+    "libcxx >=19",
+    "libmamba 2.3.2 he2fa6f2_0",
+    "pybind11-abi 5",
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313"
+  ],
+  "constrains": [],
+  "license": "BSD-3-Clause",
+  "license_family": "BSD",
+  "timestamp": 1757623101000,
+  "size": 587600,
+  "requested_spec": "pkgs/main/osx-arm64::libmambapy==2.3.2=py313he835dd0_0",
+  "package_tarball_full_path": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/libmambapy-2.3.2-py313he835dd0_0.conda",
+  "extracted_package_dir": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/libmambapy-2.3.2-py313he835dd0_0",
+  "files": [
+    "lib/python3.13/site-packages/libmambapy-2.3.2.dist-info/INSTALLER",
+    "lib/python3.13/site-packages/libmambapy-2.3.2.dist-info/LICENSE",
+    "lib/python3.13/site-packages/libmambapy-2.3.2.dist-info/METADATA",
+    "lib/python3.13/site-packages/libmambapy-2.3.2.dist-info/RECORD",
+    "lib/python3.13/site-packages/libmambapy-2.3.2.dist-info/REQUESTED",
+    "lib/python3.13/site-packages/libmambapy-2.3.2.dist-info/WHEEL",
+    "lib/python3.13/site-packages/libmambapy-2.3.2.dist-info/direct_url.json",
+    "lib/python3.13/site-packages/libmambapy-2.3.2.dist-info/top_level.txt",
+    "lib/python3.13/site-packages/libmambapy/__init__.py",
+    "lib/python3.13/site-packages/libmambapy/__pycache__/__init__.cpython-313.pyc",
+    "lib/python3.13/site-packages/libmambapy/__pycache__/specs.cpython-313.pyc",
+    "lib/python3.13/site-packages/libmambapy/__pycache__/utils.cpython-313.pyc",
+    "lib/python3.13/site-packages/libmambapy/__pycache__/version.cpython-313.pyc",
+    "lib/python3.13/site-packages/libmambapy/bindings.cpython-313-darwin.so",
+    "lib/python3.13/site-packages/libmambapy/solver/__init__.py",
+    "lib/python3.13/site-packages/libmambapy/solver/__pycache__/__init__.cpython-313.pyc",
+    "lib/python3.13/site-packages/libmambapy/solver/__pycache__/libsolv.cpython-313.pyc",
+    "lib/python3.13/site-packages/libmambapy/solver/libsolv.py",
+    "lib/python3.13/site-packages/libmambapy/specs.py",
+    "lib/python3.13/site-packages/libmambapy/utils.py",
+    "lib/python3.13/site-packages/libmambapy/version.py"
+  ],
+  "paths_data": {
+    "paths_version": 1,
+    "paths": []
+  },
+  "link": {
+    "source": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/libmambapy-2.3.2-py313he835dd0_0",
+    "type": 1
+  }
+}

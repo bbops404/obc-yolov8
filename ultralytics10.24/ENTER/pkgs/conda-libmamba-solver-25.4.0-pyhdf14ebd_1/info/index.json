@@ -1,0 +1,19 @@
+{
+  "arch": null,
+  "build": "pyhdf14ebd_1",
+  "build_number": 1,
+  "depends": [
+    "boltons >=23.0.0",
+    "conda >=24.11",
+    "libmambapy >=2",
+    "python >=3.9"
+  ],
+  "license": "BSD-3-Clause",
+  "license_family": "BSD",
+  "name": "conda-libmamba-solver",
+  "noarch": "python",
+  "platform": null,
+  "subdir": "noarch",
+  "timestamp": 1761744831384,
+  "version": "25.4.0"
+}

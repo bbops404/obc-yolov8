@@ -1,0 +1,23 @@
+{
+  "arch": "arm64",
+  "build": "py313hca03da5_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64/",
+  "constrains": [],
+  "depends": [
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313"
+  ],
+  "fn": "charset-normalizer-3.4.4-py313hca03da5_0.conda",
+  "license": "MIT",
+  "license_family": "MIT",
+  "md5": "6301ec890b186cbe5d8243254450651e",
+  "name": "charset-normalizer",
+  "platform": "darwin",
+  "sha256": "240ae310bc1c58a1061816b1b4751407f7841c0da8ef1c09babd9860f39a180a",
+  "size": 100213,
+  "subdir": "osx-arm64",
+  "timestamp": 1761744861000,
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/charset-normalizer-3.4.4-py313hca03da5_0.conda",
+  "version": "3.4.4"
+}

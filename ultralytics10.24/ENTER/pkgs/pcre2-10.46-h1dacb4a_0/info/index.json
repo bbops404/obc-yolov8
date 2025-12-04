@@ -1,0 +1,17 @@
+{
+  "arch": "arm64",
+  "build": "h1dacb4a_0",
+  "build_number": 0,
+  "depends": [
+    "__osx >=12.1",
+    "bzip2 >=1.0.8,<2.0a0",
+    "zlib >=1.2.13,<2.0a0"
+  ],
+  "license": "BSD-3-Clause WITH PCRE2-exception",
+  "license_family": "BSD",
+  "name": "pcre2",
+  "platform": "osx",
+  "subdir": "osx-arm64",
+  "timestamp": 1759825795666,
+  "version": "10.46"
+}

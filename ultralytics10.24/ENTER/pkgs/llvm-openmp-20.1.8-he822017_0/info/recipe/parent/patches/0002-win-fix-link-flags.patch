@@ -1,0 +1,37 @@
+From d352a0ed53810b9a5be47f6440c2872a18e2d635 Mon Sep 17 00:00:00 2001
+From: Eric Lundby <Eric.Lundby@gmail.com>
+Date: Wed, 23 Jul 2025 15:00:19 -0600
+Subject: [PATCH 1/2] win-fix-link-flags
+
+Solves:
+
+FAILED: runtime/src/libomp.lib
+C:\Windows\system32\cmd.exe /C "cd . && %PREFIX%\Library\bin\llvm-lib.exe /nologo /machine:x64 /Qoption,link,/DEF:%%SRC_DIR%%/openmp/build/runtime/src/libomp.imp.def /out:runtime\src\libomp.lib  && cd ."
+/Qoption,link,/DEF:C:/Users/dev-admin/Desktop/c2/openmp_1753295755943/work/openmp/build/runtime/src/libomp.imp.def: no such file or directory
+
+---
+ openmp/runtime/src/CMakeLists.txt | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/openmp/runtime/src/CMakeLists.txt b/openmp/runtime/src/CMakeLists.txt
+index f106694841ce..d4bd9b4e955e 100644
+--- a/openmp/runtime/src/CMakeLists.txt
++++ b/openmp/runtime/src/CMakeLists.txt
+@@ -165,6 +165,14 @@ if(NOT WIN32)
+   add_definitions(-U_GLIBCXX_ASSERTIONS)
+ endif()
+ 
++# Set the linker flag for the def file to /def: for lld-link and llvm-lib insted of "/Qoption,link,/DEF:"
++get_filename_component(_linker_basename "${CMAKE_LINKER}" NAME)
++get_filename_component(_ar_basename "${CMAKE_AR}" NAME)
++
++if(_linker_basename MATCHES "lld-link" OR _ar_basename MATCHES "llvm-lib")
++  set(CMAKE_LINK_DEF_FILE_FLAG "/def:")
++endif()
++
+ # Add the OpenMP library
+ libomp_get_ldflags(LIBOMP_CONFIGURED_LDFLAGS)
+ 
+-- 
+2.45.2
+

@@ -1,0 +1,23 @@
+{
+  "arch": "arm64",
+  "build": "py313hca03da5_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64/",
+  "constrains": [],
+  "depends": [
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313"
+  ],
+  "fn": "pygments-2.19.2-py313hca03da5_0.conda",
+  "license": "BSD-2-Clause",
+  "license_family": "BSD",
+  "md5": "2f6618a70aab69fab504c16bf3b34e9d",
+  "name": "pygments",
+  "platform": "darwin",
+  "sha256": "c38fd88505b31154b4b262a26c6a66c82d7ba57762996f675ea62d019fb9e25b",
+  "size": 4935461,
+  "subdir": "osx-arm64",
+  "timestamp": 1762431607000,
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/pygments-2.19.2-py313hca03da5_0.conda",
+  "version": "2.19.2"
+}

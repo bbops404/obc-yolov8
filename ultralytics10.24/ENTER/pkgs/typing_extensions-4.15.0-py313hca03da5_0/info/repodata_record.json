@@ -1,0 +1,23 @@
+{
+  "arch": "arm64",
+  "build": "py313hca03da5_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64/",
+  "constrains": [],
+  "depends": [
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313"
+  ],
+  "fn": "typing_extensions-4.15.0-py313hca03da5_0.conda",
+  "license": "PSF-2.0",
+  "license_family": "PSF",
+  "md5": "3c37609330dd4baeb0f4842f02cb783e",
+  "name": "typing_extensions",
+  "platform": "darwin",
+  "sha256": "a97465fc1f5093231fd739b63b3ea9282960cc9b79d106893dff7724ffcdacf6",
+  "size": 106009,
+  "subdir": "osx-arm64",
+  "timestamp": 1756281579000,
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/typing_extensions-4.15.0-py313hca03da5_0.conda",
+  "version": "4.15.0"
+}

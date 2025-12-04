@@ -1,0 +1,108 @@
+{
+  "name": "conda-libmamba-solver",
+  "version": "25.4.0",
+  "build": "pyhdf14ebd_1",
+  "build_number": 1,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64",
+  "subdir": "noarch",
+  "fn": "conda-libmamba-solver-25.4.0-pyhdf14ebd_1.conda",
+  "md5": "26e244a9dbbaf8d02620aee9c6bf16ab",
+  "url": "https://repo.anaconda.com/pkgs/main/noarch/conda-libmamba-solver-25.4.0-pyhdf14ebd_1.conda",
+  "sha256": "47ef662e76f8915537d28d1e20cdf73cb7a7fc6a2819a75719c78a410d07681e",
+  "depends": [
+    "boltons >=23.0.0",
+    "conda >=24.11",
+    "libmambapy >=2",
+    "python >=3.9"
+  ],
+  "constrains": [],
+  "noarch": "python",
+  "license": "BSD-3-Clause",
+  "license_family": "BSD",
+  "package_type": "noarch_python",
+  "timestamp": 1761744831000,
+  "size": 40446,
+  "requested_spec": "pkgs/main/noarch::conda-libmamba-solver==25.4.0=pyhdf14ebd_1",
+  "package_tarball_full_path": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/conda-libmamba-solver-25.4.0-pyhdf14ebd_1.conda",
+  "extracted_package_dir": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/conda-libmamba-solver-25.4.0-pyhdf14ebd_1",
+  "files": [
+    "lib/python3.13/site-packages/conda_libmamba_solver-25.4.0.dist-info/INSTALLER",
+    "lib/python3.13/site-packages/conda_libmamba_solver-25.4.0.dist-info/METADATA",
+    "lib/python3.13/site-packages/conda_libmamba_solver-25.4.0.dist-info/RECORD",
+    "lib/python3.13/site-packages/conda_libmamba_solver-25.4.0.dist-info/REQUESTED",
+    "lib/python3.13/site-packages/conda_libmamba_solver-25.4.0.dist-info/WHEEL",
+    "lib/python3.13/site-packages/conda_libmamba_solver-25.4.0.dist-info/direct_url.json",
+    "lib/python3.13/site-packages/conda_libmamba_solver-25.4.0.dist-info/entry_points.txt",
+    "lib/python3.13/site-packages/conda_libmamba_solver-25.4.0.dist-info/licenses/AUTHORS.md",
+    "lib/python3.13/site-packages/conda_libmamba_solver-25.4.0.dist-info/licenses/LICENSE",
+    "lib/python3.13/site-packages/conda_libmamba_solver/__init__.py",
+    "lib/python3.13/site-packages/conda_libmamba_solver/conda_build_exceptions.py",
+    "lib/python3.13/site-packages/conda_libmamba_solver/exceptions.py",
+    "lib/python3.13/site-packages/conda_libmamba_solver/index.py",
+    "lib/python3.13/site-packages/conda_libmamba_solver/mamba_utils.py",
+    "lib/python3.13/site-packages/conda_libmamba_solver/plugin.py",
+    "lib/python3.13/site-packages/conda_libmamba_solver/repoquery.py",
+    "lib/python3.13/site-packages/conda_libmamba_solver/solver.py",
+    "lib/python3.13/site-packages/conda_libmamba_solver/state.py",
+    "lib/python3.13/site-packages/conda_libmamba_solver/utils.py",
+    "lib/python3.13/site-packages/conda_libmamba_solver/__pycache__/__init__.cpython-313.pyc",
+    "lib/python3.13/site-packages/conda_libmamba_solver/__pycache__/conda_build_exceptions.cpython-313.pyc",
+    "lib/python3.13/site-packages/conda_libmamba_solver/__pycache__/exceptions.cpython-313.pyc",
+    "lib/python3.13/site-packages/conda_libmamba_solver/__pycache__/index.cpython-313.pyc",
+    "lib/python3.13/site-packages/conda_libmamba_solver/__pycache__/mamba_utils.cpython-313.pyc",
+    "lib/python3.13/site-packages/conda_libmamba_solver/__pycache__/plugin.cpython-313.pyc",
+    "lib/python3.13/site-packages/conda_libmamba_solver/__pycache__/repoquery.cpython-313.pyc",
+    "lib/python3.13/site-packages/conda_libmamba_solver/__pycache__/solver.cpython-313.pyc",
+    "lib/python3.13/site-packages/conda_libmamba_solver/__pycache__/state.cpython-313.pyc",
+    "lib/python3.13/site-packages/conda_libmamba_solver/__pycache__/utils.cpython-313.pyc"
+  ],
+  "paths_data": {
+    "paths_version": 1,
+    "paths": [
+      {
+        "_path": "lib/python3.13/site-packages/conda_libmamba_solver/__pycache__/__init__.cpython-313.pyc",
+        "path_type": "pyc_file"
+      },
+      {
+        "_path": "lib/python3.13/site-packages/conda_libmamba_solver/__pycache__/conda_build_exceptions.cpython-313.pyc",
+        "path_type": "pyc_file"
+      },
+      {
+        "_path": "lib/python3.13/site-packages/conda_libmamba_solver/__pycache__/exceptions.cpython-313.pyc",
+        "path_type": "pyc_file"
+      },
+      {
+        "_path": "lib/python3.13/site-packages/conda_libmamba_solver/__pycache__/index.cpython-313.pyc",
+        "path_type": "pyc_file"
+      },
+      {
+        "_path": "lib/python3.13/site-packages/conda_libmamba_solver/__pycache__/mamba_utils.cpython-313.pyc",
+        "path_type": "pyc_file"
+      },
+      {
+        "_path": "lib/python3.13/site-packages/conda_libmamba_solver/__pycache__/plugin.cpython-313.pyc",
+        "path_type": "pyc_file"
+      },
+      {
+        "_path": "lib/python3.13/site-packages/conda_libmamba_solver/__pycache__/repoquery.cpython-313.pyc",
+        "path_type": "pyc_file"
+      },
+      {
+        "_path": "lib/python3.13/site-packages/conda_libmamba_solver/__pycache__/solver.cpython-313.pyc",
+        "path_type": "pyc_file"
+      },
+      {
+        "_path": "lib/python3.13/site-packages/conda_libmamba_solver/__pycache__/state.cpython-313.pyc",
+        "path_type": "pyc_file"
+      },
+      {
+        "_path": "lib/python3.13/site-packages/conda_libmamba_solver/__pycache__/utils.cpython-313.pyc",
+        "path_type": "pyc_file"
+      }
+    ]
+  },
+  "link": {
+    "source": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/conda-libmamba-solver-25.4.0-pyhdf14ebd_1",
+    "type": 1
+  }
+}

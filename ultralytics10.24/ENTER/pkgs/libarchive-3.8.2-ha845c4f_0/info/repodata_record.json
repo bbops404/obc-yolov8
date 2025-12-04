@@ -1,0 +1,29 @@
+{
+  "arch": "arm64",
+  "build": "ha845c4f_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64/",
+  "constrains": [],
+  "depends": [
+    "__osx >=12.1",
+    "bzip2 >=1.0.8,<2.0a0",
+    "libiconv >=1.16,<2.0a0",
+    "libxml2 >=2.13.8,<2.14.0a0",
+    "lz4-c >=1.9.4,<1.10.0a0",
+    "xz >=5.6.4,<6.0a0",
+    "zlib >=1.2.13,<2.0a0",
+    "zstd >=1.5.6,<1.6.0a0"
+  ],
+  "fn": "libarchive-3.8.2-ha845c4f_0.conda",
+  "license": "BSD-2-Clause",
+  "license_family": "BSD",
+  "md5": "37da97cdd2cfac2cdf35aee3bb15070a",
+  "name": "libarchive",
+  "platform": "darwin",
+  "sha256": "ecb63d5aeecd58a293c6a43261fdc1e520510a7c031193f27ded4e8df7567a43",
+  "size": 778970,
+  "subdir": "osx-arm64",
+  "timestamp": 1761151812000,
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/libarchive-3.8.2-ha845c4f_0.conda",
+  "version": "3.8.2"
+}

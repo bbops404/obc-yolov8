@@ -1,0 +1,12 @@
+{
+  "cxx_compiler": "clangxx",
+  "c_stdlib_version": "12.1",
+  "channel_targets": "defaults",
+  "c_compiler_version": "20",
+  "CONDA_BUILD_SYSROOT": "/Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk",
+  "c_stdlib": "macosx_deployment_target",
+  "target_platform": "osx-arm64",
+  "cxx_compiler_version": "20",
+  "c_compiler": "clang",
+  "__osx": "__osx >=12.1"
+}

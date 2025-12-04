@@ -1,0 +1,56 @@
+{
+  "name": "mdurl",
+  "version": "0.1.2",
+  "build": "py313hca03da5_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64",
+  "subdir": "osx-arm64",
+  "fn": "mdurl-0.1.2-py313hca03da5_0.conda",
+  "md5": "cc0fbba5b4ee07d4f979149d050c864a",
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/mdurl-0.1.2-py313hca03da5_0.conda",
+  "sha256": "dcfa6b13af360bd6f3388470af3e93a4b6fe2fd47b5d0546daf0f1daed5323bb",
+  "arch": "arm64",
+  "platform": "darwin",
+  "depends": [
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313"
+  ],
+  "constrains": [],
+  "license": "MIT",
+  "license_family": "MIT",
+  "timestamp": 1758552196000,
+  "size": 26834,
+  "requested_spec": "pkgs/main/osx-arm64::mdurl==0.1.2=py313hca03da5_0",
+  "package_tarball_full_path": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/mdurl-0.1.2-py313hca03da5_0.conda",
+  "extracted_package_dir": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/mdurl-0.1.2-py313hca03da5_0",
+  "files": [
+    "lib/python3.13/site-packages/mdurl-0.1.2.dist-info/INSTALLER",
+    "lib/python3.13/site-packages/mdurl-0.1.2.dist-info/METADATA",
+    "lib/python3.13/site-packages/mdurl-0.1.2.dist-info/RECORD",
+    "lib/python3.13/site-packages/mdurl-0.1.2.dist-info/REQUESTED",
+    "lib/python3.13/site-packages/mdurl-0.1.2.dist-info/WHEEL",
+    "lib/python3.13/site-packages/mdurl-0.1.2.dist-info/direct_url.json",
+    "lib/python3.13/site-packages/mdurl-0.1.2.dist-info/licenses/LICENSE",
+    "lib/python3.13/site-packages/mdurl/__init__.py",
+    "lib/python3.13/site-packages/mdurl/__pycache__/__init__.cpython-313.pyc",
+    "lib/python3.13/site-packages/mdurl/__pycache__/_decode.cpython-313.pyc",
+    "lib/python3.13/site-packages/mdurl/__pycache__/_encode.cpython-313.pyc",
+    "lib/python3.13/site-packages/mdurl/__pycache__/_format.cpython-313.pyc",
+    "lib/python3.13/site-packages/mdurl/__pycache__/_parse.cpython-313.pyc",
+    "lib/python3.13/site-packages/mdurl/__pycache__/_url.cpython-313.pyc",
+    "lib/python3.13/site-packages/mdurl/_decode.py",
+    "lib/python3.13/site-packages/mdurl/_encode.py",
+    "lib/python3.13/site-packages/mdurl/_format.py",
+    "lib/python3.13/site-packages/mdurl/_parse.py",
+    "lib/python3.13/site-packages/mdurl/_url.py",
+    "lib/python3.13/site-packages/mdurl/py.typed"
+  ],
+  "paths_data": {
+    "paths_version": 1,
+    "paths": []
+  },
+  "link": {
+    "source": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/mdurl-0.1.2-py313hca03da5_0",
+    "type": 1
+  }
+}

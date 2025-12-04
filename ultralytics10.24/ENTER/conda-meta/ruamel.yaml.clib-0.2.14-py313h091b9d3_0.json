@@ -1,0 +1,46 @@
+{
+  "name": "ruamel.yaml.clib",
+  "version": "0.2.14",
+  "build": "py313h091b9d3_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64",
+  "subdir": "osx-arm64",
+  "fn": "ruamel.yaml.clib-0.2.14-py313h091b9d3_0.conda",
+  "md5": "ca9e7978a1057363f0c36d975b764dcb",
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/ruamel.yaml.clib-0.2.14-py313h091b9d3_0.conda",
+  "sha256": "7686f956aaa99c67ffd4ddcc948fa476397fc6844eeb6142967ddaa7b8114b1d",
+  "arch": "arm64",
+  "platform": "darwin",
+  "depends": [
+    "__osx >=12.1",
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313"
+  ],
+  "constrains": [],
+  "license": "MIT",
+  "license_family": "MIT",
+  "timestamp": 1762530107000,
+  "size": 114492,
+  "requested_spec": "pkgs/main/osx-arm64::ruamel.yaml.clib==0.2.14=py313h091b9d3_0",
+  "package_tarball_full_path": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/ruamel.yaml.clib-0.2.14-py313h091b9d3_0.conda",
+  "extracted_package_dir": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/ruamel.yaml.clib-0.2.14-py313h091b9d3_0",
+  "files": [
+    "lib/python3.13/site-packages/_ruamel_yaml.cpython-313-darwin.so",
+    "lib/python3.13/site-packages/ruamel_yaml_clib-0.2.14.dist-info/INSTALLER",
+    "lib/python3.13/site-packages/ruamel_yaml_clib-0.2.14.dist-info/METADATA",
+    "lib/python3.13/site-packages/ruamel_yaml_clib-0.2.14.dist-info/RECORD",
+    "lib/python3.13/site-packages/ruamel_yaml_clib-0.2.14.dist-info/REQUESTED",
+    "lib/python3.13/site-packages/ruamel_yaml_clib-0.2.14.dist-info/WHEEL",
+    "lib/python3.13/site-packages/ruamel_yaml_clib-0.2.14.dist-info/direct_url.json",
+    "lib/python3.13/site-packages/ruamel_yaml_clib-0.2.14.dist-info/licenses/LICENSE",
+    "lib/python3.13/site-packages/ruamel_yaml_clib-0.2.14.dist-info/top_level.txt"
+  ],
+  "paths_data": {
+    "paths_version": 1,
+    "paths": []
+  },
+  "link": {
+    "source": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/ruamel.yaml.clib-0.2.14-py313h091b9d3_0",
+    "type": 1
+  }
+}

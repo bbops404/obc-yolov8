@@ -1,0 +1,52 @@
+{
+  "name": "typing-inspection",
+  "version": "0.4.2",
+  "build": "py313hca03da5_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64",
+  "subdir": "osx-arm64",
+  "fn": "typing-inspection-0.4.2-py313hca03da5_0.conda",
+  "md5": "1398c39b86119164f19498b6fbcfdb69",
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/typing-inspection-0.4.2-py313hca03da5_0.conda",
+  "sha256": "ac672d308344cc0852fe43b5099da7eca46ce651afdb79f1cdca256c75488f99",
+  "arch": "arm64",
+  "platform": "darwin",
+  "depends": [
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313",
+    "typing_extensions >=4.12.0"
+  ],
+  "constrains": [],
+  "license": "MIT",
+  "license_family": "MIT",
+  "timestamp": 1760614190000,
+  "size": 32465,
+  "requested_spec": "pkgs/main/osx-arm64::typing-inspection==0.4.2=py313hca03da5_0",
+  "package_tarball_full_path": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/typing-inspection-0.4.2-py313hca03da5_0.conda",
+  "extracted_package_dir": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/typing-inspection-0.4.2-py313hca03da5_0",
+  "files": [
+    "lib/python3.13/site-packages/typing_inspection-0.4.2.dist-info/INSTALLER",
+    "lib/python3.13/site-packages/typing_inspection-0.4.2.dist-info/METADATA",
+    "lib/python3.13/site-packages/typing_inspection-0.4.2.dist-info/RECORD",
+    "lib/python3.13/site-packages/typing_inspection-0.4.2.dist-info/REQUESTED",
+    "lib/python3.13/site-packages/typing_inspection-0.4.2.dist-info/WHEEL",
+    "lib/python3.13/site-packages/typing_inspection-0.4.2.dist-info/direct_url.json",
+    "lib/python3.13/site-packages/typing_inspection-0.4.2.dist-info/licenses/LICENSE",
+    "lib/python3.13/site-packages/typing_inspection/__init__.py",
+    "lib/python3.13/site-packages/typing_inspection/__pycache__/__init__.cpython-313.pyc",
+    "lib/python3.13/site-packages/typing_inspection/__pycache__/introspection.cpython-313.pyc",
+    "lib/python3.13/site-packages/typing_inspection/__pycache__/typing_objects.cpython-313.pyc",
+    "lib/python3.13/site-packages/typing_inspection/introspection.py",
+    "lib/python3.13/site-packages/typing_inspection/py.typed",
+    "lib/python3.13/site-packages/typing_inspection/typing_objects.py",
+    "lib/python3.13/site-packages/typing_inspection/typing_objects.pyi"
+  ],
+  "paths_data": {
+    "paths_version": 1,
+    "paths": []
+  },
+  "link": {
+    "source": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/typing-inspection-0.4.2-py313hca03da5_0",
+    "type": 1
+  }
+}

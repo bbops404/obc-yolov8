@@ -1,0 +1,44 @@
+{
+  "name": "llvm-openmp",
+  "version": "20.1.8",
+  "build": "he822017_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64",
+  "subdir": "osx-arm64",
+  "fn": "llvm-openmp-20.1.8-he822017_0.conda",
+  "md5": "212b650a1ad620e8cf059cb6a36c976e",
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/llvm-openmp-20.1.8-he822017_0.conda",
+  "sha256": "94f079719bbbad632ae2250bbf8d423618b3094aea9a5b96a76d8bd2e99cb485",
+  "arch": "arm64",
+  "platform": "darwin",
+  "depends": [
+    "__osx >=11.1"
+  ],
+  "constrains": [
+    "openmp 20.1.8|20.1.8.*"
+  ],
+  "license": "Apache-2.0 WITH LLVM-exception",
+  "license_family": "Apache",
+  "timestamp": 1756229534000,
+  "size": 335299,
+  "requested_spec": "pkgs/main/osx-arm64::llvm-openmp==20.1.8=he822017_0",
+  "package_tarball_full_path": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/llvm-openmp-20.1.8-he822017_0.conda",
+  "extracted_package_dir": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/llvm-openmp-20.1.8-he822017_0",
+  "files": [
+    "include/omp-tools.h",
+    "include/omp.h",
+    "include/ompt.h",
+    "include/ompx.h",
+    "lib/libgomp.1.dylib",
+    "lib/libiomp5.dylib",
+    "lib/libomp.dylib"
+  ],
+  "paths_data": {
+    "paths_version": 1,
+    "paths": []
+  },
+  "link": {
+    "source": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/llvm-openmp-20.1.8-he822017_0",
+    "type": 1
+  }
+}

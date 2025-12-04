@@ -1,0 +1,57 @@
+{
+  "name": "libunistring",
+  "version": "1.3",
+  "build": "h1799b2a_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64",
+  "subdir": "osx-arm64",
+  "fn": "libunistring-1.3-h1799b2a_0.conda",
+  "md5": "51410f56fa2d258fc0a87c486b7839a8",
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/libunistring-1.3-h1799b2a_0.conda",
+  "sha256": "d34ce699ece15cf88dfe312551fcfa06a86f9038d5cec2554a5313d1687590c7",
+  "arch": "arm64",
+  "platform": "darwin",
+  "depends": [
+    "__osx >=11.1"
+  ],
+  "constrains": [],
+  "license": "LGPL-3.0-only",
+  "license_family": "LGPL",
+  "timestamp": 1755086959000,
+  "size": 718222,
+  "requested_spec": "pkgs/main/osx-arm64::libunistring==1.3=h1799b2a_0",
+  "package_tarball_full_path": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/libunistring-1.3-h1799b2a_0.conda",
+  "extracted_package_dir": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/libunistring-1.3-h1799b2a_0",
+  "files": [
+    "include/unicase.h",
+    "include/uniconv.h",
+    "include/unictype.h",
+    "include/unigbrk.h",
+    "include/unilbrk.h",
+    "include/unimetadata.h",
+    "include/uniname.h",
+    "include/uninorm.h",
+    "include/unistdio.h",
+    "include/unistr.h",
+    "include/unistring/cdefs.h",
+    "include/unistring/iconveh.h",
+    "include/unistring/inline.h",
+    "include/unistring/localcharset.h",
+    "include/unistring/stdint.h",
+    "include/unistring/version.h",
+    "include/unistring/woe32dll.h",
+    "include/unitypes.h",
+    "include/uniwbrk.h",
+    "include/uniwidth.h",
+    "lib/libunistring.5.dylib",
+    "lib/libunistring.dylib"
+  ],
+  "paths_data": {
+    "paths_version": 1,
+    "paths": []
+  },
+  "link": {
+    "source": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/libunistring-1.3-h1799b2a_0",
+    "type": 1
+  }
+}

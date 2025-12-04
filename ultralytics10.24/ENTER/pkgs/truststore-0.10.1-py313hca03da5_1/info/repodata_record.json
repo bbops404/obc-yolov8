@@ -1,0 +1,23 @@
+{
+  "arch": "arm64",
+  "build": "py313hca03da5_1",
+  "build_number": 1,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64/",
+  "constrains": [],
+  "depends": [
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313"
+  ],
+  "fn": "truststore-0.10.1-py313hca03da5_1.conda",
+  "license": "MIT",
+  "license_family": "MIT",
+  "md5": "c65542bf580047dbffdedaf763057c77",
+  "name": "truststore",
+  "platform": "darwin",
+  "sha256": "678639cde456bae6e4a11ce9118be17eebb4113963eb7aca2be86bd425d64e59",
+  "size": 49457,
+  "subdir": "osx-arm64",
+  "timestamp": 1762520944000,
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/truststore-0.10.1-py313hca03da5_1.conda",
+  "version": "0.10.1"
+}

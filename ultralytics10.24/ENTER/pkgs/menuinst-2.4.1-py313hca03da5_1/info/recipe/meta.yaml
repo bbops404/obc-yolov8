@@ -1,0 +1,112 @@
+# This file created by conda-build 25.1.2
+# meta.yaml template originally from:
+# /Users/ec2-user/tasks/task_176286068530515/menuinst-feedstock/recipe, last modified Tue Nov 11 11:31:26 2025
+# ------------------------------------------------
+
+package:
+  name: menuinst
+  version: 2.4.1
+source:
+  sha256: dc656f0f5a85d7e282a869e0e771e7fdab112a54ce95aabe78849dc90fec0f83
+  url: https://github.com/conda/menuinst/archive/2.4.1.tar.gz
+build:
+  entry_points:
+    - menuinst = menuinst.cli:main
+  missing_dso_whitelist:
+    - '**/libswift*'
+  number: '1'
+  script:
+    - /opt/miniconda3/conda-bld/menuinst_1762860695894/_h_env_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold/bin/python
+      -m pip install . -vv --no-build-isolation --no-deps
+  string: py313hca03da5_1
+requirements:
+  build:
+    - bzip2 1.0.8 h80987f9_6
+    - ca-certificates 2025.11.4 hca03da5_0
+    - expat 2.7.3 h982b769_0
+    - libcxx 20.1.8 hd7fd590_1
+    - libffi 3.4.4 hca03da5_1
+    - libmpdec 4.0.0 h80987f9_0
+    - libzlib 1.3.1 h5f15de7_0
+    - ncurses 6.5 hee39554_0
+    - openssl 3.0.18 h9b4081a_0
+    - python 3.13.9 hc7d8306_100_cp313
+    - python_abi 3.13 1_cp313
+    - readline 8.3 h0b18652_0
+    - sqlite 3.51.0 hab6afd1_0
+    - tk 8.6.15 hcd8a7d5_0
+    - tzdata 2025b h04d1e81_0
+    - xz 5.6.4 h80987f9_1
+    - zlib 1.3.1 h5f15de7_0
+  host:
+    - bzip2 1.0.8 h80987f9_6
+    - ca-certificates 2025.11.4 hca03da5_0
+    - expat 2.7.3 h982b769_0
+    - libcxx 20.1.8 hd7fd590_1
+    - libffi 3.4.4 hca03da5_1
+    - libmpdec 4.0.0 h80987f9_0
+    - libzlib 1.3.1 h5f15de7_0
+    - ncurses 6.5 hee39554_0
+    - openssl 3.0.18 h9b4081a_0
+    - packaging 25.0 py313hca03da5_1
+    - pip 25.2 pyhc872135_1
+    - python 3.13.9 hc7d8306_100_cp313
+    - python_abi 3.13 1_cp313
+    - readline 8.3 h0b18652_0
+    - setuptools 80.9.0 py313hca03da5_0
+    - setuptools-scm 8.3.1 py313hca03da5_1
+    - setuptools_scm 8.3.1 hd3eb1b0_1
+    - sqlite 3.51.0 hab6afd1_0
+    - tk 8.6.15 hcd8a7d5_0
+    - toml 0.10.2 pyhd3eb1b0_0
+    - tzdata 2025b h04d1e81_0
+    - wheel 0.45.1 py313hca03da5_0
+    - xz 5.6.4 h80987f9_1
+    - zlib 1.3.1 h5f15de7_0
+  run:
+    - python >=3.13,<3.14.0a0
+    - python_abi 3.13.* *_cp313
+test:
+  imports:
+    - menuinst
+    - menuinst.api
+  requires:
+    - conda
+    - pip
+    - pydantic >=2
+    - pytest
+    - pytest-mock
+  source_files:
+    - tests
+about:
+  description: 'This package provides cross platform menu item installation for conda
+    packages.
+
+
+    If a conda package ships a menuinst JSON document under $PREFIX/Menu, conda will
+    invoke
+
+    menuinst to process the JSON file and install the menu items in your operating
+    system.
+
+    The menu items are removed when the package is uninstalled.
+
+    '
+  dev_url: https://github.com/conda/menuinst
+  doc_url: https://conda.github.io/menuinst
+  home: https://github.com/conda/menuinst
+  license: BSD-3-Clause AND MIT
+  license_family: BSD
+  license_file:
+    - LICENSE.txt
+    - menuinst/_vendor/apipkg/LICENSE
+  summary: cross platform install of menu items
+extra:
+  copy_test_source_files: true
+  final: true
+  recipe-maintainers:
+    - carlodri
+    - goanpeca
+    - isuruf
+    - jaimergp
+    - jakirkham

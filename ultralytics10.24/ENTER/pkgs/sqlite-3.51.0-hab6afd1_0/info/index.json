@@ -1,0 +1,18 @@
+{
+  "arch": "arm64",
+  "build": "hab6afd1_0",
+  "build_number": 0,
+  "depends": [
+    "__osx >=12.1",
+    "ncurses >=6.5,<7.0a0",
+    "readline >=8.3,<9.0a0",
+    "zlib >=1.2.13,<2.0a0"
+  ],
+  "license": "blessing",
+  "license_family": "Other",
+  "name": "sqlite",
+  "platform": "osx",
+  "subdir": "osx-arm64",
+  "timestamp": 1762525029950,
+  "version": "3.51.0"
+}

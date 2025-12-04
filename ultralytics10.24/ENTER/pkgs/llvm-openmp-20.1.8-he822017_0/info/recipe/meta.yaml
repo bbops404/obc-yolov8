@@ -1,0 +1,103 @@
+# This file created by conda-build 24.9.0
+# ------------------------------------------------
+
+package:
+  name: llvm-openmp
+  version: 20.1.8
+source:
+  folder: llvm-project
+  patches:
+    - patches/0001-link-libomp-to-compiler-rt-on-osx-arm.patch
+  sha256: a6cbad9b2243b17e87795817cfff2107d113543a12486586f8a055a2bb044963
+  url: https://github.com/llvm/llvm-project/archive/refs/tags/llvmorg-20.1.8.tar.gz
+build:
+  ignore_run_exports_from:
+    - clang_bootstrap_osx-arm64 20.1.8.*
+    - gfortran_osx-arm64 11.2.0.*
+  number: 0
+  run_exports:
+    strong:
+      - llvm-openmp >=20.1.8
+  string: he822017_0
+requirements:
+  build:
+    - bzip2 1.0.8 h80987f9_6
+    - c-ares 1.34.5 h2ca31fc_0
+    - ca-certificates 2025.7.15 hca03da5_0
+    - clang_bootstrap_osx-arm64 20.1.8 h310783a_0
+    - cmake 3.31.2 h89d4fe9_0
+    - expat 2.7.1 h313beb8_0
+    - libcurl 8.14.1 hcdd2897_1
+    - libcxx 20.1.8 h8869778_0
+    - libev 4.33 h1a28f6b_1
+    - libnghttp2 1.57.0 h62f6fdd_0
+    - libssh2 1.11.1 h3e2b118_0
+    - libuv 1.48.0 h80987f9_0
+    - lz4-c 1.9.4 h313beb8_1
+    - macosx_deployment_target_osx-arm64 11.1 had524d6_1
+    - ncurses 6.5 hee39554_0
+    - openssl 3.0.17 h4ee41c1_0
+    - rhash 1.4.3 h02f6b3c_0
+    - xz 5.6.4 h80987f9_1
+    - zlib 1.2.13 h18a0788_1
+    - zstd 1.5.6 hfb09047_0
+  host:
+    - __osx >=11.1
+  run:
+    - __osx >=11.1
+  run_constrained:
+    - openmp 20.1.8|20.1.8.*
+test:
+  commands:
+    - test -f $PREFIX/include/omp.h
+    - test -f $PREFIX/lib/clang/20/include/omp.h
+    - test -f $PREFIX/lib/libomp.dylib
+    - $PREFIX/bin/clang -v -fopenmp -I$PREFIX/include -L$PREFIX/lib -Wl,-rpath,$PREFIX/lib
+      $LNK_XTRA omp_hello.c -o omp_hello
+    - ./omp_hello
+  files:
+    - omp_hello.c
+  requires:
+    - clang_bootstrap_osx-arm64 20.1.8.*
+    - clangxx <=20.1.8
+about:
+  description: 'LLVM''s OpenMP runtime library (libomp) provides a high-performance
+    implementation
+
+    of the OpenMP API specification for shared-memory parallel programming. This
+
+    package delivers the runtime library and headers needed to execute OpenMP programs
+
+    compiled with clang or other LLVM-based compilers. It supports all major OpenMP
+
+    features including parallel regions, work-sharing constructs, synchronization
+
+    primitives, and SIMD directives. The implementation is optimized for modern
+
+    multi-core processors and provides excellent scalability across different
+
+    platforms including Linux, macOS, and Windows.
+
+    '
+  dev_url: https://github.com/llvm/llvm-project/
+  doc_url: https://llvm.org/docs/
+  home: https://openmp.llvm.org/
+  license: Apache-2.0 WITH LLVM-exception
+  license_family: Apache
+  license_file: openmp/LICENSE.TXT
+  summary: The OpenMP API supports multi-platform shared-memory parallel programming
+    in C/C++ and Fortran.
+extra:
+  copy_test_source_files: true
+  final: true
+  flow_run_id: 4db70ed0-80e3-43f1-9af7-0af78297c150
+  recipe-maintainers:
+    - beckermr
+    - h-vetinari
+    - inducer
+    - isuruf
+    - jakirkham
+    - katietz
+    - yesimon
+  remote_url: git@github.com:AnacondaRecipes/openmp-feedstock.git
+  sha: bb66f649fe23be4f82348610644f55db84e14aa5

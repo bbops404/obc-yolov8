@@ -1,0 +1,24 @@
+{
+  "arch": "arm64",
+  "build": "py313hca03da5_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64/",
+  "constrains": [],
+  "depends": [
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313",
+    "typing_extensions >=4.12.0"
+  ],
+  "fn": "typing-inspection-0.4.2-py313hca03da5_0.conda",
+  "license": "MIT",
+  "license_family": "MIT",
+  "md5": "1398c39b86119164f19498b6fbcfdb69",
+  "name": "typing-inspection",
+  "platform": "darwin",
+  "sha256": "ac672d308344cc0852fe43b5099da7eca46ce651afdb79f1cdca256c75488f99",
+  "size": 32465,
+  "subdir": "osx-arm64",
+  "timestamp": 1760614190000,
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/typing-inspection-0.4.2-py313hca03da5_0.conda",
+  "version": "0.4.2"
+}

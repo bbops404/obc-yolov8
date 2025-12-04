@@ -1,0 +1,53 @@
+{
+  "name": "brotlicffi",
+  "version": "1.0.9.2",
+  "build": "py313h50f4ffc_2",
+  "build_number": 2,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64",
+  "subdir": "osx-arm64",
+  "fn": "brotlicffi-1.0.9.2-py313h50f4ffc_2.conda",
+  "md5": "57831c5cbb7a690b625d42e155fd71d0",
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/brotlicffi-1.0.9.2-py313h50f4ffc_2.conda",
+  "sha256": "123e657ea24306db305123faef95d6056574244519e355bfc38ddea3d7b0afc4",
+  "arch": "arm64",
+  "platform": "darwin",
+  "depends": [
+    "__osx >=12.1",
+    "cffi >=1.0.0",
+    "libcxx >=20",
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313"
+  ],
+  "constrains": [],
+  "license": "MIT",
+  "timestamp": 1761745205000,
+  "size": 335169,
+  "requested_spec": "pkgs/main/osx-arm64::brotlicffi==1.0.9.2=py313h50f4ffc_2",
+  "package_tarball_full_path": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/brotlicffi-1.0.9.2-py313h50f4ffc_2.conda",
+  "extracted_package_dir": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/brotlicffi-1.0.9.2-py313h50f4ffc_2",
+  "files": [
+    "lib/python3.13/site-packages/brotlicffi-1.0.9.2.dist-info/INSTALLER",
+    "lib/python3.13/site-packages/brotlicffi-1.0.9.2.dist-info/METADATA",
+    "lib/python3.13/site-packages/brotlicffi-1.0.9.2.dist-info/RECORD",
+    "lib/python3.13/site-packages/brotlicffi-1.0.9.2.dist-info/REQUESTED",
+    "lib/python3.13/site-packages/brotlicffi-1.0.9.2.dist-info/WHEEL",
+    "lib/python3.13/site-packages/brotlicffi-1.0.9.2.dist-info/direct_url.json",
+    "lib/python3.13/site-packages/brotlicffi-1.0.9.2.dist-info/licenses/LICENSE",
+    "lib/python3.13/site-packages/brotlicffi-1.0.9.2.dist-info/top_level.txt",
+    "lib/python3.13/site-packages/brotlicffi/__init__.py",
+    "lib/python3.13/site-packages/brotlicffi/__pycache__/__init__.cpython-313.pyc",
+    "lib/python3.13/site-packages/brotlicffi/__pycache__/_api.cpython-313.pyc",
+    "lib/python3.13/site-packages/brotlicffi/__pycache__/_build.cpython-313.pyc",
+    "lib/python3.13/site-packages/brotlicffi/_api.py",
+    "lib/python3.13/site-packages/brotlicffi/_brotlicffi.abi3.so",
+    "lib/python3.13/site-packages/brotlicffi/_build.py"
+  ],
+  "paths_data": {
+    "paths_version": 1,
+    "paths": []
+  },
+  "link": {
+    "source": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/brotlicffi-1.0.9.2-py313h50f4ffc_2",
+    "type": 1
+  }
+}

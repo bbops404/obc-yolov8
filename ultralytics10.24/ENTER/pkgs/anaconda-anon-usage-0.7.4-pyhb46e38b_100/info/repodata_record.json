@@ -1,0 +1,24 @@
+{
+  "build": "pyhb46e38b_100",
+  "build_number": 100,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64/",
+  "constrains": [
+    "conda >=23.7"
+  ],
+  "depends": [
+    "python >=3.8"
+  ],
+  "fn": "anaconda-anon-usage-0.7.4-pyhb46e38b_100.conda",
+  "license": "BSD-3-Clause",
+  "license_family": "BSD",
+  "md5": "a125f2f0ff097eea9b846d7bc9a3742b",
+  "name": "anaconda-anon-usage",
+  "noarch": "python",
+  "package_type": "noarch_python",
+  "sha256": "a85f2d63a5b120adc9cdf9ff89ac6ca880fa250d27ef93e6f33fcdaf90e9446c",
+  "size": 19550,
+  "subdir": "noarch",
+  "timestamp": 1761606332000,
+  "url": "https://repo.anaconda.com/pkgs/main/noarch/anaconda-anon-usage-0.7.4-pyhb46e38b_100.conda",
+  "version": "0.7.4"
+}

@@ -1,0 +1,23 @@
+{
+  "arch": "arm64",
+  "build": "py313hca03da5_1",
+  "build_number": 1,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64/",
+  "constrains": [],
+  "depends": [
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313"
+  ],
+  "fn": "pysocks-1.7.1-py313hca03da5_1.conda",
+  "license": "BSD 3-Clause",
+  "license_family": "BSD",
+  "md5": "16bf831da5d9b80789ca8c06f958ae2f",
+  "name": "pysocks",
+  "platform": "darwin",
+  "sha256": "9c857a8b0e6e5b390b17fafb7788844a01ece2f6c5b5aa4d3253f1ab02e94dec",
+  "size": 36057,
+  "subdir": "osx-arm64",
+  "timestamp": 1761753032000,
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/pysocks-1.7.1-py313hca03da5_1.conda",
+  "version": "1.7.1"
+}

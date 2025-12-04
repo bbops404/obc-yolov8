@@ -1,0 +1,11 @@
+prefix=/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER
+exec_prefix=${prefix}
+includedir=${prefix}/include
+libdir=${exec_prefix}/lib
+
+Name: libidn2
+Description: Library implementing IDNA2008 and TR46
+Version: 2.3.8
+Cflags: -I${includedir}
+Libs: -L${libdir} -lidn2
+Libs.private: -L/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/lib -liconv -R/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/lib -L/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/lib -lunistring -R/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/lib

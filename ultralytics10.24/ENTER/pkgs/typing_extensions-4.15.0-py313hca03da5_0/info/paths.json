@@ -1,0 +1,59 @@
+{
+  "paths": [
+    {
+      "_path": "lib/python3.13/site-packages/__pycache__/typing_extensions.cpython-313.pyc",
+      "path_type": "hardlink",
+      "sha256": "c60b3e90c81a6a3d15fefe3829c98cf64dbf22a09e81c9faee69d87c8f43d125",
+      "size_in_bytes": 162795
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typing_extensions-4.15.0.dist-info/INSTALLER",
+      "path_type": "hardlink",
+      "sha256": "d0edee15f91b406f3f99726e44eb990be6e34fd0345b52b910c568e0eef6a2a8",
+      "size_in_bytes": 5
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typing_extensions-4.15.0.dist-info/METADATA",
+      "path_type": "hardlink",
+      "sha256": "c138378fe8f18934ac99de060535c53ec6c13aeed65e94c32641da7ee3192a72",
+      "size_in_bytes": 3259
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typing_extensions-4.15.0.dist-info/RECORD",
+      "path_type": "hardlink",
+      "sha256": "bb3bf67d0379f82a85ed2a8d3830b24391bb4009379410f70e655fda2d225ae4",
+      "size_in_bytes": 786
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typing_extensions-4.15.0.dist-info/REQUESTED",
+      "path_type": "hardlink",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_in_bytes": 0
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typing_extensions-4.15.0.dist-info/WHEEL",
+      "path_type": "hardlink",
+      "sha256": "1b68144734c4b66791f27add5d425f3620775585718a03d0f9b110ba3a4d88db",
+      "size_in_bytes": 82
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typing_extensions-4.15.0.dist-info/direct_url.json",
+      "path_type": "hardlink",
+      "sha256": "bc9ca999b0d049d2514a6024dd12e27e213a1f353430c5fdef592f1d8132643b",
+      "size_in_bytes": 148
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typing_extensions-4.15.0.dist-info/licenses/LICENSE",
+      "path_type": "hardlink",
+      "sha256": "3b2f81fe21d181c499c59a256c8e1968455d6689d269aa85373bfb6af41da3bf",
+      "size_in_bytes": 13936
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typing_extensions.py",
+      "path_type": "hardlink",
+      "sha256": "433d11d170d3a24d2eb065ebc1bfe848cea7e3d7ce68567ab52bea2d4c2f7ed8",
+      "size_in_bytes": 160429
+    }
+  ],
+  "paths_version": 1
+}

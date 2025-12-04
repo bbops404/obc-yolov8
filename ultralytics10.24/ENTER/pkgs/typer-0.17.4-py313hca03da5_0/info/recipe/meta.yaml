@@ -1,0 +1,101 @@
+# This file created by conda-build 25.1.2
+# meta.yaml template originally from:
+# /Users/ec2-user/tasks/task_175758085011048/typer-feedstock/recipe, last modified Thu Sep 11 08:54:11 2025
+# ------------------------------------------------
+
+package:
+  name: typer
+  version: 0.17.4
+source:
+  sha256: b77dc07d849312fd2bb5e7f20a7af8985c7ec360c45b051ed5412f64d8dc1580
+  url: https://pypi.org/packages/source/t/typer/typer-0.17.4.tar.gz
+build:
+  entry_points:
+    - typer = typer.cli:main
+  number: '0'
+  script: /opt/miniconda3/conda-bld/typer_1757580868385/_h_env_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_pl/bin/python
+    -m pip install . -vv --no-deps --no-build-isolation
+  string: py313hca03da5_0
+requirements:
+  host:
+    - bzip2 1.0.8 h80987f9_6
+    - ca-certificates 2025.7.15 hca03da5_0
+    - expat 2.7.1 h313beb8_0
+    - libcxx 20.1.8 h8869778_0
+    - libffi 3.4.4 hca03da5_1
+    - libmpdec 4.0.0 h80987f9_0
+    - libzlib 1.3.1 h5f15de7_0
+    - ncurses 6.5 hee39554_0
+    - openssl 3.0.17 h4ee41c1_0
+    - pdm-backend 2.4.3 py313hca03da5_0
+    - pip 25.2 pyhc872135_0
+    - python 3.13.7 hc28b8d9_100_cp313
+    - python_abi 3.13 1_cp313
+    - readline 8.3 h0b18652_0
+    - setuptools 78.1.1 py313hca03da5_0
+    - sqlite 3.50.2 h79febb2_1
+    - tk 8.6.15 hcd8a7d5_0
+    - tzdata 2025b h04d1e81_0
+    - wheel 0.45.1 py313hca03da5_0
+    - xz 5.6.4 h80987f9_1
+    - zlib 1.3.1 h5f15de7_0
+  run:
+    - click >=8.0.0
+    - python >=3.13,<3.14.0a0
+    - python_abi 3.13.* *_cp313
+    - rich >=10.11.0
+    - shellingham >=1.3.0
+    - typing-extensions >=3.7.4.3
+test:
+  commands:
+    - pip check
+    - typer --help
+    - pytest -v tests  --deselect=tests/test_tutorial/test_multiple_values/test_arguments_with_multiple_values/test_tutorial001.py::test_main
+      --deselect=tests/test_tutorial/test_parameter_types/test_number/test_tutorial001.py::test_invalid_score
+      --deselect=tests/test_tutorial/test_parameter_types/test_number/test_tutorial001_an.py::test_invalid_score
+  imports:
+    - typer
+  requires:
+    - coverage
+    - pip
+    - pytest
+  source_files:
+    - docs_src
+    - tests
+about:
+  description: 'Typer is library for building CLI applications that users will love
+    using and developers will love creating. Based on Python 3.6+ type hints.
+
+
+    The key features are:
+
+
+    Intuitive to write: Great editor support. Completion everywhere. Less time debugging.
+    Designed to be easy to use and learn. Less time reading docs.
+
+    Easy to use: It''s easy to use for the final users. Automatic help, and automatic
+    completion for all shells.
+
+    Short: Minimize code duplication. Multiple features from each parameter declaration.
+    Fewer bugs.
+
+    Start simple: The simplest example adds only 2 lines of code to your app: 1 import,
+    1 function call.
+
+    Grow large: Grow in complexity as much as you want, create arbitrarily complex
+    trees of commands and groups of subcommands, with options and arguments.
+
+    '
+  dev_url: https://github.com/tiangolo/typer
+  doc_url: https://typer.tiangolo.com
+  home: https://github.com/tiangolo/typer
+  license: MIT
+  license_family: MIT
+  license_file: LICENSE
+  summary: A library for building CLI applications
+extra:
+  copy_test_source_files: true
+  final: true
+  recipe-maintainers:
+    - bollwyvl
+    - dfornika

@@ -1,0 +1,5 @@
+#!/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/bin/python3.13
+
+import pydoc
+if __name__ == '__main__':
+    pydoc.cli()

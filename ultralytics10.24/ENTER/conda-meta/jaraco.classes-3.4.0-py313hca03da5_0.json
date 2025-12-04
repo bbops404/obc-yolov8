@@ -1,0 +1,54 @@
+{
+  "name": "jaraco.classes",
+  "version": "3.4.0",
+  "build": "py313hca03da5_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64",
+  "subdir": "osx-arm64",
+  "fn": "jaraco.classes-3.4.0-py313hca03da5_0.conda",
+  "md5": "f4e4bcf521aa18ee57d0607ad48f284c",
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/jaraco.classes-3.4.0-py313hca03da5_0.conda",
+  "sha256": "b0cdf7c33f4c61d0143590b15616e19a3c104203d6507b5c5363ee70b78b8a29",
+  "arch": "arm64",
+  "platform": "darwin",
+  "depends": [
+    "more-itertools",
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313"
+  ],
+  "constrains": [],
+  "license": "MIT",
+  "license_family": "MIT",
+  "timestamp": 1755516531000,
+  "size": 21271,
+  "requested_spec": "pkgs/main/osx-arm64::jaraco.classes==3.4.0=py313hca03da5_0",
+  "package_tarball_full_path": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/jaraco.classes-3.4.0-py313hca03da5_0.conda",
+  "extracted_package_dir": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/jaraco.classes-3.4.0-py313hca03da5_0",
+  "files": [
+    "lib/python3.13/site-packages/jaraco/classes/__init__.py",
+    "lib/python3.13/site-packages/jaraco/classes/__pycache__/__init__.cpython-313.pyc",
+    "lib/python3.13/site-packages/jaraco/classes/__pycache__/ancestry.cpython-313.pyc",
+    "lib/python3.13/site-packages/jaraco/classes/__pycache__/meta.cpython-313.pyc",
+    "lib/python3.13/site-packages/jaraco/classes/__pycache__/properties.cpython-313.pyc",
+    "lib/python3.13/site-packages/jaraco/classes/ancestry.py",
+    "lib/python3.13/site-packages/jaraco/classes/meta.py",
+    "lib/python3.13/site-packages/jaraco/classes/properties.py",
+    "lib/python3.13/site-packages/jaraco/classes/py.typed",
+    "lib/python3.13/site-packages/jaraco_classes-3.4.0.dist-info/INSTALLER",
+    "lib/python3.13/site-packages/jaraco_classes-3.4.0.dist-info/METADATA",
+    "lib/python3.13/site-packages/jaraco_classes-3.4.0.dist-info/RECORD",
+    "lib/python3.13/site-packages/jaraco_classes-3.4.0.dist-info/REQUESTED",
+    "lib/python3.13/site-packages/jaraco_classes-3.4.0.dist-info/WHEEL",
+    "lib/python3.13/site-packages/jaraco_classes-3.4.0.dist-info/direct_url.json",
+    "lib/python3.13/site-packages/jaraco_classes-3.4.0.dist-info/licenses/LICENSE",
+    "lib/python3.13/site-packages/jaraco_classes-3.4.0.dist-info/top_level.txt"
+  ],
+  "paths_data": {
+    "paths_version": 1,
+    "paths": []
+  },
+  "link": {
+    "source": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/jaraco.classes-3.4.0-py313hca03da5_0",
+    "type": 1
+  }
+}

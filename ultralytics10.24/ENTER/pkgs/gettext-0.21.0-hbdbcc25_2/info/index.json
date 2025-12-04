@@ -1,0 +1,19 @@
+{
+  "arch": "arm64",
+  "build": "hbdbcc25_2",
+  "build_number": 2,
+  "depends": [
+    "libcxx >=14.0.6",
+    "libiconv >=1.16,<2.0a0",
+    "libxml2 >=2.13.1,<2.14.0a0",
+    "llvm-openmp >=14.0.6",
+    "ncurses >=6.4,<7.0a0"
+  ],
+  "license": "GPL-3.0-or-later",
+  "license_family": "GPL",
+  "name": "gettext",
+  "platform": "osx",
+  "subdir": "osx-arm64",
+  "timestamp": 1722922815248,
+  "version": "0.21.0"
+}

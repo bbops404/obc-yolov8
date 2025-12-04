@@ -1,0 +1,92 @@
+# This file created by conda-build 25.1.2
+# meta.yaml template originally from:
+# /home/task_176054724192090/pip-feedstock/recipe, last modified Wed Oct 15 17:00:34 2025
+# ------------------------------------------------
+
+package:
+  name: pip
+  version: '25.2'
+source:
+  sha256: 578283f006390f85bb6282dffb876454593d637f5d1be494b5202ce4877e71f2
+  url: https://pypi.org/packages/source/p/pip/pip-25.2.tar.gz
+build:
+  disable_pip: true
+  entry_points:
+    - pip = pip._internal.cli.main:main
+    - pip3 = pip._internal.cli.main:main
+  noarch: python
+  number: '1'
+  string: pyhc872135_1
+requirements:
+  host:
+    - _libgcc_mutex 0.1 main
+    - _openmp_mutex 5.1 51_gnu
+    - bzip2 1.0.8 h998d150_6
+    - ca-certificates 2025.9.9 hd43f75c_0
+    - expat 2.7.1 h419075a_0
+    - ld_impl_linux-aarch64 2.44 h4e4ac68_2
+    - libffi 3.4.4 h419075a_1
+    - libgcc-ng 11.2.0 h1234567_1
+    - libgomp 11.2.0 h1234567_1
+    - libmpdec 4.0.0 h998d150_0
+    - libstdcxx-ng 11.2.0 h1234567_1
+    - libuuid 1.41.5 h998d150_0
+    - libxcb 1.17.0 hf66535e_0
+    - libzlib 1.3.1 h998d150_0
+    - ncurses 6.5 h419075a_0
+    - openssl 3.0.18 h8a9c3cf_0
+    - pthread-stubs 0.3 hfd63f10_1
+    - python 3.13.7 h572d80e_100_cp313
+    - python_abi 3.13 1_cp313
+    - readline 8.3 h886d1d0_0
+    - setuptools 80.9.0 py313hd43f75c_0
+    - sqlite 3.50.2 h998d150_1
+    - tk 8.6.15 h987d8db_0
+    - tzdata 2025b h04d1e81_0
+    - wheel 0.45.1 py313hd43f75c_0
+    - xorg-libx11 1.8.12 hf66535e_1
+    - xorg-libxau 1.0.12 hf66535e_0
+    - xorg-libxdmcp 1.1.5 hf66535e_0
+    - xorg-xorgproto 2024.1 h998d150_1
+    - xz 5.6.4 h998d150_1
+    - zlib 1.3.1 h998d150_0
+  run:
+    - python >=3.9,<3.14.0a0
+    - setuptools
+    - wheel
+test:
+  commands:
+    - pip -h
+    - pip list
+  imports:
+    - pip
+  requires:
+    - python 3.9.*
+about:
+  description: 'pip is the package installer for Python.
+
+    You can use pip to install packages from the Python Package
+
+    Index and other indexes.
+
+    '
+  dev_url: https://github.com/pypa/pip
+  doc_url: https://pip.pypa.io
+  home: https://pip.pypa.io
+  license: MIT
+  license_family: MIT
+  license_file: LICENSE.txt
+  summary: PyPA recommended tool for installing Python packages
+extra:
+  copy_test_source_files: true
+  final: true
+  recipe-maintainers:
+    - jakirkham
+    - mingwandroid
+    - msarahan
+    - ocefpaf
+    - pelson
+  skip-lints:
+    - missing_pip_check
+    - python_build_tool_in_run
+    - uses_setup_py

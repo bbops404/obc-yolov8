@@ -1,0 +1,16 @@
+{
+  "arch": "arm64",
+  "build": "h5f15de7_0",
+  "build_number": 0,
+  "depends": [
+    "__osx >=11.1",
+    "libzlib 1.3.1 h5f15de7_0"
+  ],
+  "license": "Zlib",
+  "license_family": "OTHER",
+  "name": "zlib",
+  "platform": "osx",
+  "subdir": "osx-arm64",
+  "timestamp": 1756475938331,
+  "version": "1.3.1"
+}

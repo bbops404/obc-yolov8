@@ -1,0 +1,11 @@
+prefix=/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER
+exec_prefix=${prefix}
+includedir=/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/include
+libdir=/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/lib
+
+Name: Yaml-cpp
+Description: A YAML parser and emitter for C++
+Version: 0.8.0
+Requires:
+Libs: -L${libdir} -lyaml-cpp
+Cflags: -I${includedir}

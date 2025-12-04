@@ -1,0 +1,48 @@
+{
+  "name": "jansson",
+  "version": "2.14",
+  "build": "h80987f9_1",
+  "build_number": 1,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64",
+  "subdir": "osx-arm64",
+  "fn": "jansson-2.14-h80987f9_1.conda",
+  "md5": "cf1fff0a1cca90c8d635b8364ba163fd",
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/jansson-2.14-h80987f9_1.conda",
+  "sha256": "815b81bced82407b6ad5f482c642fd467d8ccb536d84ed3d383290abdc8d1134",
+  "arch": "arm64",
+  "platform": "darwin",
+  "depends": [],
+  "constrains": [],
+  "license": "MIT",
+  "license_family": "MIT",
+  "timestamp": 1705704639000,
+  "size": 35343,
+  "requested_spec": "pkgs/main/osx-arm64::jansson==2.14=h80987f9_1",
+  "package_tarball_full_path": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/jansson-2.14-h80987f9_1.conda",
+  "extracted_package_dir": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/jansson-2.14-h80987f9_1",
+  "files": [
+    "include/jansson.h",
+    "include/jansson_config.h",
+    "lib/libjansson.4.dylib",
+    "lib/libjansson.dylib",
+    "lib/pkgconfig/jansson.pc"
+  ],
+  "paths_data": {
+    "paths_version": 1,
+    "paths": [
+      {
+        "_path": "lib/pkgconfig/jansson.pc",
+        "prefix_placeholder": "/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_edf7vh9apj/croot/jansson_1705704573546/_h_env_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placeh",
+        "file_mode": "text",
+        "path_type": "hardlink",
+        "sha256": "4b7bd4536eaf901d59ceb6540a4b18ab4173f1aca5490a5c0d747ad18f9d4e1b",
+        "size_in_bytes": 492,
+        "sha256_in_prefix": "1d5899a405c5a58925a68c2a4329091ccc275544fd6b4c8f35998232b5dc7be7"
+      }
+    ]
+  },
+  "link": {
+    "source": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/jansson-2.14-h80987f9_1",
+    "type": 1
+  }
+}

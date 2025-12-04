@@ -1,0 +1,39 @@
+{
+  "name": "cpp-expected",
+  "version": "1.1.0",
+  "build": "h48ca7d4_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64",
+  "subdir": "osx-arm64",
+  "fn": "cpp-expected-1.1.0-h48ca7d4_0.conda",
+  "md5": "9a83af67c17d1c760cd7aff545ef7e0f",
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/cpp-expected-1.1.0-h48ca7d4_0.conda",
+  "sha256": "6639ca3fc92dd98178c78ac917ea864b475821ce55a617f9e636f618ffdce7f1",
+  "arch": "arm64",
+  "platform": "darwin",
+  "depends": [
+    "libcxx >=14.0.6"
+  ],
+  "constrains": [],
+  "license": "CC0-1.0",
+  "license_family": "CC",
+  "timestamp": 1734039345000,
+  "size": 134133,
+  "requested_spec": "pkgs/main/osx-arm64::cpp-expected==1.1.0=h48ca7d4_0",
+  "package_tarball_full_path": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/cpp-expected-1.1.0-h48ca7d4_0.conda",
+  "extracted_package_dir": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/cpp-expected-1.1.0-h48ca7d4_0",
+  "files": [
+    "include/tl/expected.hpp",
+    "share/cmake/tl-expected/tl-expected-config-version.cmake",
+    "share/cmake/tl-expected/tl-expected-config.cmake",
+    "share/cmake/tl-expected/tl-expected-targets.cmake"
+  ],
+  "paths_data": {
+    "paths_version": 1,
+    "paths": []
+  },
+  "link": {
+    "source": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/cpp-expected-1.1.0-h48ca7d4_0",
+    "type": 1
+  }
+}

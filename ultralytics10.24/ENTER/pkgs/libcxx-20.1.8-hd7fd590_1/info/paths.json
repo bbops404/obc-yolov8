@@ -1,0 +1,17 @@
+{
+  "paths": [
+    {
+      "_path": "lib/libc++.1.0.dylib",
+      "path_type": "hardlink",
+      "sha256": "4896bc91c0c44ed63601729a9de9af7b12e043188f18d0a14bd795b4d8f5fbd6",
+      "size_in_bytes": 1169184
+    },
+    {
+      "_path": "lib/libc++.1.dylib",
+      "path_type": "softlink",
+      "sha256": "4896bc91c0c44ed63601729a9de9af7b12e043188f18d0a14bd795b4d8f5fbd6",
+      "size_in_bytes": 1169184
+    }
+  ],
+  "paths_version": 1
+}

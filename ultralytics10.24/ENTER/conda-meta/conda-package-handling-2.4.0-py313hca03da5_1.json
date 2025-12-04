@@ -1,0 +1,81 @@
+{
+  "name": "conda-package-handling",
+  "version": "2.4.0",
+  "build": "py313hca03da5_1",
+  "build_number": 1,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64",
+  "subdir": "osx-arm64",
+  "fn": "conda-package-handling-2.4.0-py313hca03da5_1.conda",
+  "md5": "99d586bc84e70ee5e8415cfb63cc4cfe",
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/conda-package-handling-2.4.0-py313hca03da5_1.conda",
+  "sha256": "0e7ae6a4e9eda628de32dc45bfc552e5a8c7c79224e134e3fe3579e933af82c6",
+  "arch": "arm64",
+  "platform": "darwin",
+  "depends": [
+    "conda-package-streaming >=0.9.0",
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313",
+    "zstandard >=0.15"
+  ],
+  "constrains": [],
+  "license": "BSD-3-Clause",
+  "license_family": "BSD",
+  "timestamp": 1762366427000,
+  "size": 285376,
+  "requested_spec": "pkgs/main/osx-arm64::conda-package-handling==2.4.0=py313hca03da5_1",
+  "package_tarball_full_path": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/conda-package-handling-2.4.0-py313hca03da5_1.conda",
+  "extracted_package_dir": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/conda-package-handling-2.4.0-py313hca03da5_1",
+  "files": [
+    "bin/cph",
+    "lib/python3.13/site-packages/conda_package_handling-2.4.0.dist-info/INSTALLER",
+    "lib/python3.13/site-packages/conda_package_handling-2.4.0.dist-info/METADATA",
+    "lib/python3.13/site-packages/conda_package_handling-2.4.0.dist-info/RECORD",
+    "lib/python3.13/site-packages/conda_package_handling-2.4.0.dist-info/REQUESTED",
+    "lib/python3.13/site-packages/conda_package_handling-2.4.0.dist-info/WHEEL",
+    "lib/python3.13/site-packages/conda_package_handling-2.4.0.dist-info/direct_url.json",
+    "lib/python3.13/site-packages/conda_package_handling-2.4.0.dist-info/entry_points.txt",
+    "lib/python3.13/site-packages/conda_package_handling-2.4.0.dist-info/licenses/AUTHORS.md",
+    "lib/python3.13/site-packages/conda_package_handling-2.4.0.dist-info/licenses/LICENSE",
+    "lib/python3.13/site-packages/conda_package_handling-2.4.0.dist-info/top_level.txt",
+    "lib/python3.13/site-packages/conda_package_handling/__init__.py",
+    "lib/python3.13/site-packages/conda_package_handling/__main__.py",
+    "lib/python3.13/site-packages/conda_package_handling/__pycache__/__init__.cpython-313.pyc",
+    "lib/python3.13/site-packages/conda_package_handling/__pycache__/__main__.cpython-313.pyc",
+    "lib/python3.13/site-packages/conda_package_handling/__pycache__/api.cpython-313.pyc",
+    "lib/python3.13/site-packages/conda_package_handling/__pycache__/cli.cpython-313.pyc",
+    "lib/python3.13/site-packages/conda_package_handling/__pycache__/conda_fmt.cpython-313.pyc",
+    "lib/python3.13/site-packages/conda_package_handling/__pycache__/exceptions.cpython-313.pyc",
+    "lib/python3.13/site-packages/conda_package_handling/__pycache__/interface.cpython-313.pyc",
+    "lib/python3.13/site-packages/conda_package_handling/__pycache__/streaming.cpython-313.pyc",
+    "lib/python3.13/site-packages/conda_package_handling/__pycache__/tarball.cpython-313.pyc",
+    "lib/python3.13/site-packages/conda_package_handling/__pycache__/utils.cpython-313.pyc",
+    "lib/python3.13/site-packages/conda_package_handling/__pycache__/validate.cpython-313.pyc",
+    "lib/python3.13/site-packages/conda_package_handling/api.py",
+    "lib/python3.13/site-packages/conda_package_handling/cli.py",
+    "lib/python3.13/site-packages/conda_package_handling/conda_fmt.py",
+    "lib/python3.13/site-packages/conda_package_handling/exceptions.py",
+    "lib/python3.13/site-packages/conda_package_handling/interface.py",
+    "lib/python3.13/site-packages/conda_package_handling/streaming.py",
+    "lib/python3.13/site-packages/conda_package_handling/tarball.py",
+    "lib/python3.13/site-packages/conda_package_handling/utils.py",
+    "lib/python3.13/site-packages/conda_package_handling/validate.py"
+  ],
+  "paths_data": {
+    "paths_version": 1,
+    "paths": [
+      {
+        "_path": "bin/cph",
+        "prefix_placeholder": "/opt/miniconda3/conda-bld/conda-package-handling_1762366402479/_h_env_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_place",
+        "file_mode": "text",
+        "path_type": "hardlink",
+        "sha256": "687e5e2a11f6f705bbdfef1e492b3062c82b657f6bf00a6c23249bb19a623736",
+        "size_in_bytes": 479,
+        "sha256_in_prefix": "34ac26524cab81bc0f852bfdc06193022329fe10bf0d1798099fca6aeb3d6065"
+      }
+    ]
+  },
+  "link": {
+    "source": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/conda-package-handling-2.4.0-py313hca03da5_1",
+    "type": 1
+  }
+}

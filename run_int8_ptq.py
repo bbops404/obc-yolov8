@@ -75,12 +75,31 @@ def load_ptq_int8_model(checkpoint_path, imgsz=640):
     else:
         yaml_path = yaml_config
     
-    # Construct full path if relative
-    if not Path(yaml_path).is_absolute():
-        repo_root = Path(__file__).parent
-        yaml_path = repo_root / yaml_path
-        if not yaml_path.exists():
-            yaml_path = repo_root / 'obc-yolov8' / 'ultralytics10.24' / 'ultralytics' / 'cfg' / 'models' / 'v8' / 'yolov8-CA.yaml'
+    # Resolve YAML path - handle hardcoded Ubuntu paths from checkpoint
+    repo_root = Path(__file__).parent
+    
+    # List of candidate paths to try
+    yaml_candidates = [
+        repo_root / 'obc-yolov8' / 'ultralytics10.24' / 'ultralytics' / 'cfg' / 'models' / 'v8' / 'yolov8-CA.yaml',
+        repo_root / 'ultralytics10.24' / 'ultralytics' / 'cfg' / 'models' / 'v8' / 'yolov8-CA.yaml',
+    ]
+    
+    # If yaml_path is not a hardcoded path, try it first
+    if yaml_path and not str(yaml_path).startswith('/home/ubuntu'):
+        if Path(yaml_path).is_absolute():
+            yaml_candidates.insert(0, Path(yaml_path))
+        else:
+            yaml_candidates.insert(0, repo_root / yaml_path)
+    
+    # Find the first existing path
+    yaml_path = None
+    for candidate in yaml_candidates:
+        if candidate.exists():
+            yaml_path = candidate
+            break
+    
+    if yaml_path is None:
+        raise FileNotFoundError(f"Could not find yolov8-CA.yaml in any of: {yaml_candidates}")
     
     print(f"Loading model structure from: {yaml_path}")
     model = YOLO(str(yaml_path))

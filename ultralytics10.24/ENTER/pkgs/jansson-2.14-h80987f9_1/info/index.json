@@ -1,0 +1,13 @@
+{
+  "arch": "arm64",
+  "build": "h80987f9_1",
+  "build_number": 1,
+  "depends": [],
+  "license": "MIT",
+  "license_family": "MIT",
+  "name": "jansson",
+  "platform": "osx",
+  "subdir": "osx-arm64",
+  "timestamp": 1705704639712,
+  "version": "2.14"
+}

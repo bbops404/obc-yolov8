@@ -1,0 +1,18 @@
+{
+  "arch": "arm64",
+  "build": "he822017_0",
+  "build_number": 0,
+  "constrains": [
+    "openmp 20.1.8|20.1.8.*"
+  ],
+  "depends": [
+    "__osx >=11.1"
+  ],
+  "license": "Apache-2.0 WITH LLVM-exception",
+  "license_family": "Apache",
+  "name": "llvm-openmp",
+  "platform": "osx",
+  "subdir": "osx-arm64",
+  "timestamp": 1756229534992,
+  "version": "20.1.8"
+}

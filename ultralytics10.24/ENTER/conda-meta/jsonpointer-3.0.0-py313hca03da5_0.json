@@ -1,0 +1,58 @@
+{
+  "name": "jsonpointer",
+  "version": "3.0.0",
+  "build": "py313hca03da5_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64",
+  "subdir": "osx-arm64",
+  "fn": "jsonpointer-3.0.0-py313hca03da5_0.conda",
+  "md5": "7c575b82763fa50d3b784992d3119aaa",
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/jsonpointer-3.0.0-py313hca03da5_0.conda",
+  "sha256": "533b82ccd026f257db9555f515dfac53ff1900515761ab516c446f82683cc799",
+  "arch": "arm64",
+  "platform": "darwin",
+  "depends": [
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313"
+  ],
+  "constrains": [],
+  "license": "BSD-3-Clause",
+  "license_family": "BSD",
+  "timestamp": 1753788470000,
+  "size": 22776,
+  "requested_spec": "pkgs/main/osx-arm64::jsonpointer==3.0.0=py313hca03da5_0",
+  "package_tarball_full_path": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/jsonpointer-3.0.0-py313hca03da5_0.conda",
+  "extracted_package_dir": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/jsonpointer-3.0.0-py313hca03da5_0",
+  "files": [
+    "bin/jsonpointer",
+    "lib/python3.13/site-packages/__pycache__/jsonpointer.cpython-313.pyc",
+    "lib/python3.13/site-packages/jsonpointer-3.0.0.dist-info/INSTALLER",
+    "lib/python3.13/site-packages/jsonpointer-3.0.0.dist-info/METADATA",
+    "lib/python3.13/site-packages/jsonpointer-3.0.0.dist-info/RECORD",
+    "lib/python3.13/site-packages/jsonpointer-3.0.0.dist-info/REQUESTED",
+    "lib/python3.13/site-packages/jsonpointer-3.0.0.dist-info/WHEEL",
+    "lib/python3.13/site-packages/jsonpointer-3.0.0.dist-info/direct_url.json",
+    "lib/python3.13/site-packages/jsonpointer-3.0.0.dist-info/licenses/AUTHORS",
+    "lib/python3.13/site-packages/jsonpointer-3.0.0.dist-info/licenses/LICENSE.txt",
+    "lib/python3.13/site-packages/jsonpointer-3.0.0.dist-info/top_level.txt",
+    "lib/python3.13/site-packages/jsonpointer.py"
+  ],
+  "paths_data": {
+    "paths_version": 1,
+    "paths": [
+      {
+        "_path": "bin/jsonpointer",
+        "prefix_placeholder": "/var/folders/k1/30mswbxs7r1g6zwn8y4fyt500000gp/T/abs_bdid71leqg/croot/jsonpointer_1753788445166/_h_env_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_pl",
+        "file_mode": "text",
+        "path_type": "hardlink",
+        "sha256": "d3b04c4ac948b7bb8794ce300fe3c29d9e2c24b498c857cb7dc7b9f66caf4066",
+        "size_in_bytes": 2033,
+        "sha256_in_prefix": "a508c5f801234581a4833091d897d8c2953f27e40e54cfe1d2762f7052f44119"
+      }
+    ]
+  },
+  "link": {
+    "source": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/jsonpointer-3.0.0-py313hca03da5_0",
+    "type": 1
+  }
+}

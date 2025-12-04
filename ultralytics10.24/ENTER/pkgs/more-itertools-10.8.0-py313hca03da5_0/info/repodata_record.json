@@ -1,0 +1,23 @@
+{
+  "arch": "arm64",
+  "build": "py313hca03da5_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64/",
+  "constrains": [],
+  "depends": [
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313"
+  ],
+  "fn": "more-itertools-10.8.0-py313hca03da5_0.conda",
+  "license": "MIT",
+  "license_family": "MIT",
+  "md5": "ba0fd81d15324ef0abfb4110b83d82cc",
+  "name": "more-itertools",
+  "platform": "darwin",
+  "sha256": "b9ab925d227d92daf0e76666bdfcd602197fce4a13ff2ae3792b86712ecce3ad",
+  "size": 166259,
+  "subdir": "osx-arm64",
+  "timestamp": 1761121562000,
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/more-itertools-10.8.0-py313hca03da5_0.conda",
+  "version": "10.8.0"
+}

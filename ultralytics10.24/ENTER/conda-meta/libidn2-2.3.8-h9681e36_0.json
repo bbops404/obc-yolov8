@@ -1,0 +1,53 @@
+{
+  "name": "libidn2",
+  "version": "2.3.8",
+  "build": "h9681e36_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64",
+  "subdir": "osx-arm64",
+  "fn": "libidn2-2.3.8-h9681e36_0.conda",
+  "md5": "4caba2988c52534c6ba5e88afebba106",
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/libidn2-2.3.8-h9681e36_0.conda",
+  "sha256": "bdd1c89fbb3b02907799131cb5a436200d134277cdb9dbebab77ebbd28a68e97",
+  "arch": "arm64",
+  "platform": "darwin",
+  "depends": [
+    "__osx >=12.1",
+    "gettext >=0.21.0,<1.0a0",
+    "libiconv >=1.16,<2.0a0",
+    "libunistring >=1,<2.0a0"
+  ],
+  "constrains": [],
+  "license": "LGPL-2.0 AND LGPL-3.0-or-later AND GPL-3.0-or-later",
+  "license_family": "OTHER",
+  "timestamp": 1760364408000,
+  "size": 114873,
+  "requested_spec": "pkgs/main/osx-arm64::libidn2==2.3.8=h9681e36_0",
+  "package_tarball_full_path": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/libidn2-2.3.8-h9681e36_0.conda",
+  "extracted_package_dir": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/libidn2-2.3.8-h9681e36_0",
+  "files": [
+    "bin/idn2",
+    "include/idn2.h",
+    "lib/libidn2.0.dylib",
+    "lib/libidn2.dylib",
+    "lib/pkgconfig/libidn2.pc"
+  ],
+  "paths_data": {
+    "paths_version": 1,
+    "paths": [
+      {
+        "_path": "lib/pkgconfig/libidn2.pc",
+        "prefix_placeholder": "/opt/miniconda3/conda-bld/libidn2_1760364301762/_h_env_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_",
+        "file_mode": "text",
+        "path_type": "hardlink",
+        "sha256": "86ea1827e335d2a1cf1d8378484a0a3e0c385738870567a697a476a517e76083",
+        "size_in_bytes": 1553,
+        "sha256_in_prefix": "b2461f5389b0a004a2d91a145075ac2e7e5e3423a3ec096a99ac4debf980bc14"
+      }
+    ]
+  },
+  "link": {
+    "source": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/libidn2-2.3.8-h9681e36_0",
+    "type": 1
+  }
+}

@@ -1,0 +1,13 @@
+prefix=/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+modules=1
+
+Name: libXML
+Version: 2.13.9
+Description: libXML library version2.
+Requires.private:  icu-i18n
+Libs: -L${libdir} -lxml2 
+Libs.private:  -L/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/lib -lz -L/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/lib -llzma  -L/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/lib -liconv    
+Cflags: -I${includedir}/libxml2 -I/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/include 

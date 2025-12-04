@@ -1,0 +1,161 @@
+{% set version = "20.1.8" %}
+# check https://clang.llvm.org/docs/OpenMPSupport.html
+# occasionally to see last fully supported openmp ver.
+{% set openmp_ver = "4.5" %}
+
+# on osx we need to use cxx_compiler_version, rest can use package version
+{% set clang_major = version.split(".")[0]|int %}
+{% if cxx_compiler_version is not undefined %}
+{% set clang_major = cxx_compiler_version.split(".")[0]|int %}  # [osx]
+{% endif %}
+
+package:
+  name: openmp
+  version: {{ version }}
+
+source:
+  url: https://github.com/llvm/llvm-project/archive/refs/tags/llvmorg-{{ version.replace(".rc", "-rc") }}.tar.gz
+  sha256: a6cbad9b2243b17e87795817cfff2107d113543a12486586f8a055a2bb044963
+  # name folder for easier deletion; we do the equivalent of downloading
+  # the subproject sources, so the work folder then has openmp in it;
+  # for details see build scripts
+  folder: llvm-project
+  patches:
+    # fix for https://github.com/llvm/llvm-project/issues/54596
+    - patches/0001-link-libomp-to-compiler-rt-on-osx-arm.patch
+    - patches/0002-win-fix-link-flags.patch  # [win]
+
+build:
+  number: 0
+
+requirements:
+  build:
+    - {{ stdlib("c") }}
+    - {{ compiler("cxx") }}
+    - {{ compiler("fortran") }}  # [win]
+    - clang                      # [win]
+    - cmake
+    - ninja
+  host:
+    - llvmdev {{ version }}
+    # see https://github.com/llvm/llvm-project/issues/54596
+    - compiler-rt {{ version }}  # [osx]
+    - zstd                       # [osx and x86_64]
+
+outputs:
+  - name: llvm-openmp
+    script: install_pkg.sh   # [unix]
+    script: install_pkg.bat  # [win]
+    build:
+      ignore_run_exports_from:
+        - {{ compiler("cxx") }}
+        - {{ compiler("fortran") }}
+      run_exports:
+        strong:
+          - {{ pin_subpackage("llvm-openmp", max_pin=None) }}
+          - _openmp_mutex >={{ openmp_ver }}  # [linux]
+          - _openmp_mutex * *_llvm            # [linux]
+    requirements:
+      build:
+        - cmake
+        # for run-exports
+        - {{ stdlib("c") }}
+        - {{ compiler("cxx") }}
+      run_constrained:
+        - openmp {{ version }}|{{ version }}.*
+    test:
+      requires:
+        # ensure we don't pull in too-new clang (when on maintenance branch),
+        # which breaks assumption about symlink below
+        - clangxx <={{ version }}
+        - {{ compiler('cxx') }}
+      files:
+        - omp_hello.c
+      commands:
+        # headers
+        - test -f $PREFIX/include/omp.h                   # [unix]
+        - if not exist %LIBRARY_INC%\omp.h exit 1         # [win]
+        # clang-specific one (symlink on unix; copies on win, see install_pkg.bat)
+        - test -f $PREFIX/lib/clang/{{ clang_major }}/include/omp.h         # [unix]
+        {% for ver in range(18, clang_major + 1) %}
+        - if not exist %LIBRARY_LIB%\clang\{{ ver }}\include\omp.h exit 1   # [win]
+        {% endfor %}
+
+        # absence of fortran bits
+        - test ! -f $PREFIX/include/omp_lib.mod             # [linux]
+        - test ! -f $PREFIX/include/omp_lib_kinds.mod       # [linux]
+        - if exist %LIBRARY_INC%\omp_lib.mod exit 1         # [win]
+        - if exist %LIBRARY_INC%\omp_lib_kinds.mod exit 1   # [win]
+
+        # shared library
+        - test -f $PREFIX/lib/libomp.so                   # [linux]
+        - test -f $PREFIX/lib/libomp.dylib                # [osx]
+        - if not exist %LIBRARY_BIN%\libomp.dll exit 1    # [win]
+        - if not exist %LIBRARY_LIB%\libomp.lib exit 1    # [win]
+
+        # compilation test
+        - export LNK_XTRA="-Wl,--allow-shlib-undefined"   # [linux]
+        - $PREFIX/bin/clang -v -fopenmp -I$PREFIX/include -L$PREFIX/lib -Wl,-rpath,$PREFIX/lib $LNK_XTRA omp_hello.c -o omp_hello  # [unix]
+        - '%LIBRARY_BIN%\clang -v -fopenmp -I%LIBRARY_INC% -L%LIBRARY_LIB% omp_hello.c -o omp_hello.exe'   # [win]
+        - ./omp_hello            # [unix]
+        - '%cd%\omp_hello.exe'   # [win]
+
+  - name: llvm-openmp-fortran
+    script: install_pkg.sh   # [unix]
+    script: install_pkg.bat  # [win]
+    build:
+      # restricted to windows for now
+      skip: true  # [not win]
+      run_exports:
+        strong:
+          - {{ pin_subpackage("llvm-openmp", max_pin=None) }}
+          - _openmp_mutex >={{ openmp_ver }}  # [linux]
+          - _openmp_mutex * *_llvm            # [linux]
+    requirements:
+      build:
+        - cmake
+        # for run-exports
+        - {{ stdlib("c") }}
+        - {{ compiler("cxx") }}
+        - {{ compiler("fortran") }}     # [linux]
+      host:
+        - {{ pin_subpackage("llvm-openmp", exact=True) }}
+      run:
+        - {{ pin_subpackage("llvm-openmp", exact=True) }}
+      run_constrained:  # [win]
+        - {{ compiler("fortran") }}  # [win]
+    test:
+      commands:
+        - test -f $PREFIX/include/omp_lib.mod                   # [linux]
+        - test -f $PREFIX/include/omp_lib_kinds.mod             # [linux]
+        - if not exist %LIBRARY_INC%\omp_lib.mod exit 1         # [win]
+        - if not exist %LIBRARY_INC%\omp_lib_kinds.mod exit 1   # [win]
+
+about:
+  home: https://openmp.llvm.org/
+  license: Apache-2.0 WITH LLVM-exception
+  license_file: openmp/LICENSE.TXT
+  dev_url: https://github.com/llvm/llvm-project
+  doc_url: https://llvm.org/docs/
+  license_family: Apache
+  summary: The OpenMP API supports multi-platform shared-memory parallel programming in C/C++ and Fortran.
+  description: |
+    LLVM's OpenMP runtime library (libomp) provides a high-performance implementation
+    of the OpenMP API specification for shared-memory parallel programming. This
+    package delivers the runtime library and headers needed to execute OpenMP programs
+    compiled with clang or other LLVM-based compilers. It supports all major OpenMP
+    features including parallel regions, work-sharing constructs, synchronization
+    primitives, and SIMD directives. The implementation is optimized for modern
+    multi-core processors and provides excellent scalability across different
+    platforms including Linux, macOS, and Windows.
+  dev_url: https://github.com/llvm/llvm-project/
+
+extra:
+  recipe-maintainers:
+    - inducer
+    - jakirkham
+    - yesimon
+    - isuruf
+    - beckermr
+    - katietz
+    - h-vetinari

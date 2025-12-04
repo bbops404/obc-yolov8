@@ -1,0 +1,13 @@
+{
+  "c_stdlib_version": "12.1",
+  "rust_compiler_version": "1.89.0",
+  "c_compiler": "clang",
+  "rust_compiler": "rust",
+  "channel_targets": "defaults",
+  "c_compiler_version": "20",
+  "openssl": "3",
+  "CONDA_BUILD_SYSROOT": "/Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk",
+  "c_stdlib": "macosx_deployment_target",
+  "target_platform": "osx-arm64",
+  "__osx": "__osx >=12.1"
+}

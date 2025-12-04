@@ -1,0 +1,61 @@
+{
+  "name": "lz4-c",
+  "version": "1.9.4",
+  "build": "h313beb8_1",
+  "build_number": 1,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64",
+  "subdir": "osx-arm64",
+  "fn": "lz4-c-1.9.4-h313beb8_1.conda",
+  "md5": "82202ff2e94bc301fd9c790556506bb7",
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/lz4-c-1.9.4-h313beb8_1.conda",
+  "sha256": "34aaf2a9ba8bef897e3684040ecbddbc99be7987ff21fa28c860f33bfac65da5",
+  "arch": "arm64",
+  "platform": "darwin",
+  "depends": [
+    "libcxx >=14.0.6"
+  ],
+  "constrains": [],
+  "license": "BSD-2-Clause",
+  "license_family": "BSD",
+  "timestamp": 1714510588000,
+  "size": 160308,
+  "requested_spec": "pkgs/main/osx-arm64::lz4-c==1.9.4=h313beb8_1",
+  "package_tarball_full_path": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/lz4-c-1.9.4-h313beb8_1.conda",
+  "extracted_package_dir": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/lz4-c-1.9.4-h313beb8_1",
+  "files": [
+    "bin/lz4",
+    "bin/lz4c",
+    "bin/lz4cat",
+    "bin/unlz4",
+    "include/lz4.h",
+    "include/lz4frame.h",
+    "include/lz4frame_static.h",
+    "include/lz4hc.h",
+    "lib/liblz4.1.9.4.dylib",
+    "lib/liblz4.1.dylib",
+    "lib/liblz4.dylib",
+    "lib/pkgconfig/liblz4.pc",
+    "share/man/man1/lz4.1",
+    "share/man/man1/lz4c.1",
+    "share/man/man1/lz4cat.1",
+    "share/man/man1/unlz4.1"
+  ],
+  "paths_data": {
+    "paths_version": 1,
+    "paths": [
+      {
+        "_path": "lib/pkgconfig/liblz4.pc",
+        "prefix_placeholder": "/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_229oxd61sl/croot/lz4-c_1714510566256/_h_env_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehol",
+        "file_mode": "text",
+        "path_type": "hardlink",
+        "sha256": "9913144b343f71d749c995adff60047a953aec5cba93396e31b4def405651d22",
+        "size_in_bytes": 640,
+        "sha256_in_prefix": "1654156783d1c3ea521f9c228bc115b3350449e196d090be18c4c8f1a570a2fe"
+      }
+    ]
+  },
+  "link": {
+    "source": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/lz4-c-1.9.4-h313beb8_1",
+    "type": 1
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "name": "more-itertools",
+  "version": "10.8.0",
+  "build": "py313hca03da5_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64",
+  "subdir": "osx-arm64",
+  "fn": "more-itertools-10.8.0-py313hca03da5_0.conda",
+  "md5": "ba0fd81d15324ef0abfb4110b83d82cc",
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/more-itertools-10.8.0-py313hca03da5_0.conda",
+  "sha256": "b9ab925d227d92daf0e76666bdfcd602197fce4a13ff2ae3792b86712ecce3ad",
+  "arch": "arm64",
+  "platform": "darwin",
+  "depends": [
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313"
+  ],
+  "constrains": [],
+  "license": "MIT",
+  "license_family": "MIT",
+  "timestamp": 1761121562000,
+  "size": 166259,
+  "requested_spec": "pkgs/main/osx-arm64::more-itertools==10.8.0=py313hca03da5_0",
+  "package_tarball_full_path": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/more-itertools-10.8.0-py313hca03da5_0.conda",
+  "extracted_package_dir": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/more-itertools-10.8.0-py313hca03da5_0",
+  "files": [
+    "lib/python3.13/site-packages/more_itertools-10.8.0.dist-info/INSTALLER",
+    "lib/python3.13/site-packages/more_itertools-10.8.0.dist-info/METADATA",
+    "lib/python3.13/site-packages/more_itertools-10.8.0.dist-info/RECORD",
+    "lib/python3.13/site-packages/more_itertools-10.8.0.dist-info/REQUESTED",
+    "lib/python3.13/site-packages/more_itertools-10.8.0.dist-info/WHEEL",
+    "lib/python3.13/site-packages/more_itertools-10.8.0.dist-info/direct_url.json",
+    "lib/python3.13/site-packages/more_itertools-10.8.0.dist-info/licenses/LICENSE",
+    "lib/python3.13/site-packages/more_itertools/__init__.py",
+    "lib/python3.13/site-packages/more_itertools/__init__.pyi",
+    "lib/python3.13/site-packages/more_itertools/__pycache__/__init__.cpython-313.pyc",
+    "lib/python3.13/site-packages/more_itertools/__pycache__/more.cpython-313.pyc",
+    "lib/python3.13/site-packages/more_itertools/__pycache__/recipes.cpython-313.pyc",
+    "lib/python3.13/site-packages/more_itertools/more.py",
+    "lib/python3.13/site-packages/more_itertools/more.pyi",
+    "lib/python3.13/site-packages/more_itertools/py.typed",
+    "lib/python3.13/site-packages/more_itertools/recipes.py",
+    "lib/python3.13/site-packages/more_itertools/recipes.pyi"
+  ],
+  "paths_data": {
+    "paths_version": 1,
+    "paths": []
+  },
+  "link": {
+    "source": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/more-itertools-10.8.0-py313hca03da5_0",
+    "type": 1
+  }
+}

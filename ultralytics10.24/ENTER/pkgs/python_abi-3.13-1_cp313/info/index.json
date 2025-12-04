@@ -1,0 +1,16 @@
+{
+  "arch": "arm64",
+  "build": "1_cp313",
+  "build_number": 1,
+  "constrains": [
+    "python 3.13.* *_cp313"
+  ],
+  "depends": [],
+  "license": "BSD-3-Clause",
+  "license_family": "BSD",
+  "name": "python_abi",
+  "platform": "osx",
+  "subdir": "osx-arm64",
+  "timestamp": 1757085633665,
+  "version": "3.13"
+}

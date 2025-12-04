@@ -1,0 +1,7 @@
+include/omp-tools.h
+include/omp.h
+include/ompt.h
+include/ompx.h
+lib/libgomp.1.dylib
+lib/libiomp5.dylib
+lib/libomp.dylib

@@ -1,0 +1,74 @@
+# This file created by conda-build 25.1.2
+# meta.yaml template originally from:
+# /Users/ec2-user/tasks/task_175749562892967/pycparser-feedstock/recipe, last modified Wed Sep 10 09:20:31 2025
+# ------------------------------------------------
+
+package:
+  name: pycparser
+  version: '2.23'
+source:
+  sha256: 78816d4f24add8f10a06d6f05b4d424ad9e96cfebf68a4ddc99c65c0720d00c2
+  url: https://pypi.org/packages/source/p/pycparser/pycparser-2.23.tar.gz
+build:
+  number: '0'
+  script: /opt/miniconda3/conda-bld/pycparser_1757496048647/_h_env_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehol/bin/python
+    -m pip install . --no-deps --no-build-isolation -vvv
+  string: py313hca03da5_0
+requirements:
+  host:
+    - bzip2 1.0.8 h80987f9_6
+    - ca-certificates 2025.7.15 hca03da5_0
+    - expat 2.7.1 h313beb8_0
+    - libcxx 20.1.8 h8869778_0
+    - libffi 3.4.4 hca03da5_1
+    - libmpdec 4.0.0 h80987f9_0
+    - ncurses 6.5 hee39554_0
+    - openssl 3.0.17 h4ee41c1_0
+    - pip 25.2 pyhc872135_0
+    - python 3.13.7 hc28b8d9_100_cp313
+    - python_abi 3.13 1_cp313
+    - readline 8.3 h0b18652_0
+    - setuptools 78.1.1 py313hca03da5_0
+    - sqlite 3.50.2 h79febb2_1
+    - tk 8.6.15 hcd8a7d5_0
+    - tzdata 2025b h04d1e81_0
+    - wheel 0.45.1 py313hca03da5_0
+    - xz 5.6.4 h80987f9_1
+    - zlib 1.2.13 ha1e9f54_2
+  run:
+    - python >=3.13,<3.14.0a0
+    - python_abi 3.13.* *_cp313
+test:
+  commands:
+    - pip check
+    - python -c "from importlib.metadata import version; assert(version('pycparser')=='2.23')"
+    - pytest --rootdir=. -vv tests
+  imports:
+    - pycparser
+    - pycparser.ply
+  requires:
+    - pip
+    - pytest
+    - python >=3.13,<3.14.0a0
+  source_files:
+    - tests
+about:
+  description: 'pycparser is a complete parser of the C language, written in pure
+    Python using the PLY parsing library.
+
+    It parses C code into an AST and can serve as a front-end for C compilers or analysis
+    tools.
+
+    '
+  dev_url: https://github.com/eliben/pycparser
+  doc_url: https://github.com/eliben/pycparser
+  home: https://github.com/eliben/pycparser
+  license: BSD-3-Clause
+  license_family: BSD
+  license_file: LICENSE
+  summary: Complete C99 parser in pure Python
+extra:
+  copy_test_source_files: true
+  final: true
+  recipe-maintainers:
+    - synapticarbors

@@ -1,0 +1,25 @@
+{
+  "arch": "arm64",
+  "build": "py313hca03da5_1",
+  "build_number": 1,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64/",
+  "constrains": [],
+  "depends": [
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313",
+    "requests",
+    "zstandard >=0.15"
+  ],
+  "fn": "conda-package-streaming-0.12.0-py313hca03da5_1.conda",
+  "license": "BSD-3-Clause",
+  "license_family": "BSD",
+  "md5": "01a0bc32a49fd331d514dfd64446fb1e",
+  "name": "conda-package-streaming",
+  "platform": "darwin",
+  "sha256": "167d9c3bfd693c347a43c4b006c1379f1ff94588ee818ed231d801ad63a65f34",
+  "size": 38499,
+  "subdir": "osx-arm64",
+  "timestamp": 1762361650000,
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/conda-package-streaming-0.12.0-py313hca03da5_1.conda",
+  "version": "0.12.0"
+}

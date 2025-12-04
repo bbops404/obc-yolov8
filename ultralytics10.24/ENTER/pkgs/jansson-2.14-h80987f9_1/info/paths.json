@@ -1,0 +1,37 @@
+{
+  "paths": [
+    {
+      "_path": "include/jansson.h",
+      "path_type": "hardlink",
+      "sha256": "8945f933b82707edea06a9e006bd7b65b160a6301f7bf90da569e263deed11f2",
+      "size_in_bytes": 16330
+    },
+    {
+      "_path": "include/jansson_config.h",
+      "path_type": "hardlink",
+      "sha256": "3fbee9af15d0707d4aba19e14397f8657b02b91898a8d3f03da41539798e5d1b",
+      "size_in_bytes": 1627
+    },
+    {
+      "_path": "lib/libjansson.4.dylib",
+      "path_type": "hardlink",
+      "sha256": "ec73971e78a1f06051275c13e930fb8a99bd8e1d306cde530997cd20dc572839",
+      "size_in_bytes": 108944
+    },
+    {
+      "_path": "lib/libjansson.dylib",
+      "path_type": "softlink",
+      "sha256": "ec73971e78a1f06051275c13e930fb8a99bd8e1d306cde530997cd20dc572839",
+      "size_in_bytes": 108944
+    },
+    {
+      "_path": "lib/pkgconfig/jansson.pc",
+      "file_mode": "text",
+      "path_type": "hardlink",
+      "prefix_placeholder": "/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_edf7vh9apj/croot/jansson_1705704573546/_h_env_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placeh",
+      "sha256": "4b7bd4536eaf901d59ceb6540a4b18ab4173f1aca5490a5c0d747ad18f9d4e1b",
+      "size_in_bytes": 492
+    }
+  ],
+  "paths_version": 1
+}

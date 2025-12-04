@@ -1,0 +1,47 @@
+{
+  "name": "jaraco.context",
+  "version": "6.0.0",
+  "build": "py313hca03da5_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64",
+  "subdir": "osx-arm64",
+  "fn": "jaraco.context-6.0.0-py313hca03da5_0.conda",
+  "md5": "afce7aebb2a0c6a71c8e8bdff7b29dec",
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/jaraco.context-6.0.0-py313hca03da5_0.conda",
+  "sha256": "369bfd22686e54c56f41e1e18d60995f8f1d49e37fdbc5ef210d543170522ea0",
+  "arch": "arm64",
+  "platform": "darwin",
+  "depends": [
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313"
+  ],
+  "constrains": [],
+  "license": "MIT",
+  "license_family": "MIT",
+  "timestamp": 1731716722000,
+  "size": 17212,
+  "requested_spec": "pkgs/main/osx-arm64::jaraco.context==6.0.0=py313hca03da5_0",
+  "package_tarball_full_path": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/jaraco.context-6.0.0-py313hca03da5_0.conda",
+  "extracted_package_dir": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/jaraco.context-6.0.0-py313hca03da5_0",
+  "files": [
+    "lib/python3.13/site-packages/jaraco.context-0.0.0.dist-info/INSTALLER",
+    "lib/python3.13/site-packages/jaraco.context-0.0.0.dist-info/LICENSE",
+    "lib/python3.13/site-packages/jaraco.context-0.0.0.dist-info/METADATA",
+    "lib/python3.13/site-packages/jaraco.context-0.0.0.dist-info/RECORD",
+    "lib/python3.13/site-packages/jaraco.context-0.0.0.dist-info/REQUESTED",
+    "lib/python3.13/site-packages/jaraco.context-0.0.0.dist-info/WHEEL",
+    "lib/python3.13/site-packages/jaraco.context-0.0.0.dist-info/direct_url.json",
+    "lib/python3.13/site-packages/jaraco.context-0.0.0.dist-info/top_level.txt",
+    "lib/python3.13/site-packages/jaraco/context/__init__.py",
+    "lib/python3.13/site-packages/jaraco/context/__pycache__/__init__.cpython-313.pyc",
+    "lib/python3.13/site-packages/jaraco/context/py.typed"
+  ],
+  "paths_data": {
+    "paths_version": 1,
+    "paths": []
+  },
+  "link": {
+    "source": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/jaraco.context-6.0.0-py313hca03da5_0",
+    "type": 1
+  }
+}

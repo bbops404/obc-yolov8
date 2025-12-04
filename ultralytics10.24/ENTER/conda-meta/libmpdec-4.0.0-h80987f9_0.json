@@ -1,0 +1,35 @@
+{
+  "name": "libmpdec",
+  "version": "4.0.0",
+  "build": "h80987f9_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64",
+  "subdir": "osx-arm64",
+  "fn": "libmpdec-4.0.0-h80987f9_0.conda",
+  "md5": "7b01d2d5e276a24dd44e7846406656ed",
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/libmpdec-4.0.0-h80987f9_0.conda",
+  "sha256": "f9b80c20080496cc40ae74500a1944d6a30eadad138fefa8f300bc3a6a4e80b0",
+  "arch": "arm64",
+  "platform": "darwin",
+  "depends": [],
+  "constrains": [],
+  "license": "BSD-2-Clause",
+  "license_family": "BSD",
+  "timestamp": 1726088461000,
+  "size": 70527,
+  "requested_spec": "pkgs/main/osx-arm64::libmpdec==4.0.0=h80987f9_0",
+  "package_tarball_full_path": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/libmpdec-4.0.0-h80987f9_0.conda",
+  "extracted_package_dir": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/libmpdec-4.0.0-h80987f9_0",
+  "files": [
+    "lib/libmpdec.4.0.0.dylib",
+    "lib/libmpdec.4.dylib"
+  ],
+  "paths_data": {
+    "paths_version": 1,
+    "paths": []
+  },
+  "link": {
+    "source": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/libmpdec-4.0.0-h80987f9_0",
+    "type": 1
+  }
+}

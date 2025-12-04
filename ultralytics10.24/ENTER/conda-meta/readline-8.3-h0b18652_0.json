@@ -1,0 +1,84 @@
+{
+  "name": "readline",
+  "version": "8.3",
+  "build": "h0b18652_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64",
+  "subdir": "osx-arm64",
+  "fn": "readline-8.3-h0b18652_0.conda",
+  "md5": "fed853901ec41684b9e08b0c7ee4d7f0",
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/readline-8.3-h0b18652_0.conda",
+  "sha256": "22cf28d17df12004caeeaae6ec93a01e3f855eafece0b32a98976eef08968a34",
+  "arch": "arm64",
+  "platform": "darwin",
+  "depends": [
+    "__osx >=11.1",
+    "ncurses >=6.5,<7.0a0"
+  ],
+  "constrains": [],
+  "license": "GPL-3.0-only",
+  "license_family": "GPL",
+  "timestamp": 1754485689000,
+  "size": 475276,
+  "requested_spec": "pkgs/main/osx-arm64::readline==8.3=h0b18652_0",
+  "package_tarball_full_path": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/readline-8.3-h0b18652_0.conda",
+  "extracted_package_dir": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/readline-8.3-h0b18652_0",
+  "files": [
+    "include/readline/chardefs.h",
+    "include/readline/history.h",
+    "include/readline/keymaps.h",
+    "include/readline/readline.h",
+    "include/readline/rlconf.h",
+    "include/readline/rlstdc.h",
+    "include/readline/rltypedefs.h",
+    "include/readline/tilde.h",
+    "lib/libhistory.8.3.dylib",
+    "lib/libhistory.8.dylib",
+    "lib/libhistory.a",
+    "lib/libhistory.dylib",
+    "lib/libreadline.8.3.dylib",
+    "lib/libreadline.8.dylib",
+    "lib/libreadline.a",
+    "lib/libreadline.dylib",
+    "lib/pkgconfig/history.pc",
+    "lib/pkgconfig/readline.pc",
+    "share/doc/readline/CHANGES",
+    "share/doc/readline/INSTALL",
+    "share/doc/readline/README",
+    "share/doc/readline/history.html",
+    "share/doc/readline/readline.html",
+    "share/doc/readline/rluserman.html",
+    "share/info/history.info",
+    "share/info/readline.info",
+    "share/info/rluserman.info",
+    "share/man/man3/history.3",
+    "share/man/man3/readline.3"
+  ],
+  "paths_data": {
+    "paths_version": 1,
+    "paths": [
+      {
+        "_path": "lib/pkgconfig/history.pc",
+        "prefix_placeholder": "/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_14q9fvz_55/croot/readline_1754485616628/_h_env_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_place",
+        "file_mode": "text",
+        "path_type": "hardlink",
+        "sha256": "4e3495dd22c8272d2a26721c6f7dde68fdf32e4a73dd752a978939937c0fd278",
+        "size_in_bytes": 548,
+        "sha256_in_prefix": "d8ae19e5a64eea6fefe17f4862e6dbe628f9e9ed0f9700ffd4bbc1d498413cf0"
+      },
+      {
+        "_path": "lib/pkgconfig/readline.pc",
+        "prefix_placeholder": "/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_14q9fvz_55/croot/readline_1754485616628/_h_env_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_place",
+        "file_mode": "text",
+        "path_type": "hardlink",
+        "sha256": "6283b4ad7cae3a389727ef459f2817076ad6cc26f3a29bf39a9a8fd0b6247cde",
+        "size_in_bytes": 564,
+        "sha256_in_prefix": "26ab2c52414c503007b3c41f25d08b73e46836a1b27748c6086349452b6c91fe"
+      }
+    ]
+  },
+  "link": {
+    "source": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/readline-8.3-h0b18652_0",
+    "type": 1
+  }
+}

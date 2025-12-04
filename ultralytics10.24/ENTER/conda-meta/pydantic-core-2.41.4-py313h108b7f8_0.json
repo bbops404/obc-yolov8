@@ -1,0 +1,52 @@
+{
+  "name": "pydantic-core",
+  "version": "2.41.4",
+  "build": "py313h108b7f8_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64",
+  "subdir": "osx-arm64",
+  "fn": "pydantic-core-2.41.4-py313h108b7f8_0.conda",
+  "md5": "aecbbd6223cb26a74ab7478f5b99f703",
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/pydantic-core-2.41.4-py313h108b7f8_0.conda",
+  "sha256": "7e6708a1f94729bab1043b0192fedb27c421cacab2de6d31ac83f911ecfb3f43",
+  "arch": "arm64",
+  "platform": "darwin",
+  "depends": [
+    "__osx >=12.1",
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313",
+    "typing-extensions >=4.14.1"
+  ],
+  "constrains": [],
+  "license": "MIT",
+  "license_family": "MIT",
+  "timestamp": 1760597407000,
+  "size": 1718133,
+  "requested_spec": "pkgs/main/osx-arm64::pydantic-core==2.41.4=py313h108b7f8_0",
+  "package_tarball_full_path": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/pydantic-core-2.41.4-py313h108b7f8_0.conda",
+  "extracted_package_dir": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/pydantic-core-2.41.4-py313h108b7f8_0",
+  "files": [
+    "lib/python3.13/site-packages/pydantic_core-2.41.4.dist-info/INSTALLER",
+    "lib/python3.13/site-packages/pydantic_core-2.41.4.dist-info/METADATA",
+    "lib/python3.13/site-packages/pydantic_core-2.41.4.dist-info/RECORD",
+    "lib/python3.13/site-packages/pydantic_core-2.41.4.dist-info/REQUESTED",
+    "lib/python3.13/site-packages/pydantic_core-2.41.4.dist-info/WHEEL",
+    "lib/python3.13/site-packages/pydantic_core-2.41.4.dist-info/direct_url.json",
+    "lib/python3.13/site-packages/pydantic_core-2.41.4.dist-info/licenses/LICENSE",
+    "lib/python3.13/site-packages/pydantic_core/__init__.py",
+    "lib/python3.13/site-packages/pydantic_core/__pycache__/__init__.cpython-313.pyc",
+    "lib/python3.13/site-packages/pydantic_core/__pycache__/core_schema.cpython-313.pyc",
+    "lib/python3.13/site-packages/pydantic_core/_pydantic_core.cpython-313-darwin.so",
+    "lib/python3.13/site-packages/pydantic_core/_pydantic_core.pyi",
+    "lib/python3.13/site-packages/pydantic_core/core_schema.py",
+    "lib/python3.13/site-packages/pydantic_core/py.typed"
+  ],
+  "paths_data": {
+    "paths_version": 1,
+    "paths": []
+  },
+  "link": {
+    "source": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/pydantic-core-2.41.4-py313h108b7f8_0",
+    "type": 1
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "arch": "arm64",
+  "build": "h1799b2a_0",
+  "build_number": 0,
+  "depends": [
+    "__osx >=11.1"
+  ],
+  "license": "LGPL-3.0-only",
+  "license_family": "LGPL",
+  "name": "libunistring",
+  "platform": "osx",
+  "subdir": "osx-arm64",
+  "timestamp": 1755086959740,
+  "version": "1.3"
+}

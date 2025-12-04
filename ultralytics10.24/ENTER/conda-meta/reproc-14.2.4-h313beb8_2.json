@@ -1,0 +1,55 @@
+{
+  "name": "reproc",
+  "version": "14.2.4",
+  "build": "h313beb8_2",
+  "build_number": 2,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64",
+  "subdir": "osx-arm64",
+  "fn": "reproc-14.2.4-h313beb8_2.conda",
+  "md5": "91a2f6f75e6c6614f43ddc8ac2b3e0aa",
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/reproc-14.2.4-h313beb8_2.conda",
+  "sha256": "c762e27a07ece0e9977ae96f454ed40c4bef396d9f0c0fe3e7fb8059945b6d4d",
+  "arch": "arm64",
+  "platform": "darwin",
+  "depends": [],
+  "constrains": [],
+  "license": "MIT",
+  "license_family": "MIT",
+  "timestamp": 1714680923000,
+  "size": 28562,
+  "requested_spec": "pkgs/main/osx-arm64::reproc==14.2.4=h313beb8_2",
+  "package_tarball_full_path": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/reproc-14.2.4-h313beb8_2.conda",
+  "extracted_package_dir": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/reproc-14.2.4-h313beb8_2",
+  "files": [
+    "include/reproc/drain.h",
+    "include/reproc/export.h",
+    "include/reproc/reproc.h",
+    "include/reproc/run.h",
+    "lib/cmake/reproc/reproc-config-version.cmake",
+    "lib/cmake/reproc/reproc-config.cmake",
+    "lib/cmake/reproc/reproc-targets-release.cmake",
+    "lib/cmake/reproc/reproc-targets.cmake",
+    "lib/libreproc.14.2.4.dylib",
+    "lib/libreproc.14.dylib",
+    "lib/libreproc.dylib",
+    "lib/pkgconfig/reproc.pc"
+  ],
+  "paths_data": {
+    "paths_version": 1,
+    "paths": [
+      {
+        "_path": "lib/pkgconfig/reproc.pc",
+        "prefix_placeholder": "/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_77d995f1ra/croot/reproc_1714680881141/_h_env_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placeho",
+        "file_mode": "text",
+        "path_type": "hardlink",
+        "sha256": "99250ad0dd2934bd697eec0a0999f007f342060d1086646ee8c26e2e891864b2",
+        "size_in_bytes": 535,
+        "sha256_in_prefix": "8f7dbfec64abbc80f6429db6a206eea7ceee00e6e9a5a2d9ef1f3df3ba443f7e"
+      }
+    ]
+  },
+  "link": {
+    "source": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/reproc-14.2.4-h313beb8_2",
+    "type": 1
+  }
+}

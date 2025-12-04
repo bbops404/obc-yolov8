@@ -1,0 +1,259 @@
+{
+  "paths": [
+    {
+      "_path": "bin/typer",
+      "file_mode": "text",
+      "path_type": "hardlink",
+      "prefix_placeholder": "/opt/miniconda3/conda-bld/typer_1757580868385/_h_env_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_pl",
+      "sha256": "3047ce0e78cd2ecb91040221de01b6c17116d6b832e77f18dc24724e18ace388",
+      "size_in_bytes": 462
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typer-0.17.4.dist-info/INSTALLER",
+      "path_type": "hardlink",
+      "sha256": "d0edee15f91b406f3f99726e44eb990be6e34fd0345b52b910c568e0eef6a2a8",
+      "size_in_bytes": 5
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typer-0.17.4.dist-info/METADATA",
+      "path_type": "hardlink",
+      "sha256": "deff5adac8620c61092bde9da3ba56cc57b4c88c235c0db9b77f676b6875d61b",
+      "size_in_bytes": 15721
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typer-0.17.4.dist-info/RECORD",
+      "path_type": "hardlink",
+      "sha256": "108ead6d1605353815aba322842bf794c9a4176f2f59a5740a6ab02b24ec0b65",
+      "size_in_bytes": 2746
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typer-0.17.4.dist-info/REQUESTED",
+      "path_type": "hardlink",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_in_bytes": 0
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typer-0.17.4.dist-info/WHEEL",
+      "path_type": "hardlink",
+      "sha256": "b6169a036c352737060b8f1662e7c0b3c9eb6198c99bc2ea35f9d714e172082e",
+      "size_in_bytes": 90
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typer-0.17.4.dist-info/direct_url.json",
+      "path_type": "hardlink",
+      "sha256": "1ee25b28fff81c495fcc2bc0439cf1033a2dd6303e81a326d5a7ff0ab3b95800",
+      "size_in_bytes": 84
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typer-0.17.4.dist-info/entry_points.txt",
+      "path_type": "hardlink",
+      "sha256": "60ed770728aa59eb9ab3d5742400cb5004591547bf73053fef099336fc41610f",
+      "size_in_bytes": 57
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typer-0.17.4.dist-info/licenses/LICENSE",
+      "path_type": "hardlink",
+      "sha256": "58992cebcf8dfb6e40c4e2112ed12126c243666dca3912a3d78b7ecac4859d49",
+      "size_in_bytes": 1086
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typer/__init__.py",
+      "path_type": "hardlink",
+      "sha256": "d0368a612698a4a606029e443abdca43f7ae8d67bd1768ebd36f565bd5a856e6",
+      "size_in_bytes": 1596
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typer/__main__.py",
+      "path_type": "hardlink",
+      "sha256": "6d8b7d7846a845059d7a3107143f11131f63c5511d669b44085b15ec5e3d2279",
+      "size_in_bytes": 30
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typer/__pycache__/__init__.cpython-313.pyc",
+      "path_type": "hardlink",
+      "sha256": "411ccf7d52de0c9b0e045b1cf7f2f6082de68eb29d8c551eb6b1df29cd0611f6",
+      "size_in_bytes": 1422
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typer/__pycache__/__main__.cpython-313.pyc",
+      "path_type": "hardlink",
+      "sha256": "4c1bc5acb148a33996f0dd8c7d3ef7ece31b1558bcb9e7d40bda95e5a970578a",
+      "size_in_bytes": 197
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typer/__pycache__/_completion_classes.cpython-313.pyc",
+      "path_type": "hardlink",
+      "sha256": "0b368a0d7cd1507e46e2250aa52866dfaabafe738dad94450499a88dd88adfaa",
+      "size_in_bytes": 10874
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typer/__pycache__/_completion_shared.cpython-313.pyc",
+      "path_type": "hardlink",
+      "sha256": "73ab1712eb628c31c1e14b6a20632c693af868ee6adfce2a7411ccb6a54bb4b1",
+      "size_in_bytes": 9886
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typer/__pycache__/_types.cpython-313.pyc",
+      "path_type": "hardlink",
+      "sha256": "7da3e2bb4284c92f31fe05481ccfd4606c67d3547a234a8ac54783da6d5aa6f1",
+      "size_in_bytes": 1308
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typer/__pycache__/_typing.cpython-313.pyc",
+      "path_type": "hardlink",
+      "sha256": "70648e05b84b6e5f3c318684c3feaf03cac7793a32d500b07ab0b872e15cd257",
+      "size_in_bytes": 3463
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typer/__pycache__/cli.cpython-313.pyc",
+      "path_type": "hardlink",
+      "sha256": "a8adfc3aae3105218a9109afe4e2c08132f67d68d881631cf2febe62ee0c2287",
+      "size_in_bytes": 14795
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typer/__pycache__/colors.cpython-313.pyc",
+      "path_type": "hardlink",
+      "sha256": "5693a4232b1b88a5eb059af35e398004b8c25baab0fc1a59007f0f021681fd61",
+      "size_in_bytes": 637
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typer/__pycache__/completion.cpython-313.pyc",
+      "path_type": "hardlink",
+      "sha256": "19e3b8cf320963fb017cfc4fdd1d3eefe9b775e4539fd950b585a76b29a45cdd",
+      "size_in_bytes": 5431
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typer/__pycache__/core.cpython-313.pyc",
+      "path_type": "hardlink",
+      "sha256": "c1251417e37a076331e141cafc063a6ef4bd0922a793a7ad12e2f1dbef137128",
+      "size_in_bytes": 29555
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typer/__pycache__/main.cpython-313.pyc",
+      "path_type": "hardlink",
+      "sha256": "e9557357953f0771a4e5502903ba6545864906c00c592d13d09d92a68fbe9359",
+      "size_in_bytes": 44666
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typer/__pycache__/models.cpython-313.pyc",
+      "path_type": "hardlink",
+      "sha256": "67ea5561d66c8f89fdfa2f219a5ae1a148f116efd2c3164043fb13b6c24aef45",
+      "size_in_bytes": 19432
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typer/__pycache__/params.cpython-313.pyc",
+      "path_type": "hardlink",
+      "sha256": "0b68107f5115ae9e7f6e3a60c409ac661877cee79541ef519f0e13fee1c99380",
+      "size_in_bytes": 14476
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typer/__pycache__/rich_utils.cpython-313.pyc",
+      "path_type": "hardlink",
+      "sha256": "98aae8fc51d4e32bfe6bccb86f89e167c2dac7ec032b7fb6490999b304fd6529",
+      "size_in_bytes": 27558
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typer/__pycache__/testing.cpython-313.pyc",
+      "path_type": "hardlink",
+      "sha256": "c682b63c54548defe758a39dcdb61814a884a9cac335ee9b314917891db4ac47",
+      "size_in_bytes": 1450
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typer/__pycache__/utils.cpython-313.pyc",
+      "path_type": "hardlink",
+      "sha256": "d3ebf7a3c18971fd7a37b136aee8c71f961a1b7a57b4bcd3e9e11a057c47f360",
+      "size_in_bytes": 7561
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typer/_completion_classes.py",
+      "path_type": "hardlink",
+      "sha256": "3f1f5b579e98e09fc5f52fec508da23e9521fe2fbe0a1a1cc6b9381c0badd871",
+      "size_in_bytes": 7385
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typer/_completion_shared.py",
+      "path_type": "hardlink",
+      "sha256": "e2514e5215d2af2d9b21947d6a5ed4ab7de2b69812ce0e9e6a0aae032b0d98e1",
+      "size_in_bytes": 8758
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typer/_types.py",
+      "path_type": "hardlink",
+      "sha256": "9122f184a997dfb6338b3423a985005a6aff2457025b9be111ce18b210d30bd4",
+      "size_in_bytes": 1031
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typer/_typing.py",
+      "path_type": "hardlink",
+      "sha256": "9ec67e4ca70c94602daa259733ad2bf7baeab56319c5d8708ff6242e8f3f9de3",
+      "size_in_bytes": 3001
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typer/cli.py",
+      "path_type": "hardlink",
+      "sha256": "c7e9a770ef4c866a0c2324952be88429a9c977b841287d449a914761d311822e",
+      "size_in_bytes": 9780
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typer/colors.py",
+      "path_type": "hardlink",
+      "sha256": "7b8da3f2e079db484ba57e42ff47e247738ea0814c6e13b700366fbfa865015f",
+      "size_in_bytes": 430
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typer/completion.py",
+      "path_type": "hardlink",
+      "sha256": "775022a6daec13051e48f41a200e688afe13dd7cb7303ab9a375488cadfd41e8",
+      "size_in_bytes": 4810
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typer/core.py",
+      "path_type": "hardlink",
+      "sha256": "455f72299542e7e20de1ad207293909b4bdd3146c8fa72da9ca99f5fbc6f1a9e",
+      "size_in_bytes": 26752
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typer/main.py",
+      "path_type": "hardlink",
+      "sha256": "c7508f8bbbaff6450c0cdb4a56ab803e1658c23d8fd735c41001b92bf6b27f60",
+      "size_in_bytes": 41924
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typer/models.py",
+      "path_type": "hardlink",
+      "sha256": "43abfd05062eb4d947e388bb7e7d186d9f8e7915ec8226f5a3fb51e204e6aa8c",
+      "size_in_bytes": 17188
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typer/params.py",
+      "path_type": "hardlink",
+      "sha256": "311542c113f334c90e75853a54d54691ac17fe00286336e209f2ffb58711eb1f",
+      "size_in_bytes": 14929
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typer/py.typed",
+      "path_type": "hardlink",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_in_bytes": 0
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typer/rich_utils.py",
+      "path_type": "hardlink",
+      "sha256": "38d4d02c283c583ea780c4b986416afa08c255f515398f4daefc9d62d5b3ba52",
+      "size_in_bytes": 26260
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typer/testing.py",
+      "path_type": "hardlink",
+      "sha256": "31bfc7a939293f0db8aac558c4242b0c9a63abfa0e1e582a6696ae5a87f192ad",
+      "size_in_bytes": 874
+    },
+    {
+      "_path": "lib/python3.13/site-packages/typer/utils.py",
+      "path_type": "hardlink",
+      "sha256": "1b4a9d7435f4e98b47b8c24d0a68fe7eb2c96246317d46bb8b03ba28e4d7d852",
+      "size_in_bytes": 7368
+    }
+  ],
+  "paths_version": 1
+}

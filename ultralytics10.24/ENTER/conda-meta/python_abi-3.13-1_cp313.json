@@ -1,0 +1,34 @@
+{
+  "name": "python_abi",
+  "version": "3.13",
+  "build": "1_cp313",
+  "build_number": 1,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64",
+  "subdir": "osx-arm64",
+  "fn": "python_abi-3.13-1_cp313.conda",
+  "md5": "762c641e13c16bad927edcb1227550db",
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/python_abi-3.13-1_cp313.conda",
+  "sha256": "a2aad9e854957cfc60486ddc259acc24dea4b77608e87c19bb82f7079ee80ed2",
+  "arch": "arm64",
+  "platform": "darwin",
+  "depends": [],
+  "constrains": [
+    "python 3.13.* *_cp313"
+  ],
+  "license": "BSD-3-Clause",
+  "license_family": "BSD",
+  "timestamp": 1757085633000,
+  "size": 5699,
+  "requested_spec": "pkgs/main/osx-arm64::python_abi==3.13=1_cp313",
+  "package_tarball_full_path": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/python_abi-3.13-1_cp313.conda",
+  "extracted_package_dir": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/python_abi-3.13-1_cp313",
+  "files": [],
+  "paths_data": {
+    "paths_version": 1,
+    "paths": []
+  },
+  "link": {
+    "source": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/python_abi-3.13-1_cp313",
+    "type": 1
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "name": "zstandard",
+  "version": "0.24.0",
+  "build": "py313hbc14757_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64",
+  "subdir": "osx-arm64",
+  "fn": "zstandard-0.24.0-py313hbc14757_0.conda",
+  "md5": "b282b2aecb718102ee0bb3848514689a",
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/zstandard-0.24.0-py313hbc14757_0.conda",
+  "sha256": "443e7f4075520a4d613ec1d73800bbd40fe9517c263b2e4fb4e9deaa6c596886",
+  "arch": "arm64",
+  "platform": "darwin",
+  "depends": [
+    "__osx >=12.1",
+    "cffi >=1.17",
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313",
+    "zstd >=1.5.7,<1.5.8.0a0",
+    "zstd >=1.5.7,<1.6.0a0"
+  ],
+  "constrains": [],
+  "license": "BSD-3-Clause",
+  "license_family": "BSD",
+  "timestamp": 1758189118000,
+  "size": 349977,
+  "requested_spec": "pkgs/main/osx-arm64::zstandard==0.24.0=py313hbc14757_0",
+  "package_tarball_full_path": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/zstandard-0.24.0-py313hbc14757_0.conda",
+  "extracted_package_dir": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/zstandard-0.24.0-py313hbc14757_0",
+  "files": [
+    "lib/python3.13/site-packages/zstandard-0.24.0.dist-info/INSTALLER",
+    "lib/python3.13/site-packages/zstandard-0.24.0.dist-info/METADATA",
+    "lib/python3.13/site-packages/zstandard-0.24.0.dist-info/RECORD",
+    "lib/python3.13/site-packages/zstandard-0.24.0.dist-info/REQUESTED",
+    "lib/python3.13/site-packages/zstandard-0.24.0.dist-info/WHEEL",
+    "lib/python3.13/site-packages/zstandard-0.24.0.dist-info/direct_url.json",
+    "lib/python3.13/site-packages/zstandard-0.24.0.dist-info/top_level.txt",
+    "lib/python3.13/site-packages/zstandard/__init__.py",
+    "lib/python3.13/site-packages/zstandard/__init__.pyi",
+    "lib/python3.13/site-packages/zstandard/__pycache__/__init__.cpython-313.pyc",
+    "lib/python3.13/site-packages/zstandard/__pycache__/backend_cffi.cpython-313.pyc",
+    "lib/python3.13/site-packages/zstandard/_cffi.cpython-313-darwin.so",
+    "lib/python3.13/site-packages/zstandard/backend_c.cpython-313-darwin.so",
+    "lib/python3.13/site-packages/zstandard/backend_cffi.py",
+    "lib/python3.13/site-packages/zstandard/py.typed"
+  ],
+  "paths_data": {
+    "paths_version": 1,
+    "paths": []
+  },
+  "link": {
+    "source": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/zstandard-0.24.0-py313hbc14757_0",
+    "type": 1
+  }
+}

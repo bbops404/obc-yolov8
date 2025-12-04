@@ -1,0 +1,85 @@
+# This file created by conda-build 25.1.2
+# meta.yaml template originally from:
+# /Users/ec2-user/tasks/task_176252091314074/truststore-feedstock/recipe, last modified Fri Nov  7 13:08:34 2025
+# ------------------------------------------------
+
+package:
+  name: truststore
+  version: 0.10.1
+source:
+  fn: truststore-0.10.1.tar.gz
+  sha256: a470d2763875f9b9a148d5726af330d15b65d2a83f70610c262de8888ee94b4e
+  url: https://github.com/sethmlarson/truststore/archive/refs/tags/v0.10.1.tar.gz
+build:
+  number: '1'
+  script: /opt/miniconda3/conda-bld/truststore_1762520923820/_h_env_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placeho/bin/python
+    -m pip install . -vv --no-deps --no-build-isolation
+  string: py313hca03da5_1
+requirements:
+  host:
+    - bzip2 1.0.8 h80987f9_6
+    - ca-certificates 2025.11.4 hca03da5_0
+    - expat 2.7.3 h982b769_0
+    - flit-core 3.12.0 py313hedbb292_1
+    - libcxx 20.1.8 hd7fd590_1
+    - libffi 3.4.4 hca03da5_1
+    - libmpdec 4.0.0 h80987f9_0
+    - libzlib 1.3.1 h5f15de7_0
+    - ncurses 6.5 hee39554_0
+    - openssl 3.0.18 h9b4081a_0
+    - pip 25.2 pyhc872135_1
+    - python 3.13.9 hc7d8306_100_cp313
+    - python_abi 3.13 1_cp313
+    - readline 8.3 h0b18652_0
+    - setuptools 80.9.0 py313hca03da5_0
+    - sqlite 3.50.2 h79febb2_1
+    - tk 8.6.15 hcd8a7d5_0
+    - tzdata 2025b h04d1e81_0
+    - wheel 0.45.1 py313hca03da5_0
+    - xz 5.6.4 h80987f9_1
+    - zlib 1.3.1 h5f15de7_0
+  run:
+    - python >=3.13,<3.14.0a0
+    - python_abi 3.13.* *_cp313
+test:
+  commands:
+    - pip check
+    - pytest -k 'not (test_failures or test_failure_after_loading_additional_anchors)'
+      tests/
+  imports:
+    - truststore
+  requires:
+    - aiohttp
+    - flaky
+    - httpx
+    - pip
+    - pyopenssl
+    - pytest
+    - pytest-asyncio
+    - pytest-httpserver
+    - requests
+    - trustme
+    - urllib3
+  source_files:
+    - tests
+about:
+  description: 'A library which exposes native system certificate stores (ie "trust
+    stores")
+
+    through an ssl.SSLContext-like API. This means that Python applications no
+
+    longer need to rely on certifi as a root certificate store.
+
+    '
+  dev_url: https://github.com/sethmlarson/truststore
+  doc_url: https://truststore.readthedocs.io
+  home: https://github.com/sethmlarson/truststore
+  license: MIT
+  license_family: MIT
+  license_file: LICENSE
+  summary: Verify certificates using native system trust stores
+extra:
+  copy_test_source_files: true
+  final: true
+  recipe-maintainers:
+    - conda-forge/truststore

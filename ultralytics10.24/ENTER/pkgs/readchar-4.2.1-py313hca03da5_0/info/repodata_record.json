@@ -1,0 +1,23 @@
+{
+  "arch": "arm64",
+  "build": "py313hca03da5_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64/",
+  "constrains": [],
+  "depends": [
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313"
+  ],
+  "fn": "readchar-4.2.1-py313hca03da5_0.conda",
+  "license": "MIT",
+  "license_family": "MIT",
+  "md5": "65b12cc9b3773ba5fc8a6beb3c3d0938",
+  "name": "readchar",
+  "platform": "darwin",
+  "sha256": "0d5e09acdaf98868658dd89212a4e626ee165b323ab0fb5e643f066d925e5830",
+  "size": 20018,
+  "subdir": "osx-arm64",
+  "timestamp": 1760613321000,
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/readchar-4.2.1-py313hca03da5_0.conda",
+  "version": "4.2.1"
+}

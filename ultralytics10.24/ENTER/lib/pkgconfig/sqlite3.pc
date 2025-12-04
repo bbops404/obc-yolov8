@@ -1,0 +1,13 @@
+# Package Information for pkg-config
+
+prefix=/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: SQLite
+Description: SQL database engine
+Version: 3.51.0
+Libs: -L${libdir} -lsqlite3
+Libs.private:  -lz   
+Cflags: -I${includedir}

@@ -1,0 +1,60 @@
+{
+  "name": "idna",
+  "version": "3.11",
+  "build": "py313hca03da5_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64",
+  "subdir": "osx-arm64",
+  "fn": "idna-3.11-py313hca03da5_0.conda",
+  "md5": "9840df0ca7f12f0d58576f9fa33ef0fc",
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/idna-3.11-py313hca03da5_0.conda",
+  "sha256": "bdb342e9e185cebf1f33d858ead48f6594829d014e1008a818b4ee3b8ce8b3dd",
+  "arch": "arm64",
+  "platform": "darwin",
+  "depends": [
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313"
+  ],
+  "constrains": [],
+  "license": "BSD-3-Clause",
+  "license_family": "BSD",
+  "timestamp": 1761912023000,
+  "size": 203509,
+  "requested_spec": "pkgs/main/osx-arm64::idna==3.11=py313hca03da5_0",
+  "package_tarball_full_path": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/idna-3.11-py313hca03da5_0.conda",
+  "extracted_package_dir": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/idna-3.11-py313hca03da5_0",
+  "files": [
+    "lib/python3.13/site-packages/idna-3.11.dist-info/INSTALLER",
+    "lib/python3.13/site-packages/idna-3.11.dist-info/METADATA",
+    "lib/python3.13/site-packages/idna-3.11.dist-info/RECORD",
+    "lib/python3.13/site-packages/idna-3.11.dist-info/REQUESTED",
+    "lib/python3.13/site-packages/idna-3.11.dist-info/WHEEL",
+    "lib/python3.13/site-packages/idna-3.11.dist-info/direct_url.json",
+    "lib/python3.13/site-packages/idna-3.11.dist-info/licenses/LICENSE.md",
+    "lib/python3.13/site-packages/idna/__init__.py",
+    "lib/python3.13/site-packages/idna/__pycache__/__init__.cpython-313.pyc",
+    "lib/python3.13/site-packages/idna/__pycache__/codec.cpython-313.pyc",
+    "lib/python3.13/site-packages/idna/__pycache__/compat.cpython-313.pyc",
+    "lib/python3.13/site-packages/idna/__pycache__/core.cpython-313.pyc",
+    "lib/python3.13/site-packages/idna/__pycache__/idnadata.cpython-313.pyc",
+    "lib/python3.13/site-packages/idna/__pycache__/intranges.cpython-313.pyc",
+    "lib/python3.13/site-packages/idna/__pycache__/package_data.cpython-313.pyc",
+    "lib/python3.13/site-packages/idna/__pycache__/uts46data.cpython-313.pyc",
+    "lib/python3.13/site-packages/idna/codec.py",
+    "lib/python3.13/site-packages/idna/compat.py",
+    "lib/python3.13/site-packages/idna/core.py",
+    "lib/python3.13/site-packages/idna/idnadata.py",
+    "lib/python3.13/site-packages/idna/intranges.py",
+    "lib/python3.13/site-packages/idna/package_data.py",
+    "lib/python3.13/site-packages/idna/py.typed",
+    "lib/python3.13/site-packages/idna/uts46data.py"
+  ],
+  "paths_data": {
+    "paths_version": 1,
+    "paths": []
+  },
+  "link": {
+    "source": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/idna-3.11-py313hca03da5_0",
+    "type": 1
+  }
+}

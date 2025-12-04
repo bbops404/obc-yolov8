@@ -1,0 +1,48 @@
+{
+  "name": "annotated-types",
+  "version": "0.6.0",
+  "build": "py313hca03da5_1",
+  "build_number": 1,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64",
+  "subdir": "osx-arm64",
+  "fn": "annotated-types-0.6.0-py313hca03da5_1.conda",
+  "md5": "c0c2fb9483677bb657eda6d491e5f29c",
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/annotated-types-0.6.0-py313hca03da5_1.conda",
+  "sha256": "c3073a3025838c527211012e3943a613f50c1fa1a258dc52f6c21d81aab0993e",
+  "arch": "arm64",
+  "platform": "darwin",
+  "depends": [
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313"
+  ],
+  "constrains": [],
+  "license": "MIT",
+  "license_family": "MIT",
+  "timestamp": 1761744968000,
+  "size": 25909,
+  "requested_spec": "pkgs/main/osx-arm64::annotated-types==0.6.0=py313hca03da5_1",
+  "package_tarball_full_path": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/annotated-types-0.6.0-py313hca03da5_1.conda",
+  "extracted_package_dir": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/annotated-types-0.6.0-py313hca03da5_1",
+  "files": [
+    "lib/python3.13/site-packages/annotated_types-0.6.0.dist-info/INSTALLER",
+    "lib/python3.13/site-packages/annotated_types-0.6.0.dist-info/METADATA",
+    "lib/python3.13/site-packages/annotated_types-0.6.0.dist-info/RECORD",
+    "lib/python3.13/site-packages/annotated_types-0.6.0.dist-info/REQUESTED",
+    "lib/python3.13/site-packages/annotated_types-0.6.0.dist-info/WHEEL",
+    "lib/python3.13/site-packages/annotated_types-0.6.0.dist-info/direct_url.json",
+    "lib/python3.13/site-packages/annotated_types-0.6.0.dist-info/licenses/LICENSE",
+    "lib/python3.13/site-packages/annotated_types/__init__.py",
+    "lib/python3.13/site-packages/annotated_types/__pycache__/__init__.cpython-313.pyc",
+    "lib/python3.13/site-packages/annotated_types/__pycache__/test_cases.cpython-313.pyc",
+    "lib/python3.13/site-packages/annotated_types/py.typed",
+    "lib/python3.13/site-packages/annotated_types/test_cases.py"
+  ],
+  "paths_data": {
+    "paths_version": 1,
+    "paths": []
+  },
+  "link": {
+    "source": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/annotated-types-0.6.0-py313hca03da5_1",
+    "type": 1
+  }
+}

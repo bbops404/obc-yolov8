@@ -1,0 +1,82 @@
+{
+  "name": "anaconda-cli-base",
+  "version": "0.6.0",
+  "build": "py313hca03da5_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64",
+  "subdir": "osx-arm64",
+  "fn": "anaconda-cli-base-0.6.0-py313hca03da5_0.conda",
+  "md5": "48d41c253d949e9da6dc262f431e9d68",
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/anaconda-cli-base-0.6.0-py313hca03da5_0.conda",
+  "sha256": "e4bd345f7bdc78787a1466088a4994f5d0b8f211330df8747d61976254664650",
+  "arch": "arm64",
+  "platform": "darwin",
+  "depends": [
+    "click <8.2",
+    "packaging >=23.0",
+    "pydantic-settings >=2.3",
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313",
+    "readchar",
+    "rich",
+    "tomli",
+    "typer"
+  ],
+  "constrains": [
+    "anaconda-client >=1.13.0",
+    "anaconda-cloud-cli >=0.3.0"
+  ],
+  "license": "BSD-3-Clause",
+  "license_family": "BSD",
+  "timestamp": 1762294828000,
+  "size": 46208,
+  "requested_spec": "pkgs/main/osx-arm64::anaconda-cli-base==0.6.0=py313hca03da5_0",
+  "package_tarball_full_path": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/anaconda-cli-base-0.6.0-py313hca03da5_0.conda",
+  "extracted_package_dir": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/anaconda-cli-base-0.6.0-py313hca03da5_0",
+  "files": [
+    "bin/anaconda",
+    "lib/python3.13/site-packages/anaconda_cli_base-0.6.0.dist-info/INSTALLER",
+    "lib/python3.13/site-packages/anaconda_cli_base-0.6.0.dist-info/METADATA",
+    "lib/python3.13/site-packages/anaconda_cli_base-0.6.0.dist-info/RECORD",
+    "lib/python3.13/site-packages/anaconda_cli_base-0.6.0.dist-info/REQUESTED",
+    "lib/python3.13/site-packages/anaconda_cli_base-0.6.0.dist-info/WHEEL",
+    "lib/python3.13/site-packages/anaconda_cli_base-0.6.0.dist-info/direct_url.json",
+    "lib/python3.13/site-packages/anaconda_cli_base-0.6.0.dist-info/entry_points.txt",
+    "lib/python3.13/site-packages/anaconda_cli_base-0.6.0.dist-info/licenses/LICENSE",
+    "lib/python3.13/site-packages/anaconda_cli_base/__init__.py",
+    "lib/python3.13/site-packages/anaconda_cli_base/__pycache__/__init__.cpython-313.pyc",
+    "lib/python3.13/site-packages/anaconda_cli_base/__pycache__/_version.cpython-313.pyc",
+    "lib/python3.13/site-packages/anaconda_cli_base/__pycache__/cli.cpython-313.pyc",
+    "lib/python3.13/site-packages/anaconda_cli_base/__pycache__/config.cpython-313.pyc",
+    "lib/python3.13/site-packages/anaconda_cli_base/__pycache__/console.cpython-313.pyc",
+    "lib/python3.13/site-packages/anaconda_cli_base/__pycache__/deprecations.cpython-313.pyc",
+    "lib/python3.13/site-packages/anaconda_cli_base/__pycache__/exceptions.cpython-313.pyc",
+    "lib/python3.13/site-packages/anaconda_cli_base/__pycache__/plugins.cpython-313.pyc",
+    "lib/python3.13/site-packages/anaconda_cli_base/_version.py",
+    "lib/python3.13/site-packages/anaconda_cli_base/cli.py",
+    "lib/python3.13/site-packages/anaconda_cli_base/config.py",
+    "lib/python3.13/site-packages/anaconda_cli_base/console.py",
+    "lib/python3.13/site-packages/anaconda_cli_base/deprecations.py",
+    "lib/python3.13/site-packages/anaconda_cli_base/exceptions.py",
+    "lib/python3.13/site-packages/anaconda_cli_base/plugins.py",
+    "lib/python3.13/site-packages/anaconda_cli_base/py.typed"
+  ],
+  "paths_data": {
+    "paths_version": 1,
+    "paths": [
+      {
+        "_path": "bin/anaconda",
+        "prefix_placeholder": "/opt/miniconda3/conda-bld/anaconda-cli-base_1762294806728/_h_env_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_",
+        "file_mode": "text",
+        "path_type": "hardlink",
+        "sha256": "03024d45ab709d1ac66e4e65f096ce7e534db5d5dc53d24b32bd157f413a9d48",
+        "size_in_bytes": 472,
+        "sha256_in_prefix": "b362fd042dc1413acb087b9dd5a8a0a4df5de5d35186f361dfb4fe176503e7f5"
+      }
+    ]
+  },
+  "link": {
+    "source": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/anaconda-cli-base-0.6.0-py313hca03da5_0",
+    "type": 1
+  }
+}

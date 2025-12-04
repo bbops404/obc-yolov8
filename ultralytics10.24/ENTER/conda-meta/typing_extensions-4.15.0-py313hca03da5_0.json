@@ -1,0 +1,45 @@
+{
+  "name": "typing_extensions",
+  "version": "4.15.0",
+  "build": "py313hca03da5_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64",
+  "subdir": "osx-arm64",
+  "fn": "typing_extensions-4.15.0-py313hca03da5_0.conda",
+  "md5": "3c37609330dd4baeb0f4842f02cb783e",
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/typing_extensions-4.15.0-py313hca03da5_0.conda",
+  "sha256": "a97465fc1f5093231fd739b63b3ea9282960cc9b79d106893dff7724ffcdacf6",
+  "arch": "arm64",
+  "platform": "darwin",
+  "depends": [
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313"
+  ],
+  "constrains": [],
+  "license": "PSF-2.0",
+  "license_family": "PSF",
+  "timestamp": 1756281579000,
+  "size": 106009,
+  "requested_spec": "pkgs/main/osx-arm64::typing_extensions==4.15.0=py313hca03da5_0",
+  "package_tarball_full_path": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/typing_extensions-4.15.0-py313hca03da5_0.conda",
+  "extracted_package_dir": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/typing_extensions-4.15.0-py313hca03da5_0",
+  "files": [
+    "lib/python3.13/site-packages/__pycache__/typing_extensions.cpython-313.pyc",
+    "lib/python3.13/site-packages/typing_extensions-4.15.0.dist-info/INSTALLER",
+    "lib/python3.13/site-packages/typing_extensions-4.15.0.dist-info/METADATA",
+    "lib/python3.13/site-packages/typing_extensions-4.15.0.dist-info/RECORD",
+    "lib/python3.13/site-packages/typing_extensions-4.15.0.dist-info/REQUESTED",
+    "lib/python3.13/site-packages/typing_extensions-4.15.0.dist-info/WHEEL",
+    "lib/python3.13/site-packages/typing_extensions-4.15.0.dist-info/direct_url.json",
+    "lib/python3.13/site-packages/typing_extensions-4.15.0.dist-info/licenses/LICENSE",
+    "lib/python3.13/site-packages/typing_extensions.py"
+  ],
+  "paths_data": {
+    "paths_version": 1,
+    "paths": []
+  },
+  "link": {
+    "source": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/typing_extensions-4.15.0-py313hca03da5_0",
+    "type": 1
+  }
+}

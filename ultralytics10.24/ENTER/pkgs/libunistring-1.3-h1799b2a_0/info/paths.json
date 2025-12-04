@@ -1,0 +1,137 @@
+{
+  "paths": [
+    {
+      "_path": "include/unicase.h",
+      "path_type": "hardlink",
+      "sha256": "9c234e5c0a1c290e49fb24e3083019badc9384c984036ef0872bb03ac786a697",
+      "size_in_bytes": 20850
+    },
+    {
+      "_path": "include/uniconv.h",
+      "path_type": "hardlink",
+      "sha256": "ab8dec29ac81d713ca600f5eb237b9a86442829e08ee2bb1e884ab349bfbdbab",
+      "size_in_bytes": 7532
+    },
+    {
+      "_path": "include/unictype.h",
+      "path_type": "hardlink",
+      "sha256": "ee6f940e0914b42c77c0e6a9b0f7684b1b410616b2b8517236ca317a964adf42",
+      "size_in_bytes": 49379
+    },
+    {
+      "_path": "include/unigbrk.h",
+      "path_type": "hardlink",
+      "sha256": "9202b17af8ef07bba53e150c2200980dc07b74baa7c56a346bdf7f4d9611f078",
+      "size_in_bytes": 5516
+    },
+    {
+      "_path": "include/unilbrk.h",
+      "path_type": "hardlink",
+      "sha256": "7546efb91b9c4e77fbfaf300f5d812e7303d45bee148d16a2881ac186934d4b7",
+      "size_in_bytes": 6948
+    },
+    {
+      "_path": "include/unimetadata.h",
+      "path_type": "hardlink",
+      "sha256": "feff5ccde46bfa38e9138c298b1ad9c4dd8b0e847f0485bd3ef457c6bc357281",
+      "size_in_bytes": 1176
+    },
+    {
+      "_path": "include/uniname.h",
+      "path_type": "hardlink",
+      "sha256": "8bcbdfa3b5d8b5346e358945a1b2aa59c0630666ceb817794188dcac491cd62b",
+      "size_in_bytes": 1985
+    },
+    {
+      "_path": "include/uninorm.h",
+      "path_type": "hardlink",
+      "sha256": "9541d6dc262d4a57b8ec84d0c6bbdde87e2dad22891bfdce984f7f051e897f3f",
+      "size_in_bytes": 10898
+    },
+    {
+      "_path": "include/unistdio.h",
+      "path_type": "hardlink",
+      "sha256": "f6ef625676526d7f6041d01a100480b9997357ccaa1af80ed731d04b6a960c9b",
+      "size_in_bytes": 10195
+    },
+    {
+      "_path": "include/unistr.h",
+      "path_type": "hardlink",
+      "sha256": "2ae243f51219a023fc590d052f024fb288d1f9ad49898fd84c2de86b606fc481",
+      "size_in_bytes": 23810
+    },
+    {
+      "_path": "include/unistring/cdefs.h",
+      "path_type": "hardlink",
+      "sha256": "a580a21833eeeb09b3e38806f6a2349c0b9bce2b9f4a88906a7f90b1ef5546b7",
+      "size_in_bytes": 4642
+    },
+    {
+      "_path": "include/unistring/iconveh.h",
+      "path_type": "hardlink",
+      "sha256": "38a32b2c077afcf08f5d593688637d9101d09abd57404f3051148355921da239",
+      "size_in_bytes": 1448
+    },
+    {
+      "_path": "include/unistring/inline.h",
+      "path_type": "hardlink",
+      "sha256": "450becd366c4d2cf4062140bc5a5edab1bf9af0cdc951f8a82e653ad9dee1f94",
+      "size_in_bytes": 2695
+    },
+    {
+      "_path": "include/unistring/localcharset.h",
+      "path_type": "hardlink",
+      "sha256": "e280315203ca4bf48deb6517b0a904e80569bbeee72a9d169cbd30b91d4496f2",
+      "size_in_bytes": 6270
+    },
+    {
+      "_path": "include/unistring/stdint.h",
+      "path_type": "hardlink",
+      "sha256": "a22f37b32ac4c1acb025d124d0a8bcedd9e0b35f4ea70a1351737d4c7c6c2fb7",
+      "size_in_bytes": 4831
+    },
+    {
+      "_path": "include/unistring/version.h",
+      "path_type": "hardlink",
+      "sha256": "314c34d7f3e369de6775de7294b605b2c5897ced9c7a00b3dbe064d061fdd39d",
+      "size_in_bytes": 1608
+    },
+    {
+      "_path": "include/unistring/woe32dll.h",
+      "path_type": "hardlink",
+      "sha256": "51eeea733bce2639cd611a0c7f2eecd8c88f00e3e8238c4153ee29e5040093da",
+      "size_in_bytes": 1384
+    },
+    {
+      "_path": "include/unitypes.h",
+      "path_type": "hardlink",
+      "sha256": "16b2a0f056d5338efb830684e727c1e553f6fbcd66aa46559bfaa4ca53ae2f22",
+      "size_in_bytes": 2319
+    },
+    {
+      "_path": "include/uniwbrk.h",
+      "path_type": "hardlink",
+      "sha256": "8d8d541ce192bb29b3cc9772142eb600b569c598a037586ec1b0572691a73dc1",
+      "size_in_bytes": 3257
+    },
+    {
+      "_path": "include/uniwidth.h",
+      "path_type": "hardlink",
+      "sha256": "36fa98416d1ec92c3a577dbd99a5a6b9f42c660ad0b5f03c750fdfbbf144739e",
+      "size_in_bytes": 2193
+    },
+    {
+      "_path": "lib/libunistring.5.dylib",
+      "path_type": "hardlink",
+      "sha256": "97083fa79a809cbd8e7ea31a65bf844d7e201abbaf6d6bab058d92cdbb885f6c",
+      "size_in_bytes": 1974432
+    },
+    {
+      "_path": "lib/libunistring.dylib",
+      "path_type": "softlink",
+      "sha256": "97083fa79a809cbd8e7ea31a65bf844d7e201abbaf6d6bab058d92cdbb885f6c",
+      "size_in_bytes": 1974432
+    }
+  ],
+  "paths_version": 1
+}

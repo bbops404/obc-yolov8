@@ -1,0 +1,9 @@
+libdir=/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/lib
+includedir=/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/include
+
+Name: libsolvext
+Description: Library for reading repositories
+Version: 0.7.30
+Requires: libsolv
+Libs: -L${libdir} -lsolvext
+Cflags: -I${includedir}

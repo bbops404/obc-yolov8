@@ -1,0 +1,77 @@
+{
+  "name": "conda-content-trust",
+  "version": "0.2.0",
+  "build": "py313hca03da5_1",
+  "build_number": 1,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64",
+  "subdir": "osx-arm64",
+  "fn": "conda-content-trust-0.2.0-py313hca03da5_1.conda",
+  "md5": "58efa6f7b2f4be9785740621963b0201",
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/conda-content-trust-0.2.0-py313hca03da5_1.conda",
+  "sha256": "2e4b0911082781676d289d51c1b8180eefbcca5787cff39dbf5db04f3ec96966",
+  "arch": "arm64",
+  "platform": "darwin",
+  "depends": [
+    "cryptography >=41",
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313"
+  ],
+  "constrains": [],
+  "license": "BSD-3-Clause",
+  "license_family": "BSD",
+  "timestamp": 1728603304000,
+  "size": 62203,
+  "requested_spec": "pkgs/main/osx-arm64::conda-content-trust==0.2.0=py313hca03da5_1",
+  "package_tarball_full_path": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/conda-content-trust-0.2.0-py313hca03da5_1.conda",
+  "extracted_package_dir": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/conda-content-trust-0.2.0-py313hca03da5_1",
+  "files": [
+    "bin/conda-content-trust",
+    "lib/python3.13/site-packages/conda_content_trust-0.2.0.dist-info/INSTALLER",
+    "lib/python3.13/site-packages/conda_content_trust-0.2.0.dist-info/METADATA",
+    "lib/python3.13/site-packages/conda_content_trust-0.2.0.dist-info/RECORD",
+    "lib/python3.13/site-packages/conda_content_trust-0.2.0.dist-info/REQUESTED",
+    "lib/python3.13/site-packages/conda_content_trust-0.2.0.dist-info/WHEEL",
+    "lib/python3.13/site-packages/conda_content_trust-0.2.0.dist-info/direct_url.json",
+    "lib/python3.13/site-packages/conda_content_trust-0.2.0.dist-info/entry_points.txt",
+    "lib/python3.13/site-packages/conda_content_trust-0.2.0.dist-info/licenses/AUTHORS.md",
+    "lib/python3.13/site-packages/conda_content_trust-0.2.0.dist-info/licenses/LICENSE",
+    "lib/python3.13/site-packages/conda_content_trust/__init__.py",
+    "lib/python3.13/site-packages/conda_content_trust/__main__.py",
+    "lib/python3.13/site-packages/conda_content_trust/__pycache__/__init__.cpython-313.pyc",
+    "lib/python3.13/site-packages/conda_content_trust/__pycache__/__main__.cpython-313.pyc",
+    "lib/python3.13/site-packages/conda_content_trust/__pycache__/__version__.cpython-313.pyc",
+    "lib/python3.13/site-packages/conda_content_trust/__pycache__/authentication.cpython-313.pyc",
+    "lib/python3.13/site-packages/conda_content_trust/__pycache__/cli.cpython-313.pyc",
+    "lib/python3.13/site-packages/conda_content_trust/__pycache__/common.cpython-313.pyc",
+    "lib/python3.13/site-packages/conda_content_trust/__pycache__/metadata_construction.cpython-313.pyc",
+    "lib/python3.13/site-packages/conda_content_trust/__pycache__/plugin.cpython-313.pyc",
+    "lib/python3.13/site-packages/conda_content_trust/__pycache__/root_signing.cpython-313.pyc",
+    "lib/python3.13/site-packages/conda_content_trust/__pycache__/signing.cpython-313.pyc",
+    "lib/python3.13/site-packages/conda_content_trust/__version__.py",
+    "lib/python3.13/site-packages/conda_content_trust/authentication.py",
+    "lib/python3.13/site-packages/conda_content_trust/cli.py",
+    "lib/python3.13/site-packages/conda_content_trust/common.py",
+    "lib/python3.13/site-packages/conda_content_trust/metadata_construction.py",
+    "lib/python3.13/site-packages/conda_content_trust/plugin.py",
+    "lib/python3.13/site-packages/conda_content_trust/root_signing.py",
+    "lib/python3.13/site-packages/conda_content_trust/signing.py"
+  ],
+  "paths_data": {
+    "paths_version": 1,
+    "paths": [
+      {
+        "_path": "bin/conda-content-trust",
+        "prefix_placeholder": "/Users/builder/cbouss/perseverance-python-buildout/croot/conda-content-trust_1728603284288/_h_env_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placeho",
+        "file_mode": "text",
+        "path_type": "hardlink",
+        "sha256": "ad2fd6e4b5416a47c73be0ac0da55aa26fd5d7bc247c8ea5d2c2a4e3454bcd0d",
+        "size_in_bytes": 474,
+        "sha256_in_prefix": "9ea715dd084b63ad3043bf5143ab5205cb1b1a43134806a1ae88d53d48a1cf26"
+      }
+    ]
+  },
+  "link": {
+    "source": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/conda-content-trust-0.2.0-py313hca03da5_1",
+    "type": 1
+  }
+}

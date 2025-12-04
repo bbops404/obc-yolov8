@@ -1,0 +1,68 @@
+{
+  "name": "fmt",
+  "version": "11.2.0",
+  "build": "h643473a_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64",
+  "subdir": "osx-arm64",
+  "fn": "fmt-11.2.0-h643473a_0.conda",
+  "md5": "4658ef48e7980c9c02455e16fb874492",
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/fmt-11.2.0-h643473a_0.conda",
+  "sha256": "4a5fc475d626338504ac2f9947936c511151712b3d98f41e14091cbdbbcbecdc",
+  "arch": "arm64",
+  "platform": "darwin",
+  "depends": [
+    "__osx >=11.1",
+    "libcxx >=14.0.6"
+  ],
+  "constrains": [],
+  "license": "MIT",
+  "license_family": "MIT",
+  "timestamp": 1754990881000,
+  "size": 192134,
+  "requested_spec": "pkgs/main/osx-arm64::fmt==11.2.0=h643473a_0",
+  "package_tarball_full_path": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/fmt-11.2.0-h643473a_0.conda",
+  "extracted_package_dir": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/fmt-11.2.0-h643473a_0",
+  "files": [
+    "include/fmt/args.h",
+    "include/fmt/base.h",
+    "include/fmt/chrono.h",
+    "include/fmt/color.h",
+    "include/fmt/compile.h",
+    "include/fmt/core.h",
+    "include/fmt/format-inl.h",
+    "include/fmt/format.h",
+    "include/fmt/os.h",
+    "include/fmt/ostream.h",
+    "include/fmt/printf.h",
+    "include/fmt/ranges.h",
+    "include/fmt/std.h",
+    "include/fmt/xchar.h",
+    "lib/cmake/fmt/fmt-config-version.cmake",
+    "lib/cmake/fmt/fmt-config.cmake",
+    "lib/cmake/fmt/fmt-targets-release.cmake",
+    "lib/cmake/fmt/fmt-targets.cmake",
+    "lib/libfmt.11.2.0.dylib",
+    "lib/libfmt.11.dylib",
+    "lib/libfmt.dylib",
+    "lib/pkgconfig/fmt.pc"
+  ],
+  "paths_data": {
+    "paths_version": 1,
+    "paths": [
+      {
+        "_path": "lib/pkgconfig/fmt.pc",
+        "prefix_placeholder": "/var/folders/k1/30mswbxs7r1g6zwn8y4fyt500000gp/T/abs_04awf4inmn/croot/fmt_1754990825914/_h_env_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_",
+        "file_mode": "text",
+        "path_type": "hardlink",
+        "sha256": "ed3a7632ce3a22f6fb9cfb1b4d7c5951775926777612ccc1cf473f3803866ffb",
+        "size_in_bytes": 703,
+        "sha256_in_prefix": "456231f04a861e95383e646ab75e787cb3e1ec42a1aa1b6390cd5f337b84e9f6"
+      }
+    ]
+  },
+  "link": {
+    "source": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/fmt-11.2.0-h643473a_0",
+    "type": 1
+  }
+}

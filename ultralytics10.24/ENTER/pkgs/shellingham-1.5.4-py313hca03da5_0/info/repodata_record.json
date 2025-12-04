@@ -1,0 +1,23 @@
+{
+  "arch": "arm64",
+  "build": "py313hca03da5_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64/",
+  "constrains": [],
+  "depends": [
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313"
+  ],
+  "fn": "shellingham-1.5.4-py313hca03da5_0.conda",
+  "license": "ISC",
+  "license_family": "OTHER",
+  "md5": "58fe2f1c6896f6e26cea231b74e3888c",
+  "name": "shellingham",
+  "platform": "darwin",
+  "sha256": "43437a90f1db5cd5603620a8af4e37880850dfcd9ab88ae616528ca659449e89",
+  "size": 22962,
+  "subdir": "osx-arm64",
+  "timestamp": 1761912224000,
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/shellingham-1.5.4-py313hca03da5_0.conda",
+  "version": "1.5.4"
+}

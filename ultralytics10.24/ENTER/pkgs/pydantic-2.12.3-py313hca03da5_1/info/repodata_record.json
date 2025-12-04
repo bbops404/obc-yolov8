@@ -1,0 +1,29 @@
+{
+  "arch": "arm64",
+  "build": "py313hca03da5_1",
+  "build_number": 1,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64/",
+  "constrains": [
+    "email-validator >=2.0.0"
+  ],
+  "depends": [
+    "annotated-types >=0.6.0",
+    "pydantic-core 2.41.4",
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313",
+    "typing-inspection >=0.4.2",
+    "typing_extensions >=4.14.1"
+  ],
+  "fn": "pydantic-2.12.3-py313hca03da5_1.conda",
+  "license": "MIT",
+  "license_family": "MIT",
+  "md5": "2953d5c6e692e418fdb94924d9a58bf1",
+  "name": "pydantic",
+  "platform": "darwin",
+  "sha256": "a465841bdf4da9e2ef1a03cdadd0c1ed370efba2216dc84a354dfe77353f89da",
+  "size": 1108165,
+  "subdir": "osx-arm64",
+  "timestamp": 1762505218000,
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/pydantic-2.12.3-py313hca03da5_1.conda",
+  "version": "2.12.3"
+}

@@ -1,0 +1,60 @@
+{
+  "name": "platformdirs",
+  "version": "4.5.0",
+  "build": "py313hca03da5_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64",
+  "subdir": "osx-arm64",
+  "fn": "platformdirs-4.5.0-py313hca03da5_0.conda",
+  "md5": "b2535a472eaf53d1982df15632310fae",
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/platformdirs-4.5.0-py313hca03da5_0.conda",
+  "sha256": "c68510209d40b88b7fba7ee583a375f2bd170495c6155fd487a4b22cf30e2ccf",
+  "arch": "arm64",
+  "platform": "darwin",
+  "depends": [
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313"
+  ],
+  "constrains": [],
+  "license": "MIT",
+  "license_family": "MIT",
+  "timestamp": 1762356687000,
+  "size": 42631,
+  "requested_spec": "pkgs/main/osx-arm64::platformdirs==4.5.0=py313hca03da5_0",
+  "package_tarball_full_path": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/platformdirs-4.5.0-py313hca03da5_0.conda",
+  "extracted_package_dir": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/platformdirs-4.5.0-py313hca03da5_0",
+  "files": [
+    "lib/python3.13/site-packages/platformdirs-4.5.0.dist-info/INSTALLER",
+    "lib/python3.13/site-packages/platformdirs-4.5.0.dist-info/METADATA",
+    "lib/python3.13/site-packages/platformdirs-4.5.0.dist-info/RECORD",
+    "lib/python3.13/site-packages/platformdirs-4.5.0.dist-info/REQUESTED",
+    "lib/python3.13/site-packages/platformdirs-4.5.0.dist-info/WHEEL",
+    "lib/python3.13/site-packages/platformdirs-4.5.0.dist-info/direct_url.json",
+    "lib/python3.13/site-packages/platformdirs-4.5.0.dist-info/licenses/LICENSE",
+    "lib/python3.13/site-packages/platformdirs/__init__.py",
+    "lib/python3.13/site-packages/platformdirs/__main__.py",
+    "lib/python3.13/site-packages/platformdirs/__pycache__/__init__.cpython-313.pyc",
+    "lib/python3.13/site-packages/platformdirs/__pycache__/__main__.cpython-313.pyc",
+    "lib/python3.13/site-packages/platformdirs/__pycache__/android.cpython-313.pyc",
+    "lib/python3.13/site-packages/platformdirs/__pycache__/api.cpython-313.pyc",
+    "lib/python3.13/site-packages/platformdirs/__pycache__/macos.cpython-313.pyc",
+    "lib/python3.13/site-packages/platformdirs/__pycache__/unix.cpython-313.pyc",
+    "lib/python3.13/site-packages/platformdirs/__pycache__/version.cpython-313.pyc",
+    "lib/python3.13/site-packages/platformdirs/__pycache__/windows.cpython-313.pyc",
+    "lib/python3.13/site-packages/platformdirs/android.py",
+    "lib/python3.13/site-packages/platformdirs/api.py",
+    "lib/python3.13/site-packages/platformdirs/macos.py",
+    "lib/python3.13/site-packages/platformdirs/py.typed",
+    "lib/python3.13/site-packages/platformdirs/unix.py",
+    "lib/python3.13/site-packages/platformdirs/version.py",
+    "lib/python3.13/site-packages/platformdirs/windows.py"
+  ],
+  "paths_data": {
+    "paths_version": 1,
+    "paths": []
+  },
+  "link": {
+    "source": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/platformdirs-4.5.0-py313hca03da5_0",
+    "type": 1
+  }
+}

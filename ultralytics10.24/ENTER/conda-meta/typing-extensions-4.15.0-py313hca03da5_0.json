@@ -1,0 +1,36 @@
+{
+  "name": "typing-extensions",
+  "version": "4.15.0",
+  "build": "py313hca03da5_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64",
+  "subdir": "osx-arm64",
+  "fn": "typing-extensions-4.15.0-py313hca03da5_0.conda",
+  "md5": "22b46f0e6d389d4199ffaa317e9c9a05",
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/typing-extensions-4.15.0-py313hca03da5_0.conda",
+  "sha256": "7c6b650c981f3b6874c2d3bbda3d336f5fb2694985c306523a0b136ca2f3ed73",
+  "arch": "arm64",
+  "platform": "darwin",
+  "depends": [
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313",
+    "typing_extensions 4.15.0 py313hca03da5_0"
+  ],
+  "constrains": [],
+  "license": "PSF-2.0",
+  "license_family": "PSF",
+  "timestamp": 1756281597000,
+  "size": 12434,
+  "requested_spec": "pkgs/main/osx-arm64::typing-extensions==4.15.0=py313hca03da5_0",
+  "package_tarball_full_path": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/typing-extensions-4.15.0-py313hca03da5_0.conda",
+  "extracted_package_dir": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/typing-extensions-4.15.0-py313hca03da5_0",
+  "files": [],
+  "paths_data": {
+    "paths_version": 1,
+    "paths": []
+  },
+  "link": {
+    "source": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/typing-extensions-4.15.0-py313hca03da5_0",
+    "type": 1
+  }
+}

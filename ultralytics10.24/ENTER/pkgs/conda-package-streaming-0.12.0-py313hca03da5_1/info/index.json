@@ -1,0 +1,18 @@
+{
+  "arch": "arm64",
+  "build": "py313hca03da5_1",
+  "build_number": 1,
+  "depends": [
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313",
+    "requests",
+    "zstandard >=0.15"
+  ],
+  "license": "BSD-3-Clause",
+  "license_family": "BSD",
+  "name": "conda-package-streaming",
+  "platform": "osx",
+  "subdir": "osx-arm64",
+  "timestamp": 1762361650835,
+  "version": "0.12.0"
+}

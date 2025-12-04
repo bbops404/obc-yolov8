@@ -1,0 +1,5 @@
+#!/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/bin/python3.13
+
+from idlelib.pyshell import main
+if __name__ == '__main__':
+    main()

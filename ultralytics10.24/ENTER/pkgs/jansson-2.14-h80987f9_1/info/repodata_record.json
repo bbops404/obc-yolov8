@@ -1,0 +1,20 @@
+{
+  "arch": "arm64",
+  "build": "h80987f9_1",
+  "build_number": 1,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64/",
+  "constrains": [],
+  "depends": [],
+  "fn": "jansson-2.14-h80987f9_1.conda",
+  "license": "MIT",
+  "license_family": "MIT",
+  "md5": "cf1fff0a1cca90c8d635b8364ba163fd",
+  "name": "jansson",
+  "platform": "darwin",
+  "sha256": "815b81bced82407b6ad5f482c642fd467d8ccb536d84ed3d383290abdc8d1134",
+  "size": 35343,
+  "subdir": "osx-arm64",
+  "timestamp": 1705704639000,
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/jansson-2.14-h80987f9_1.conda",
+  "version": "2.14"
+}

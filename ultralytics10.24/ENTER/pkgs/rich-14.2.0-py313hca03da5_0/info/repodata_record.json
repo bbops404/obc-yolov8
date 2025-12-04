@@ -1,0 +1,27 @@
+{
+  "arch": "arm64",
+  "build": "py313hca03da5_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64/",
+  "constrains": [
+    "ipywidgets >=7.5.1,<9"
+  ],
+  "depends": [
+    "markdown-it-py >=2.2.0",
+    "pygments >=2.13.0,<3.0.0",
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313"
+  ],
+  "fn": "rich-14.2.0-py313hca03da5_0.conda",
+  "license": "MIT",
+  "license_family": "MIT",
+  "md5": "ffc0d1741d0d0dbff07518323feb64d8",
+  "name": "rich",
+  "platform": "darwin",
+  "sha256": "ceb20a4d0571172d728e024274f030472988f4d4ab1965ac462d3fa590fee548",
+  "size": 603836,
+  "subdir": "osx-arm64",
+  "timestamp": 1760375502000,
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/rich-14.2.0-py313hca03da5_0.conda",
+  "version": "14.2.0"
+}

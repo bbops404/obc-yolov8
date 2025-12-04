@@ -1,0 +1,20 @@
+{
+  "arch": "arm64",
+  "build": "hca03da5_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64/",
+  "constrains": [],
+  "depends": [],
+  "fn": "ca-certificates-2025.11.4-hca03da5_0.conda",
+  "license": "MPL-2.0",
+  "license_family": "Other",
+  "md5": "019b1f15d967aab6fc2f79e2e8b808e8",
+  "name": "ca-certificates",
+  "platform": "darwin",
+  "sha256": "7b495af2dccc63a726599502ca320f737d297bedd2d90d90888add73b8469e6f",
+  "size": 131295,
+  "subdir": "osx-arm64",
+  "timestamp": 1762269547000,
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/ca-certificates-2025.11.4-hca03da5_0.conda",
+  "version": "2025.11.4"
+}

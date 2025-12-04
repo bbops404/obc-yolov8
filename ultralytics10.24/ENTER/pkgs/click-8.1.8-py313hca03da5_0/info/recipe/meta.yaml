@@ -1,0 +1,85 @@
+# This file created by conda-build 24.9.0
+# meta.yaml template originally from:
+# /var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_d2rtg2ejqc/clone/recipe, last modified Thu Apr 10 02:53:16 2025
+# ------------------------------------------------
+
+package:
+  name: click
+  version: 8.1.8
+source:
+  sha256: ed53c9d8990d83c2a27deae68e4ee337473f6330c040a31d4225c9574d16096a
+  url: https://pypi.io/packages/source/c/click/click-8.1.8.tar.gz
+build:
+  number: '0'
+  script: /var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_d2rtg2ejqc/croot/click_1744271604580/_h_env_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehol/bin/python
+    -m pip install . --no-deps --no-build-isolation -vv
+  string: py313hca03da5_0
+requirements:
+  host:
+    - bzip2 1.0.8 h80987f9_6
+    - ca-certificates 2025.2.25 hca03da5_0
+    - expat 2.6.4 h313beb8_0
+    - flit-core 3.9.0 py313hf651a9f_1
+    - libcxx 14.0.6 h848a8c0_0
+    - libffi 3.4.4 hca03da5_1
+    - libmpdec 4.0.0 h80987f9_0
+    - ncurses 6.4 h313beb8_0
+    - openssl 3.0.16 h02f6b3c_0
+    - pip 25.0 py313hca03da5_0
+    - python 3.13.2 h4862095_100_cp313
+    - python_abi 3.13 0_cp313
+    - readline 8.2 h1a28f6b_0
+    - setuptools 75.8.0 py313hca03da5_0
+    - sqlite 3.45.3 h80987f9_0
+    - tk 8.6.14 h6ba3021_0
+    - tzdata 2025a h04d1e81_0
+    - wheel 0.45.1 py313hca03da5_0
+    - xz 5.6.4 h80987f9_1
+    - zlib 1.2.13 h18a0788_1
+  run:
+    - python >=3.13,<3.14.0a0
+    - python_abi 3.13.* *_cp313
+test:
+  commands:
+    - pip check
+    - pytest -v tests
+  imports:
+    - click
+  requires:
+    - pip
+    - pytest
+  source_files:
+    - docs
+    - pyproject.toml
+    - tests
+about:
+  description: 'Click is a Python package for creating beautiful command line interfaces
+    in a composable way
+
+    with as little code as necessary. It''s the "Command Line Interface Creation Kit".
+
+    It''s highly configurable but comes with sensible defaults out of the box.
+
+    It aims to make the process of writing command line tools quick and fun
+
+    while also preventing any frustration caused by the inability to implement an
+    intended CLI API.
+
+    '
+  dev_url: https://github.com/pallets/click
+  doc_url: https://click.palletsprojects.com
+  home: https://palletsprojects.com/p/click/
+  license: BSD-3-Clause
+  license_family: BSD
+  license_file: LICENSE.txt
+  summary: Python composable command line interface toolkit
+extra:
+  copy_test_source_files: true
+  final: true
+  flow_run_id: d2268213-4ade-46b8-acad-245aa8b29dde
+  recipe-maintainers:
+    - ocefpaf
+    - pmlandwehr
+    - xylar
+  remote_url: git@github.com:AnacondaRecipes/click-feedstock.git
+  sha: a06a3a3f7c9ede4c7128a37735a2734bd2c1992e

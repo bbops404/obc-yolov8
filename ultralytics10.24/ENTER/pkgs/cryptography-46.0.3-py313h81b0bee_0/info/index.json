@@ -1,0 +1,22 @@
+{
+  "arch": "arm64",
+  "build": "py313h81b0bee_0",
+  "build_number": 0,
+  "constrains": [
+    "bcrypt >=3.1.5"
+  ],
+  "depends": [
+    "__osx >=12.1",
+    "cffi >=2.0.0",
+    "openssl >=3.0.18,<4.0a0",
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313"
+  ],
+  "license": "Apache-2.0 OR BSD-3-Clause",
+  "license_family": "OTHER",
+  "name": "cryptography",
+  "platform": "osx",
+  "subdir": "osx-arm64",
+  "timestamp": 1761932058784,
+  "version": "46.0.3"
+}

@@ -1,0 +1,17 @@
+{
+  "c_stdlib": "macosx_deployment_target",
+  "libzlib": "1",
+  "vc": "14",
+  "c_compiler": "clang_bootstrap",
+  "cxx_compiler_version": "17",
+  "target_platform": "osx-arm64",
+  "channel_targets": "defaults",
+  "lz4_c": "1.9",
+  "xz": "5",
+  "c_stdlib_version": "12.1",
+  "c_compiler_version": "17",
+  "CONDA_BUILD_SYSROOT": "/Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk",
+  "cxx_compiler": "clang_bootstrap",
+  "zstd": "1.5",
+  "__osx": "__osx >=12.1"
+}

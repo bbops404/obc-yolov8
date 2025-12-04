@@ -1,0 +1,55 @@
+# This file created by conda-build 24.9.0
+# ------------------------------------------------
+
+package:
+  name: libzlib
+  version: 1.3.1
+source:
+  sha256: 9a93b2b7dfdac77ceba5a558a580e74667dd6fede4585b91eefb60f03b72df23
+  url: https://zlib.net/zlib-1.3.1.tar.gz
+build:
+  noarch: false
+  noarch_python: false
+  number: '0'
+  run_exports:
+    - libzlib >=1.3.1,<2.0a0
+  string: h5f15de7_0
+requirements:
+  build:
+    - clang_bootstrap_osx-arm64 14.0.6 h1d3d883_0
+    - macosx_deployment_target_osx-arm64 11.1 had524d6_1
+  host:
+    - __osx >=11.1
+  run:
+    - __osx >=11.1
+  run_constrained:
+    - zlib 1.3.1
+test:
+  commands:
+    - test ! -f ${PREFIX}/lib/libz.a
+    - test ! -f ${PREFIX}/lib/libz${SHLIB_EXT}
+    - test ! -f ${PREFIX}/include/zlib.h
+about:
+  description: 'zlib is designed to be a free, general-purpose, lossless data-compression
+
+    library for use on virtually any computer hardware and operating system.
+
+    '
+  dev_url: https://github.com/madler/zlib/tree/v1.3.1
+  doc_url: https://zlib.net/manual.html
+  home: https://zlib.net/
+  license: Zlib
+  license_family: OTHER
+  license_file: LICENSE
+  summary: A massively spiffy yet delicately unobtrusive compression library
+extra:
+  copy_test_source_files: true
+  final: true
+  flow_run_id: a7a61ee3-e80c-4a1f-93e2-513311c33711
+  recipe-maintainers:
+    - groutr
+    - mingwandroid
+    - msarahan
+    - ocefpaf
+  remote_url: git@github.com:AnacondaRecipes/zlib-feedstock.git
+  sha: 75e04258de05478db14c1c11ee6200f55a676d6a

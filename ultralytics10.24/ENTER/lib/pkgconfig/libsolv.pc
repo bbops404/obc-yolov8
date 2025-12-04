@@ -1,0 +1,8 @@
+libdir=/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/lib
+includedir=/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/include
+
+Name: libsolv
+Description: Library for solving packages
+Version: 0.7.30
+Libs: -L${libdir} -lsolv
+Cflags: -I${includedir}

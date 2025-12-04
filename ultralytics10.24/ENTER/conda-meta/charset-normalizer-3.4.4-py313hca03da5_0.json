@@ -1,0 +1,81 @@
+{
+  "name": "charset-normalizer",
+  "version": "3.4.4",
+  "build": "py313hca03da5_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64",
+  "subdir": "osx-arm64",
+  "fn": "charset-normalizer-3.4.4-py313hca03da5_0.conda",
+  "md5": "6301ec890b186cbe5d8243254450651e",
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/charset-normalizer-3.4.4-py313hca03da5_0.conda",
+  "sha256": "240ae310bc1c58a1061816b1b4751407f7841c0da8ef1c09babd9860f39a180a",
+  "arch": "arm64",
+  "platform": "darwin",
+  "depends": [
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313"
+  ],
+  "constrains": [],
+  "license": "MIT",
+  "license_family": "MIT",
+  "timestamp": 1761744861000,
+  "size": 100213,
+  "requested_spec": "pkgs/main/osx-arm64::charset-normalizer==3.4.4=py313hca03da5_0",
+  "package_tarball_full_path": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/charset-normalizer-3.4.4-py313hca03da5_0.conda",
+  "extracted_package_dir": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/charset-normalizer-3.4.4-py313hca03da5_0",
+  "files": [
+    "bin/normalizer",
+    "lib/python3.13/site-packages/charset_normalizer-3.4.4.dist-info/INSTALLER",
+    "lib/python3.13/site-packages/charset_normalizer-3.4.4.dist-info/METADATA",
+    "lib/python3.13/site-packages/charset_normalizer-3.4.4.dist-info/RECORD",
+    "lib/python3.13/site-packages/charset_normalizer-3.4.4.dist-info/REQUESTED",
+    "lib/python3.13/site-packages/charset_normalizer-3.4.4.dist-info/WHEEL",
+    "lib/python3.13/site-packages/charset_normalizer-3.4.4.dist-info/direct_url.json",
+    "lib/python3.13/site-packages/charset_normalizer-3.4.4.dist-info/entry_points.txt",
+    "lib/python3.13/site-packages/charset_normalizer-3.4.4.dist-info/licenses/LICENSE",
+    "lib/python3.13/site-packages/charset_normalizer-3.4.4.dist-info/top_level.txt",
+    "lib/python3.13/site-packages/charset_normalizer/__init__.py",
+    "lib/python3.13/site-packages/charset_normalizer/__main__.py",
+    "lib/python3.13/site-packages/charset_normalizer/__pycache__/__init__.cpython-313.pyc",
+    "lib/python3.13/site-packages/charset_normalizer/__pycache__/__main__.cpython-313.pyc",
+    "lib/python3.13/site-packages/charset_normalizer/__pycache__/api.cpython-313.pyc",
+    "lib/python3.13/site-packages/charset_normalizer/__pycache__/cd.cpython-313.pyc",
+    "lib/python3.13/site-packages/charset_normalizer/__pycache__/constant.cpython-313.pyc",
+    "lib/python3.13/site-packages/charset_normalizer/__pycache__/legacy.cpython-313.pyc",
+    "lib/python3.13/site-packages/charset_normalizer/__pycache__/md.cpython-313.pyc",
+    "lib/python3.13/site-packages/charset_normalizer/__pycache__/models.cpython-313.pyc",
+    "lib/python3.13/site-packages/charset_normalizer/__pycache__/utils.cpython-313.pyc",
+    "lib/python3.13/site-packages/charset_normalizer/__pycache__/version.cpython-313.pyc",
+    "lib/python3.13/site-packages/charset_normalizer/api.py",
+    "lib/python3.13/site-packages/charset_normalizer/cd.py",
+    "lib/python3.13/site-packages/charset_normalizer/cli/__init__.py",
+    "lib/python3.13/site-packages/charset_normalizer/cli/__main__.py",
+    "lib/python3.13/site-packages/charset_normalizer/cli/__pycache__/__init__.cpython-313.pyc",
+    "lib/python3.13/site-packages/charset_normalizer/cli/__pycache__/__main__.cpython-313.pyc",
+    "lib/python3.13/site-packages/charset_normalizer/constant.py",
+    "lib/python3.13/site-packages/charset_normalizer/legacy.py",
+    "lib/python3.13/site-packages/charset_normalizer/md.py",
+    "lib/python3.13/site-packages/charset_normalizer/models.py",
+    "lib/python3.13/site-packages/charset_normalizer/py.typed",
+    "lib/python3.13/site-packages/charset_normalizer/utils.py",
+    "lib/python3.13/site-packages/charset_normalizer/version.py"
+  ],
+  "paths_data": {
+    "paths_version": 1,
+    "paths": [
+      {
+        "_path": "bin/normalizer",
+        "prefix_placeholder": "/opt/miniconda3/conda-bld/charset-normalizer_1761744840553/_h_env_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold",
+        "file_mode": "text",
+        "path_type": "hardlink",
+        "sha256": "d49b4c4e11abf01f5a94931738b3459d4d01aa5d230e56f2bdfdd84d643b3cda",
+        "size_in_bytes": 487,
+        "sha256_in_prefix": "b47d4e416f821f9cb33906650aa4c89823e7d140cbeb606e5a53a511ed101eeb"
+      }
+    ]
+  },
+  "link": {
+    "source": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/charset-normalizer-3.4.4-py313hca03da5_0",
+    "type": 1
+  }
+}

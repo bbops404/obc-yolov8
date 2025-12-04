@@ -1,0 +1,23 @@
+{
+  "arch": "arm64",
+  "build": "py313hca03da5_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64/",
+  "constrains": [],
+  "depends": [
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313"
+  ],
+  "fn": "click-8.1.8-py313hca03da5_0.conda",
+  "license": "BSD-3-Clause",
+  "license_family": "BSD",
+  "md5": "0b616e78cce27b08600bccda66071b4d",
+  "name": "click",
+  "platform": "darwin",
+  "sha256": "52fcc0fe3b5e28cb1b88f6e6ab3591ffc6ea280d6717688275c0eb8cfa4f548f",
+  "size": 340143,
+  "subdir": "osx-arm64",
+  "timestamp": 1744271680000,
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/click-8.1.8-py313hca03da5_0.conda",
+  "version": "8.1.8"
+}

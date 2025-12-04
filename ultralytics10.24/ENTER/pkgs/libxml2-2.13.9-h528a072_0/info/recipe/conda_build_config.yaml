@@ -1,0 +1,38 @@
+CONDA_BUILD_SYSROOT: /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk
+VERBOSE_AT: V=1
+c_compiler: clang_bootstrap
+c_compiler_version: '20'
+c_stdlib: macosx_deployment_target
+c_stdlib_version: '12.1'
+channel_targets: defaults
+cpu_optimization_target: nocona
+cran_mirror: https://cran.r-project.org
+cxx_compiler: clang_bootstrap
+extend_keys:
+- extend_keys
+- ignore_build_only_deps
+- pin_run_as_build
+- ignore_version
+fortran_compiler: gfortran
+icu: '73'
+ignore_build_only_deps:
+- numpy
+- python
+libiconv: '1'
+libxml2: '2.13'
+lua: '5'
+numpy: '1.26'
+perl: 5.26.2
+pin_run_as_build:
+  python:
+    max_pin: x.x
+    min_pin: x.x
+  r-base:
+    max_pin: x.x
+    min_pin: x.x
+platform: osx-arm64
+python: '3.12'
+r_base: '3.5'
+target_platform: osx-arm64
+xz: '5'
+zlib: '1.2'

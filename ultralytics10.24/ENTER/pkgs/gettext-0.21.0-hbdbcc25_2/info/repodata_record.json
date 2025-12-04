@@ -1,0 +1,26 @@
+{
+  "arch": "arm64",
+  "build": "hbdbcc25_2",
+  "build_number": 2,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64/",
+  "constrains": [],
+  "depends": [
+    "libcxx >=14.0.6",
+    "libiconv >=1.16,<2.0a0",
+    "libxml2 >=2.13.1,<2.14.0a0",
+    "llvm-openmp >=14.0.6",
+    "ncurses >=6.4,<7.0a0"
+  ],
+  "fn": "gettext-0.21.0-hbdbcc25_2.conda",
+  "license": "GPL-3.0-or-later",
+  "license_family": "GPL",
+  "md5": "696510eade633e9c89adb95e003ebd01",
+  "name": "gettext",
+  "platform": "darwin",
+  "sha256": "9589c2f12f0aa73d2a140dc01fc91d8c96845525c6937e185971f60492b33a9a",
+  "size": 3228436,
+  "subdir": "osx-arm64",
+  "timestamp": 1722922815000,
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/gettext-0.21.0-hbdbcc25_2.conda",
+  "version": "0.21.0"
+}

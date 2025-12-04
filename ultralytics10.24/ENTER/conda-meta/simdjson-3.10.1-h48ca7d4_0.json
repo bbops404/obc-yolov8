@@ -1,0 +1,54 @@
+{
+  "name": "simdjson",
+  "version": "3.10.1",
+  "build": "h48ca7d4_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64",
+  "subdir": "osx-arm64",
+  "fn": "simdjson-3.10.1-h48ca7d4_0.conda",
+  "md5": "443db5b88521ce0e2aaeb77bcf8fb488",
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/simdjson-3.10.1-h48ca7d4_0.conda",
+  "sha256": "80fdef44c1ea1d8a4ffa768444c116f711058b835c30ddbee929c8a309daf985",
+  "arch": "arm64",
+  "platform": "darwin",
+  "depends": [
+    "libcxx >=14.0.6"
+  ],
+  "constrains": [],
+  "license": "Apache-2.0",
+  "license_family": "Apache",
+  "timestamp": 1734048107000,
+  "size": 220407,
+  "requested_spec": "pkgs/main/osx-arm64::simdjson==3.10.1=h48ca7d4_0",
+  "package_tarball_full_path": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/simdjson-3.10.1-h48ca7d4_0.conda",
+  "extracted_package_dir": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/simdjson-3.10.1-h48ca7d4_0",
+  "files": [
+    "include/simdjson.h",
+    "lib/cmake/simdjson/simdjson-config-version.cmake",
+    "lib/cmake/simdjson/simdjson-config.cmake",
+    "lib/cmake/simdjson/simdjsonTargets-release.cmake",
+    "lib/cmake/simdjson/simdjsonTargets.cmake",
+    "lib/libsimdjson.23.0.0.dylib",
+    "lib/libsimdjson.23.dylib",
+    "lib/libsimdjson.dylib",
+    "lib/pkgconfig/simdjson.pc"
+  ],
+  "paths_data": {
+    "paths_version": 1,
+    "paths": [
+      {
+        "_path": "lib/pkgconfig/simdjson.pc",
+        "prefix_placeholder": "/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_47b1a8ihr8/croot/simdjson-split_1734048060447/_h_env_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold",
+        "file_mode": "text",
+        "path_type": "hardlink",
+        "sha256": "1e53d5b84d37887de1b43971e0525b20e48da105e7a82b4cc26adf93228834b5",
+        "size_in_bytes": 505,
+        "sha256_in_prefix": "3079a9e20ad3b05239e33bab15deb766cf6105454946311011cde7d5a43b0a31"
+      }
+    ]
+  },
+  "link": {
+    "source": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/simdjson-3.10.1-h48ca7d4_0",
+    "type": 1
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "arch": "arm64",
+  "build": "py313hca03da5_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64/",
+  "constrains": [
+    "anaconda-client >=1.13.0",
+    "anaconda-cloud-cli >=0.3.0"
+  ],
+  "depends": [
+    "click <8.2",
+    "packaging >=23.0",
+    "pydantic-settings >=2.3",
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313",
+    "readchar",
+    "rich",
+    "tomli",
+    "typer"
+  ],
+  "fn": "anaconda-cli-base-0.6.0-py313hca03da5_0.conda",
+  "license": "BSD-3-Clause",
+  "license_family": "BSD",
+  "md5": "48d41c253d949e9da6dc262f431e9d68",
+  "name": "anaconda-cli-base",
+  "platform": "darwin",
+  "sha256": "e4bd345f7bdc78787a1466088a4994f5d0b8f211330df8747d61976254664650",
+  "size": 46208,
+  "subdir": "osx-arm64",
+  "timestamp": 1762294828000,
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/anaconda-cli-base-0.6.0-py313hca03da5_0.conda",
+  "version": "0.6.0"
+}

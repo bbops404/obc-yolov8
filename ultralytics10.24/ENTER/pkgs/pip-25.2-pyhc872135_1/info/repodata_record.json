@@ -1,0 +1,24 @@
+{
+  "build": "pyhc872135_1",
+  "build_number": 1,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64/",
+  "constrains": [],
+  "depends": [
+    "python >=3.9,<3.14.0a0",
+    "setuptools",
+    "wheel"
+  ],
+  "fn": "pip-25.2-pyhc872135_1.conda",
+  "license": "MIT",
+  "license_family": "MIT",
+  "md5": "67ecf6d546469530f5968a9e2abc685c",
+  "name": "pip",
+  "noarch": "python",
+  "package_type": "noarch_python",
+  "sha256": "6128642d289e2c2ccd4fb4ec474cb3e465ce0c2bc995b306ffc3296f82eb1dec",
+  "size": 1176094,
+  "subdir": "noarch",
+  "timestamp": 1760547688000,
+  "url": "https://repo.anaconda.com/pkgs/main/noarch/pip-25.2-pyhc872135_1.conda",
+  "version": "25.2"
+}

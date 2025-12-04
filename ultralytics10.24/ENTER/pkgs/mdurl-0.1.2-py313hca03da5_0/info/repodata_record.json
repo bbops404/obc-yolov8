@@ -1,0 +1,23 @@
+{
+  "arch": "arm64",
+  "build": "py313hca03da5_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64/",
+  "constrains": [],
+  "depends": [
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313"
+  ],
+  "fn": "mdurl-0.1.2-py313hca03da5_0.conda",
+  "license": "MIT",
+  "license_family": "MIT",
+  "md5": "cc0fbba5b4ee07d4f979149d050c864a",
+  "name": "mdurl",
+  "platform": "darwin",
+  "sha256": "dcfa6b13af360bd6f3388470af3e93a4b6fe2fd47b5d0546daf0f1daed5323bb",
+  "size": 26834,
+  "subdir": "osx-arm64",
+  "timestamp": 1758552196000,
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/mdurl-0.1.2-py313hca03da5_0.conda",
+  "version": "0.1.2"
+}

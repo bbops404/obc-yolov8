@@ -1,0 +1,103 @@
+# This file created by conda-build 25.1.2
+# meta.yaml template originally from:
+# /Users/ec2-user/tasks/task_176236638664930/conda-package-handling-feedstock/recipe, last modified Wed Nov  5 18:13:13 2025
+# ------------------------------------------------
+
+package:
+  name: conda-package-handling
+  version: 2.4.0
+source:
+  sha256: a68d23d795704f1b687559b89c98e73d0dbebcab077592c60bffc1dc408b72e9
+  url: https://github.com/conda/conda-package-handling/archive/2.4.0.tar.gz
+build:
+  entry_points:
+    - cph = conda_package_handling.cli:main
+  number: '1'
+  script: /opt/miniconda3/conda-bld/conda-package-handling_1762366402479/_h_env_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_place/bin/python
+    -m pip install . --no-deps --no-build-isolation -vv
+  string: py313hca03da5_1
+requirements:
+  build:
+    - bzip2 1.0.8 h80987f9_6
+    - ca-certificates 2025.11.4 hca03da5_0
+    - expat 2.7.3 h982b769_0
+    - libcxx 20.1.8 hd7fd590_1
+    - libffi 3.4.4 hca03da5_1
+    - libmpdec 4.0.0 h80987f9_0
+    - libzlib 1.3.1 h5f15de7_0
+    - ncurses 6.5 hee39554_0
+    - openssl 3.0.18 h9b4081a_0
+    - python 3.13.9 hc7d8306_100_cp313
+    - python_abi 3.13 1_cp313
+    - readline 8.3 h0b18652_0
+    - sqlite 3.50.2 h79febb2_1
+    - tk 8.6.15 hcd8a7d5_0
+    - tzdata 2025b h04d1e81_0
+    - xz 5.6.4 h80987f9_1
+    - zlib 1.3.1 h5f15de7_0
+  host:
+    - bzip2 1.0.8 h80987f9_6
+    - ca-certificates 2025.11.4 hca03da5_0
+    - expat 2.7.3 h982b769_0
+    - libcxx 20.1.8 hd7fd590_1
+    - libffi 3.4.4 hca03da5_1
+    - libmpdec 4.0.0 h80987f9_0
+    - libzlib 1.3.1 h5f15de7_0
+    - ncurses 6.5 hee39554_0
+    - openssl 3.0.18 h9b4081a_0
+    - pip 25.2 pyhc872135_1
+    - python 3.13.9 hc7d8306_100_cp313
+    - python_abi 3.13 1_cp313
+    - readline 8.3 h0b18652_0
+    - setuptools 80.9.0 py313hca03da5_0
+    - sqlite 3.50.2 h79febb2_1
+    - tk 8.6.15 hcd8a7d5_0
+    - tzdata 2025b h04d1e81_0
+    - wheel 0.45.1 py313hca03da5_0
+    - xz 5.6.4 h80987f9_1
+    - zlib 1.3.1 h5f15de7_0
+  run:
+    - conda-package-streaming >=0.9.0
+    - python >=3.13,<3.14.0a0
+    - python_abi 3.13.* *_cp313
+    - zstandard >=0.15
+test:
+  commands:
+    - pip check
+    - pytest -v --cov=conda_package_handling --color=yes tests/
+  imports:
+    - conda_package_handling
+    - conda_package_handling.api
+  requires:
+    - bottle
+    - mock
+    - pip
+    - pytest
+    - pytest-cov
+    - pytest-mock
+  source_files:
+    - tests
+about:
+  description: '`conda` and `conda-build` use `conda_package_handling.api` to create
+    and extract
+
+    conda packages. This package also provides the `cph` command line tool to
+
+    extract, create, and convert between formats.
+
+    '
+  dev_url: https://github.com/conda/conda-package-handling
+  doc_url: https://conda.github.io/conda-package-handling/
+  home: https://github.com/conda/conda-package-handling
+  license: BSD-3-Clause
+  license_family: BSD
+  license_file: LICENSE
+  summary: Create and extract conda packages of various formats.
+extra:
+  copy_test_source_files: true
+  final: true
+  recipe-maintainers:
+    - beckermr
+    - dbast
+    - dholth
+    - jezdez

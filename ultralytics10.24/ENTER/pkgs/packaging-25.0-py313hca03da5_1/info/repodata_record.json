@@ -1,0 +1,23 @@
+{
+  "arch": "arm64",
+  "build": "py313hca03da5_1",
+  "build_number": 1,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64/",
+  "constrains": [],
+  "depends": [
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313"
+  ],
+  "fn": "packaging-25.0-py313hca03da5_1.conda",
+  "license": "Apache-2.0 or BSD-2-Clause",
+  "license_family": "Apache",
+  "md5": "4972900e47725fc5030c2a71e74c1613",
+  "name": "packaging",
+  "platform": "darwin",
+  "sha256": "0dbfab794842213747fcb6f4517132724b9ef8f5c9371da260c9ca59fa8a6155",
+  "size": 193477,
+  "subdir": "osx-arm64",
+  "timestamp": 1761049097000,
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/packaging-25.0-py313hca03da5_1.conda",
+  "version": "25.0"
+}

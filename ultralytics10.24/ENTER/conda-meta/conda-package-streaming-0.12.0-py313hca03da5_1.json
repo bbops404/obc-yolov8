@@ -1,0 +1,63 @@
+{
+  "name": "conda-package-streaming",
+  "version": "0.12.0",
+  "build": "py313hca03da5_1",
+  "build_number": 1,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64",
+  "subdir": "osx-arm64",
+  "fn": "conda-package-streaming-0.12.0-py313hca03da5_1.conda",
+  "md5": "01a0bc32a49fd331d514dfd64446fb1e",
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/conda-package-streaming-0.12.0-py313hca03da5_1.conda",
+  "sha256": "167d9c3bfd693c347a43c4b006c1379f1ff94588ee818ed231d801ad63a65f34",
+  "arch": "arm64",
+  "platform": "darwin",
+  "depends": [
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313",
+    "requests",
+    "zstandard >=0.15"
+  ],
+  "constrains": [],
+  "license": "BSD-3-Clause",
+  "license_family": "BSD",
+  "timestamp": 1762361650000,
+  "size": 38499,
+  "requested_spec": "pkgs/main/osx-arm64::conda-package-streaming==0.12.0=py313hca03da5_1",
+  "package_tarball_full_path": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/conda-package-streaming-0.12.0-py313hca03da5_1.conda",
+  "extracted_package_dir": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/conda-package-streaming-0.12.0-py313hca03da5_1",
+  "files": [
+    "lib/python3.13/site-packages/conda_package_streaming-0.12.0.dist-info/INSTALLER",
+    "lib/python3.13/site-packages/conda_package_streaming-0.12.0.dist-info/METADATA",
+    "lib/python3.13/site-packages/conda_package_streaming-0.12.0.dist-info/RECORD",
+    "lib/python3.13/site-packages/conda_package_streaming-0.12.0.dist-info/REQUESTED",
+    "lib/python3.13/site-packages/conda_package_streaming-0.12.0.dist-info/WHEEL",
+    "lib/python3.13/site-packages/conda_package_streaming-0.12.0.dist-info/direct_url.json",
+    "lib/python3.13/site-packages/conda_package_streaming-0.12.0.dist-info/licenses/LICENSE",
+    "lib/python3.13/site-packages/conda_package_streaming/__init__.py",
+    "lib/python3.13/site-packages/conda_package_streaming/__pycache__/__init__.cpython-313.pyc",
+    "lib/python3.13/site-packages/conda_package_streaming/__pycache__/create.cpython-313.pyc",
+    "lib/python3.13/site-packages/conda_package_streaming/__pycache__/exceptions.cpython-313.pyc",
+    "lib/python3.13/site-packages/conda_package_streaming/__pycache__/extract.cpython-313.pyc",
+    "lib/python3.13/site-packages/conda_package_streaming/__pycache__/lazy_wheel.cpython-313.pyc",
+    "lib/python3.13/site-packages/conda_package_streaming/__pycache__/package_streaming.cpython-313.pyc",
+    "lib/python3.13/site-packages/conda_package_streaming/__pycache__/s3.cpython-313.pyc",
+    "lib/python3.13/site-packages/conda_package_streaming/__pycache__/transmute.cpython-313.pyc",
+    "lib/python3.13/site-packages/conda_package_streaming/__pycache__/url.cpython-313.pyc",
+    "lib/python3.13/site-packages/conda_package_streaming/create.py",
+    "lib/python3.13/site-packages/conda_package_streaming/exceptions.py",
+    "lib/python3.13/site-packages/conda_package_streaming/extract.py",
+    "lib/python3.13/site-packages/conda_package_streaming/lazy_wheel.py",
+    "lib/python3.13/site-packages/conda_package_streaming/package_streaming.py",
+    "lib/python3.13/site-packages/conda_package_streaming/s3.py",
+    "lib/python3.13/site-packages/conda_package_streaming/transmute.py",
+    "lib/python3.13/site-packages/conda_package_streaming/url.py"
+  ],
+  "paths_data": {
+    "paths_version": 1,
+    "paths": []
+  },
+  "link": {
+    "source": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/conda-package-streaming-0.12.0-py313hca03da5_1",
+    "type": 1
+  }
+}

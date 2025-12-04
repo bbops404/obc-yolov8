@@ -1,0 +1,24 @@
+{
+  "arch": "arm64",
+  "build": "h1dacb4a_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64/",
+  "constrains": [],
+  "depends": [
+    "__osx >=12.1",
+    "bzip2 >=1.0.8,<2.0a0",
+    "zlib >=1.2.13,<2.0a0"
+  ],
+  "fn": "pcre2-10.46-h1dacb4a_0.conda",
+  "license": "BSD-3-Clause WITH PCRE2-exception",
+  "license_family": "BSD",
+  "md5": "dc957a9fa85669b0f6ce65ea9343fd8f",
+  "name": "pcre2",
+  "platform": "darwin",
+  "sha256": "502b7b5fa39c8ab2df0213b1541d43bb32f10da44370ad5f1124a010deb86ad2",
+  "size": 901944,
+  "subdir": "osx-arm64",
+  "timestamp": 1759825795000,
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/pcre2-10.46-h1dacb4a_0.conda",
+  "version": "10.46"
+}

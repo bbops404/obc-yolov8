@@ -1,0 +1,74 @@
+{
+  "name": "python-dotenv",
+  "version": "1.1.0",
+  "build": "py313hca03da5_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64",
+  "subdir": "osx-arm64",
+  "fn": "python-dotenv-1.1.0-py313hca03da5_0.conda",
+  "md5": "6b9441155abb478544865bde19c3d6d2",
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/python-dotenv-1.1.0-py313hca03da5_0.conda",
+  "sha256": "ee575a10247f4d8acc6672a4a639f9027e659b7da461bb47e7f25bdac27721de",
+  "arch": "arm64",
+  "platform": "darwin",
+  "depends": [
+    "click >=5.0",
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313"
+  ],
+  "constrains": [],
+  "license": "BSD-3-Clause",
+  "license_family": "BSD",
+  "timestamp": 1745610344000,
+  "size": 48976,
+  "requested_spec": "pkgs/main/osx-arm64::python-dotenv==1.1.0=py313hca03da5_0",
+  "package_tarball_full_path": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/python-dotenv-1.1.0-py313hca03da5_0.conda",
+  "extracted_package_dir": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/python-dotenv-1.1.0-py313hca03da5_0",
+  "files": [
+    "bin/dotenv",
+    "lib/python3.13/site-packages/dotenv/__init__.py",
+    "lib/python3.13/site-packages/dotenv/__main__.py",
+    "lib/python3.13/site-packages/dotenv/__pycache__/__init__.cpython-313.pyc",
+    "lib/python3.13/site-packages/dotenv/__pycache__/__main__.cpython-313.pyc",
+    "lib/python3.13/site-packages/dotenv/__pycache__/cli.cpython-313.pyc",
+    "lib/python3.13/site-packages/dotenv/__pycache__/ipython.cpython-313.pyc",
+    "lib/python3.13/site-packages/dotenv/__pycache__/main.cpython-313.pyc",
+    "lib/python3.13/site-packages/dotenv/__pycache__/parser.cpython-313.pyc",
+    "lib/python3.13/site-packages/dotenv/__pycache__/variables.cpython-313.pyc",
+    "lib/python3.13/site-packages/dotenv/__pycache__/version.cpython-313.pyc",
+    "lib/python3.13/site-packages/dotenv/cli.py",
+    "lib/python3.13/site-packages/dotenv/ipython.py",
+    "lib/python3.13/site-packages/dotenv/main.py",
+    "lib/python3.13/site-packages/dotenv/parser.py",
+    "lib/python3.13/site-packages/dotenv/py.typed",
+    "lib/python3.13/site-packages/dotenv/variables.py",
+    "lib/python3.13/site-packages/dotenv/version.py",
+    "lib/python3.13/site-packages/python_dotenv-1.1.0.dist-info/INSTALLER",
+    "lib/python3.13/site-packages/python_dotenv-1.1.0.dist-info/LICENSE",
+    "lib/python3.13/site-packages/python_dotenv-1.1.0.dist-info/METADATA",
+    "lib/python3.13/site-packages/python_dotenv-1.1.0.dist-info/RECORD",
+    "lib/python3.13/site-packages/python_dotenv-1.1.0.dist-info/REQUESTED",
+    "lib/python3.13/site-packages/python_dotenv-1.1.0.dist-info/WHEEL",
+    "lib/python3.13/site-packages/python_dotenv-1.1.0.dist-info/direct_url.json",
+    "lib/python3.13/site-packages/python_dotenv-1.1.0.dist-info/entry_points.txt",
+    "lib/python3.13/site-packages/python_dotenv-1.1.0.dist-info/top_level.txt"
+  ],
+  "paths_data": {
+    "paths_version": 1,
+    "paths": [
+      {
+        "_path": "bin/dotenv",
+        "prefix_placeholder": "/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_0bqseadoho/croot/python-dotenv_1745610246418/_h_env_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_",
+        "file_mode": "text",
+        "path_type": "hardlink",
+        "sha256": "0fdd26c34b567af8f399e059b4f3e144c8d5710546d8ff50867abd0fa87d47db",
+        "size_in_bytes": 466,
+        "sha256_in_prefix": "21280c46eef207fca9f8dd00becfd04f16e1c82c1c2137f5b42f93568d59fb60"
+      }
+    ]
+  },
+  "link": {
+    "source": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/python-dotenv-1.1.0-py313hca03da5_0",
+    "type": 1
+  }
+}

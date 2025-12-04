@@ -1,0 +1,11 @@
+prefix=/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER
+exec_prefix=/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: fmt
+Description: A modern formatting library
+Version: 11.2.0
+Libs: -L${libdir} -lfmt
+Cflags: -I${includedir}
+

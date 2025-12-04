@@ -1,0 +1,66 @@
+{
+  "name": "libnghttp2",
+  "version": "1.67.1",
+  "build": "h8189af8_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64",
+  "subdir": "osx-arm64",
+  "fn": "libnghttp2-1.67.1-h8189af8_0.conda",
+  "md5": "bed79f63cae2e78f5b697f6196453d96",
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/libnghttp2-1.67.1-h8189af8_0.conda",
+  "sha256": "c723a4c7a7952a55c5e211fd3bf978ce185392fc5857d28cec656cc4d2683950",
+  "arch": "arm64",
+  "platform": "darwin",
+  "depends": [
+    "__osx >=12.1",
+    "c-ares >=1.34.5,<2.0a0",
+    "c-ares >=1.7.5",
+    "jansson >=2.14,<3.0a0",
+    "jansson >=2.5",
+    "libcxx >=20",
+    "libev >=4.11",
+    "libev >=4.33,<4.34.0a0",
+    "libxml2 >=2.13.9,<2.14.0a0",
+    "libxml2 >=2.6.26",
+    "openssl >=1.1.1",
+    "openssl >=3.0.18,<4.0a0",
+    "zlib >=1.2.13,<2.0a0",
+    "zlib >=1.2.3"
+  ],
+  "constrains": [],
+  "license": "MIT",
+  "license_family": "MIT",
+  "timestamp": 1762785206000,
+  "size": 569791,
+  "requested_spec": "pkgs/main/osx-arm64::libnghttp2==1.67.1=h8189af8_0",
+  "package_tarball_full_path": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/libnghttp2-1.67.1-h8189af8_0.conda",
+  "extracted_package_dir": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/libnghttp2-1.67.1-h8189af8_0",
+  "files": [
+    "bin/nghttp",
+    "bin/nghttpd",
+    "bin/nghttpx",
+    "include/nghttp2/nghttp2.h",
+    "include/nghttp2/nghttp2ver.h",
+    "lib/libnghttp2.14.dylib",
+    "lib/libnghttp2.dylib",
+    "lib/pkgconfig/libnghttp2.pc"
+  ],
+  "paths_data": {
+    "paths_version": 1,
+    "paths": [
+      {
+        "_path": "lib/pkgconfig/libnghttp2.pc",
+        "prefix_placeholder": "/opt/miniconda3/conda-bld/nghttp2-split_1762785123320/_h_env_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_plac",
+        "file_mode": "text",
+        "path_type": "hardlink",
+        "sha256": "91660cc75f4509e2b94c525b9704bcb3abac0a24cf5ad348cad0af72bb41670b",
+        "size_in_bytes": 1633,
+        "sha256_in_prefix": "7487ca2484cc9dc761063839db616fa77694b2cd0eb4e473714d45b09a2ce7b3"
+      }
+    ]
+  },
+  "link": {
+    "source": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/libnghttp2-1.67.1-h8189af8_0",
+    "type": 1
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "name": "libffi",
+  "version": "3.4.4",
+  "build": "hca03da5_1",
+  "build_number": 1,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64",
+  "subdir": "osx-arm64",
+  "fn": "libffi-3.4.4-hca03da5_1.conda",
+  "md5": "2bec9ee4b1214a3c3e2d1f2e18725daf",
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/libffi-3.4.4-hca03da5_1.conda",
+  "sha256": "800216cb554d0beaf970fe7c3efeee7974bb76576c1c5e0ae070c57fca2bba93",
+  "arch": "arm64",
+  "platform": "darwin",
+  "depends": [],
+  "constrains": [],
+  "license": "MIT",
+  "license_family": "MIT",
+  "timestamp": 1714483461000,
+  "size": 122887,
+  "requested_spec": "pkgs/main/osx-arm64::libffi==3.4.4=hca03da5_1",
+  "package_tarball_full_path": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/libffi-3.4.4-hca03da5_1.conda",
+  "extracted_package_dir": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/libffi-3.4.4-hca03da5_1",
+  "files": [
+    "include/ffi.h",
+    "include/ffitarget.h",
+    "lib/libffi.7.dylib",
+    "lib/libffi.8.dylib",
+    "lib/libffi.a",
+    "lib/libffi.dylib",
+    "lib/pkgconfig/libffi.pc",
+    "share/info/libffi.info",
+    "share/man/man3/ffi.3",
+    "share/man/man3/ffi_call.3",
+    "share/man/man3/ffi_prep_cif.3",
+    "share/man/man3/ffi_prep_cif_var.3"
+  ],
+  "paths_data": {
+    "paths_version": 1,
+    "paths": [
+      {
+        "_path": "lib/pkgconfig/libffi.pc",
+        "prefix_placeholder": "/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_a4554tl608/croot/libffi_1714483416836/_h_env_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placeho",
+        "file_mode": "text",
+        "path_type": "hardlink",
+        "sha256": "8b45c79c2b77688d27226a8876c46bf53de8fdd38591aaf738f5d214d227e718",
+        "size_in_bytes": 756,
+        "sha256_in_prefix": "68f4521614b42ccb9cb0554b655d82b1fc892cb245dd242de7881d709cb7d373"
+      }
+    ]
+  },
+  "link": {
+    "source": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/libffi-3.4.4-hca03da5_1",
+    "type": 1
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "arch": "arm64",
+  "build": "1_cp313",
+  "build_number": 1,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64/",
+  "constrains": [
+    "python 3.13.* *_cp313"
+  ],
+  "depends": [],
+  "fn": "python_abi-3.13-1_cp313.conda",
+  "license": "BSD-3-Clause",
+  "license_family": "BSD",
+  "md5": "762c641e13c16bad927edcb1227550db",
+  "name": "python_abi",
+  "platform": "darwin",
+  "sha256": "a2aad9e854957cfc60486ddc259acc24dea4b77608e87c19bb82f7079ee80ed2",
+  "size": 5699,
+  "subdir": "osx-arm64",
+  "timestamp": 1757085633000,
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/python_abi-3.13-1_cp313.conda",
+  "version": "3.13"
+}

@@ -1,0 +1,56 @@
+{
+  "name": "truststore",
+  "version": "0.10.1",
+  "build": "py313hca03da5_1",
+  "build_number": 1,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64",
+  "subdir": "osx-arm64",
+  "fn": "truststore-0.10.1-py313hca03da5_1.conda",
+  "md5": "c65542bf580047dbffdedaf763057c77",
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/truststore-0.10.1-py313hca03da5_1.conda",
+  "sha256": "678639cde456bae6e4a11ce9118be17eebb4113963eb7aca2be86bd425d64e59",
+  "arch": "arm64",
+  "platform": "darwin",
+  "depends": [
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313"
+  ],
+  "constrains": [],
+  "license": "MIT",
+  "license_family": "MIT",
+  "timestamp": 1762520944000,
+  "size": 49457,
+  "requested_spec": "pkgs/main/osx-arm64::truststore==0.10.1=py313hca03da5_1",
+  "package_tarball_full_path": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/truststore-0.10.1-py313hca03da5_1.conda",
+  "extracted_package_dir": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/truststore-0.10.1-py313hca03da5_1",
+  "files": [
+    "lib/python3.13/site-packages/truststore-0.10.1.dist-info/INSTALLER",
+    "lib/python3.13/site-packages/truststore-0.10.1.dist-info/METADATA",
+    "lib/python3.13/site-packages/truststore-0.10.1.dist-info/RECORD",
+    "lib/python3.13/site-packages/truststore-0.10.1.dist-info/REQUESTED",
+    "lib/python3.13/site-packages/truststore-0.10.1.dist-info/WHEEL",
+    "lib/python3.13/site-packages/truststore-0.10.1.dist-info/direct_url.json",
+    "lib/python3.13/site-packages/truststore-0.10.1.dist-info/licenses/LICENSE",
+    "lib/python3.13/site-packages/truststore/__init__.py",
+    "lib/python3.13/site-packages/truststore/__pycache__/__init__.cpython-313.pyc",
+    "lib/python3.13/site-packages/truststore/__pycache__/_api.cpython-313.pyc",
+    "lib/python3.13/site-packages/truststore/__pycache__/_macos.cpython-313.pyc",
+    "lib/python3.13/site-packages/truststore/__pycache__/_openssl.cpython-313.pyc",
+    "lib/python3.13/site-packages/truststore/__pycache__/_ssl_constants.cpython-313.pyc",
+    "lib/python3.13/site-packages/truststore/__pycache__/_windows.cpython-313.pyc",
+    "lib/python3.13/site-packages/truststore/_api.py",
+    "lib/python3.13/site-packages/truststore/_macos.py",
+    "lib/python3.13/site-packages/truststore/_openssl.py",
+    "lib/python3.13/site-packages/truststore/_ssl_constants.py",
+    "lib/python3.13/site-packages/truststore/_windows.py",
+    "lib/python3.13/site-packages/truststore/py.typed"
+  ],
+  "paths_data": {
+    "paths_version": 1,
+    "paths": []
+  },
+  "link": {
+    "source": "/Users/user/Documents/obc-yolov8/ultralytics10.24/ENTER/pkgs/truststore-0.10.1-py313hca03da5_1",
+    "type": 1
+  }
+}

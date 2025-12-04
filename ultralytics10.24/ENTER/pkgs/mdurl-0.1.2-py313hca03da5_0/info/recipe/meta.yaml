@@ -1,0 +1,78 @@
+# This file created by conda-build 25.1.2
+# meta.yaml template originally from:
+# /Users/ec2-user/tasks/task_175855215749451/mdurl-feedstock/recipe, last modified Mon Sep 22 14:42:39 2025
+# ------------------------------------------------
+
+package:
+  name: mdurl
+  version: 0.1.2
+source:
+  - sha256: bb413d29f5eea38f31dd4754dd7377d4465116fb207585f97bf925588687c1ba
+    url: https://pypi.org/packages/source/m/mdurl/mdurl-0.1.2.tar.gz
+  - folder: gh
+    sha256: 99d4fabddab7ee4a05fa458deb1a6f0d009966e4631c50d1b875767a1cd3896d
+    url: https://github.com/executablebooks/mdurl/archive/refs/tags/0.1.2.tar.gz
+build:
+  number: '0'
+  script: /opt/miniconda3/conda-bld/mdurl_1758552175942/_h_env_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_pl/bin/python
+    -m pip install . -vv --no-deps --no-build-isolation
+  string: py313hca03da5_0
+requirements:
+  host:
+    - bzip2 1.0.8 h80987f9_6
+    - ca-certificates 2025.9.9 hca03da5_0
+    - expat 2.7.1 h313beb8_0
+    - flit-core 3.12.0 py313hedbb292_0
+    - libcxx 20.1.8 h8869778_0
+    - libffi 3.4.4 hca03da5_1
+    - libmpdec 4.0.0 h80987f9_0
+    - libzlib 1.3.1 h5f15de7_0
+    - ncurses 6.5 hee39554_0
+    - openssl 3.0.17 h4ee41c1_0
+    - pip 25.2 pyhc872135_0
+    - python 3.13.7 hc28b8d9_100_cp313
+    - python_abi 3.13 1_cp313
+    - readline 8.3 h0b18652_0
+    - setuptools 78.1.1 py313hca03da5_0
+    - sqlite 3.50.2 h79febb2_1
+    - tk 8.6.15 hcd8a7d5_0
+    - tzdata 2025b h04d1e81_0
+    - wheel 0.45.1 py313hca03da5_0
+    - xz 5.6.4 h80987f9_1
+    - zlib 1.3.1 h5f15de7_0
+  run:
+    - python >=3.13,<3.14.0a0
+    - python_abi 3.13.* *_cp313
+test:
+  commands:
+    - pip check
+    - python -c "from importlib.metadata import version; assert(version('mdurl')=='0.1.2')"
+    - pytest -v gh/tests
+  imports:
+    - mdurl
+    - mdurl._decode
+    - mdurl._encode
+    - mdurl._format
+    - mdurl._parse
+    - mdurl._url
+  requires:
+    - pip
+    - pytest
+  source_files:
+    - gh/tests
+about:
+  description: This is a Python port of the JavaScript mdurl package. See the upstream
+    README.md file for API documentation.
+  dev_url: https://github.com/executablebooks/mdurl
+  doc_url: https://github.com/executablebooks/mdurl/blob/master/README.md
+  home: https://github.com/executablebooks/mdurl
+  license: MIT
+  license_family: MIT
+  license_file: LICENSE
+  summary: This is a Python port of the JavaScript mdurl package. See the upstream
+    README.md file for API documentation.
+extra:
+  copy_test_source_files: true
+  final: true
+  recipe-maintainers:
+    - chrisjsewell

@@ -1,0 +1,23 @@
+{
+  "arch": "arm64",
+  "build": "py313hca03da5_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64/",
+  "constrains": [],
+  "depends": [
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313"
+  ],
+  "fn": "semver-3.0.4-py313hca03da5_0.conda",
+  "license": "BSD-3-Clause",
+  "license_family": "BSD",
+  "md5": "8b4a9bf142beac7513382b0a84ce51f5",
+  "name": "semver",
+  "platform": "darwin",
+  "sha256": "78efad9113b08c223bf96a195fe65996bbdaf3587e87c4b3c6481928070c7529",
+  "size": 45786,
+  "subdir": "osx-arm64",
+  "timestamp": 1761903046000,
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/semver-3.0.4-py313hca03da5_0.conda",
+  "version": "3.0.4"
+}

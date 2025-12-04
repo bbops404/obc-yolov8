@@ -1,0 +1,24 @@
+{
+  "arch": "arm64",
+  "build": "py313haa24f5a_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64/",
+  "constrains": [],
+  "depends": [
+    "__osx >=12.1",
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313"
+  ],
+  "fn": "frozendict-2.4.6-py313haa24f5a_0.conda",
+  "license": "LGPL-3.0-only",
+  "license_family": "LGPL",
+  "md5": "662529f545d783dc4148ad30f1110b51",
+  "name": "frozendict",
+  "platform": "darwin",
+  "sha256": "a04a4d19f35edd518d645c0b86dd3c68772df87abdcf1b6d210c2cfa4697ee69",
+  "size": 39679,
+  "subdir": "osx-arm64",
+  "timestamp": 1761750693000,
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/frozendict-2.4.6-py313haa24f5a_0.conda",
+  "version": "2.4.6"
+}

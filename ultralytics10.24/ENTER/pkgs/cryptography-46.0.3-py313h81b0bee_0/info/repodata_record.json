@@ -1,0 +1,28 @@
+{
+  "arch": "arm64",
+  "build": "py313h81b0bee_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64/",
+  "constrains": [
+    "pyopenssl >=23.0.0"
+  ],
+  "depends": [
+    "__osx >=12.1",
+    "cffi >=2.0.0",
+    "openssl >=3.0.18,<4.0a0",
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313"
+  ],
+  "fn": "cryptography-46.0.3-py313h81b0bee_0.conda",
+  "license": "Apache-2.0 OR BSD-3-Clause",
+  "license_family": "OTHER",
+  "md5": "6b489a307472d328bc237a3d4762c0ff",
+  "name": "cryptography",
+  "platform": "darwin",
+  "sha256": "47644797f3a8cabff9e7a5ac5f0f632cf619c59c983982374752860355fafd15",
+  "size": 1584557,
+  "subdir": "osx-arm64",
+  "timestamp": 1761932058000,
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/cryptography-46.0.3-py313h81b0bee_0.conda",
+  "version": "46.0.3"
+}

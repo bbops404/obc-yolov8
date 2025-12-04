@@ -1,0 +1,79 @@
+# This file created by conda-build 25.1.2
+# meta.yaml template originally from:
+# /Users/ec2-user/tasks/task_176037327405013/rich-feedstock/recipe, last modified Mon Oct 13 17:11:08 2025
+# ------------------------------------------------
+
+package:
+  name: rich
+  version: 14.2.0
+source:
+  sha256: 589ddd6a66adbffb9d0e406da9d529a886d2c040177da4b72fad4a8563ff5afc
+  url: https://github.com/Textualize/rich/archive/refs/tags/v14.2.0.tar.gz
+build:
+  number: '0'
+  script: /opt/miniconda3/conda-bld/rich_1760375480293/_h_env_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_pla/bin/python
+    -m pip install . --no-deps --no-build-isolation -vv
+  string: py313hca03da5_0
+requirements:
+  host:
+    - bzip2 1.0.8 h80987f9_6
+    - ca-certificates 2025.9.9 hca03da5_0
+    - expat 2.7.1 h313beb8_0
+    - libcxx 20.1.8 h8869778_0
+    - libffi 3.4.4 hca03da5_1
+    - libmpdec 4.0.0 h80987f9_0
+    - libzlib 1.3.1 h5f15de7_0
+    - ncurses 6.5 hee39554_0
+    - openssl 3.0.18 h9b4081a_0
+    - pip 25.2 pyhc872135_0
+    - poetry-core 2.2.0 py313hca03da5_0
+    - python 3.13.7 hc28b8d9_100_cp313
+    - python_abi 3.13 1_cp313
+    - readline 8.3 h0b18652_0
+    - setuptools 80.9.0 py313hca03da5_0
+    - sqlite 3.50.2 h79febb2_1
+    - tk 8.6.15 hcd8a7d5_0
+    - tzdata 2025b h04d1e81_0
+    - wheel 0.45.1 py313hca03da5_0
+    - xz 5.6.4 h80987f9_1
+    - zlib 1.3.1 h5f15de7_0
+  run:
+    - markdown-it-py >=2.2.0
+    - pygments >=2.13.0,<3.0.0
+    - python >=3.13,<3.14.0a0
+    - python_abi 3.13.* *_cp313
+  run_constrained:
+    - ipywidgets >=7.5.1,<9
+test:
+  commands:
+    - pip check
+    - pytest -vv tests -k "not (test_markdown_render or test_syntax_highlight_ranges
+      or test_option_no_wrap or test_python_render or test_card_render or test_brokenpipeerror
+      or test_background_color_override_includes_padding)"
+  imports:
+    - rich
+  requires:
+    - attrs
+    - pip
+    - pytest
+  source_files:
+    - tests
+about:
+  description: "Rich is a Python library for rich text and beautiful formatting\n\
+    in the terminal.The Rich API makes it easy to add color and style to\nterminal\
+    \ output. Rich can also render pretty tables, progress bars,\nmarkdown, syntax\
+    \ highlighted source code, tracebacks, and more \u2014 out\nof the box.\n"
+  dev_url: https://github.com/Textualize/rich
+  doc_url: https://rich.readthedocs.io
+  home: https://github.com/Textualize/rich
+  license: MIT
+  license_family: MIT
+  license_file: LICENSE
+  summary: Rich is a Python library for rich text and beautiful formatting in the
+    terminal.
+extra:
+  copy_test_source_files: true
+  final: true
+  recipe-maintainers:
+    - jan-janssen
+    - willmcgugan

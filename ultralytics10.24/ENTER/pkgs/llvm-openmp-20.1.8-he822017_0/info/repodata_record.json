@@ -1,0 +1,24 @@
+{
+  "arch": "arm64",
+  "build": "he822017_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64/",
+  "constrains": [
+    "openmp 20.1.8|20.1.8.*"
+  ],
+  "depends": [
+    "__osx >=11.1"
+  ],
+  "fn": "llvm-openmp-20.1.8-he822017_0.conda",
+  "license": "Apache-2.0 WITH LLVM-exception",
+  "license_family": "Apache",
+  "md5": "212b650a1ad620e8cf059cb6a36c976e",
+  "name": "llvm-openmp",
+  "platform": "darwin",
+  "sha256": "94f079719bbbad632ae2250bbf8d423618b3094aea9a5b96a76d8bd2e99cb485",
+  "size": 335299,
+  "subdir": "osx-arm64",
+  "timestamp": 1756229534000,
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/llvm-openmp-20.1.8-he822017_0.conda",
+  "version": "20.1.8"
+}

@@ -215,8 +215,8 @@ def train_ptq(
     calibration_split: str = "val",  # 'val' or 'train'
     evaluate: bool = False,  # Skip evaluation by default (can cause segfaults with quantized models)
 
-    quantize_botnet: bool = True,
-    quantize_coordatt: bool = True,
+    quantize_botnet: bool = False,
+    quantize_coordatt: bool = False,
     **kwargs: Any,
 ) -> Dict[str, Optional[Path]]:
     """Run PTQ calibration and optionally export an INT8 model.
@@ -351,7 +351,7 @@ def train_ptq(
     if not quantize_coordatt:
         LOGGER.info("!!! MANUAL SKIP: Excluding CoordAtt (model.20 and model.24) from INT8 quantization.")
         layer_list = model_for_manual_skip.model # Access the Sequential module
-        for index_str in ['19','23','20', '24']: 
+        for index_str in ['20', '24']: 
             try:
                 ca_module = layer_list.get_submodule(index_str)
                 cleared_count = 0
@@ -377,6 +377,9 @@ def train_ptq(
     # Note: key, query, and value layers are now included in PTQ quantization
     botnet_skip_names = {
         "model.10.m.0.fc1",
+        "model.10.m.0.cv2.0.key",
+        "model.10.m.0.cv2.0.query",
+        "model.10.m.0.cv2.0.value",
     }
     botnet_cleared = 0
     for name, module in model_for_manual_skip.named_modules():
@@ -605,7 +608,7 @@ def train_ptq(
         weights_dir = save_dir_path / "weights"
         weights_dir.mkdir(parents=True, exist_ok=True)
 
-        int8_path = weights_dir / "int8.pt"
+        int8_path = weights_dir / "ptq_int8.pt"
         LOGGER.info(f"Saving INT8 model to {int8_path}")
         
         # Check if forward is a local function (can't be pickled)

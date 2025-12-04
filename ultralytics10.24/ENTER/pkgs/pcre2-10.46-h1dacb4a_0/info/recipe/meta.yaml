@@ -1,0 +1,113 @@
+# This file created by conda-build 25.1.2
+# meta.yaml template originally from:
+# /Users/ec2-user/tasks/task_175982553389291/pcre2-feedstock/recipe, last modified Tue Oct  7 08:29:09 2025
+# ------------------------------------------------
+
+package:
+  name: pcre2
+  version: '10.46'
+source:
+  - sha256: ffde0c6ead457c4f8edcd8f9ce490bbabd30adabdfd179ecaddd320946cf3872
+    url: https://github.com/PCRE2Project/pcre2/archive/refs/tags/pcre2-10.46.tar.gz
+  - folder: deps/sljit
+    sha256: 5caf31959f4c2dfa9fdbaf290b0e16538527d929d5c1c5bd1a3e6df01436c1cf
+    url: https://github.com/zherczeg/sljit/archive/e51eabbfb8eabc6526f56e4e88b29fb10d1ee048.tar.gz
+build:
+  number: '0'
+  run_exports:
+    - pcre2 >=10.46,<10.47.0a0
+  string: h1dacb4a_0
+requirements:
+  build:
+    - bzip2 1.0.8 h80987f9_6
+    - c-ares 1.34.5 h2ca31fc_0
+    - ca-certificates 2025.9.9 hca03da5_0
+    - cctools 986 h0dbccd1_3
+    - clang 17.0.6 hdefe189_6
+    - clang-17 17.0.6 default_h000693a_6
+    - clang_impl_osx-arm64 17.0.6 hcb56dc5_4
+    - clang_osx-arm64 17.0.6 hcb56dc5_4
+    - clangxx 17.0.6 default_h000693a_6
+    - cmake 3.31.2 h89d4fe9_0
+    - compiler-rt 17.0.6 h6a6761b_1
+    - compiler-rt_osx-arm64 17.0.6 h6a6761b_1
+    - expat 2.7.1 h313beb8_0
+    - ld64 711 h3c27c41_3
+    - libclang-cpp17 17.0.6 default_h000693a_6
+    - libcurl 8.15.0 hcdd2897_0
+    - libcxx 17.0.6 he5c5206_4
+    - libcxx-devel 17.0.6 hbf97328_4
+    - libev 4.33 h1a28f6b_1
+    - libffi 3.4.4 hca03da5_1
+    - libllvm17 17.0.6 hac7df47_1
+    - libnghttp2 1.57.0 h62f6fdd_0
+    - libssh2 1.11.1 h3e2b118_0
+    - libuv 1.48.0 h80987f9_0
+    - libzlib 1.3.1 h5f15de7_0
+    - llvm 17.0.6 h8abdc9b_1
+    - llvm-tools 17.0.6 h7e95266_1
+    - lz4-c 1.9.4 h313beb8_1
+    - macosx_deployment_target_osx-arm64 12.1 h1c4a9a5_1
+    - ncurses 6.5 hee39554_0
+    - ninja-base 1.12.1 h48ca7d4_0
+    - openssl 3.0.18 h9b4081a_0
+    - rhash 1.4.3 h02f6b3c_0
+    - tapi 1100.0.11 h8754e6a_1
+    - xz 5.6.4 h80987f9_1
+    - zlib 1.3.1 h5f15de7_0
+    - zstd 1.5.7 h817c040_0
+  host:
+    - bzip2 1.0.8 h80987f9_6
+    - zlib 1.2.13 ha1e9f54_2
+  run:
+    - __osx >=12.1
+    - bzip2 >=1.0.8,<2.0a0
+    - zlib >=1.2.13,<2.0a0
+test:
+  commands:
+    - pcre2test --version
+    - pcre2grep --version
+    - pcre2-config --version
+    - test -f ${PREFIX}/include/pcre2.h
+    - test -f ${PREFIX}/include/pcre2posix.h
+    - test -f ${PREFIX}/lib/libpcre2-posix${SHLIB_EXT}
+    - test -f ${PREFIX}/lib/libpcre2-posix.3${SHLIB_EXT}
+    - test -f ${PREFIX}/lib/libpcre2-8${SHLIB_EXT}
+    - test -f ${PREFIX}/lib/libpcre2-8.0${SHLIB_EXT}
+    - test -f ${PREFIX}/lib/libpcre2-16${SHLIB_EXT}
+    - test -f ${PREFIX}/lib/libpcre2-16.0${SHLIB_EXT}
+    - test -f ${PREFIX}/lib/libpcre2-32${SHLIB_EXT}
+    - test -f ${PREFIX}/lib/libpcre2-32.0${SHLIB_EXT}
+    - test -f ${PREFIX}/lib/pkgconfig/libpcre2-8.pc
+    - test -f ${PREFIX}/lib/pkgconfig/libpcre2-16.pc
+    - test -f ${PREFIX}/lib/pkgconfig/libpcre2-32.pc
+    - test -f ${PREFIX}/lib/pkgconfig/libpcre2-posix.pc
+    - test -f ${PREFIX}/lib/cmake/pcre2/pcre2-config.cmake
+    - test -f ${PREFIX}/lib/cmake/pcre2/pcre2-config-version.cmake
+about:
+  description: 'The PCRE library is a set of functions that implement regular expression
+    pattern matching
+
+    using the same syntax and semantics as Perl 5. PCRE has its own native API, as
+    well as a set of
+
+    wrapper functions that correspond to the POSIX regular expression API. The PCRE
+    library is
+
+    free, even for building proprietary software.
+
+    '
+  dev_url: https://github.com/PCRE2Project/pcre2
+  doc_url: https://www.pcre.org/current/doc/html/
+  home: https://www.pcre.org
+  license: BSD-3-Clause WITH PCRE2-exception
+  license_family: BSD
+  license_file: LICENCE.md
+  summary: Regular expression pattern matching using Perl 5 syntax and semantics.
+extra:
+  copy_test_source_files: true
+  final: true
+  recipe-maintainers:
+    - dfornika
+    - mariusvniekerk
+    - xhochy

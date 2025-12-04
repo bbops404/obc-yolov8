@@ -1,0 +1,47 @@
+{% set name = "libunistring" %}
+{% set version = "1.3" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  fn: {{ name }}-{{ version }}.tar.xz
+  url: https://ftpmirror.gnu.org/{{ name }}/{{ name }}-{{ version }}.tar.xz
+  sha256: f245786c831d25150f3dfb4317cda1acc5e3f79a5da4ad073ddca58886569527
+
+build:
+  number: 0
+  skip: True  # [win]
+  run_exports:
+    # https://abi-laboratory.pro/?view=timeline&l=libunistring
+    - {{ pin_subpackage('libunistring', min_pin='x', max_pin='x') }}
+
+requirements:
+  build:
+    - {{ stdlib('c') }}
+    - {{ compiler('c') }}
+    - make
+    - libtool
+
+test:
+  commands:
+    - test -e $PREFIX/lib/libunistring${SHLIB_EXT}
+
+about:
+  home: https://www.gnu.org/software/libunistring
+  license: LGPL-3.0-only
+  license_file: COPYING
+  license_family: LGPL
+  summary: C unicode string manipulation library
+  description: |
+    This library provides functions for manipulating Unicode strings and 
+    for manipulating C strings according to the Unicode standard.
+  dev_url: https://git.savannah.gnu.org/gitweb/?p=libunistring.git
+  doc_url: https://www.gnu.org/software/libunistring/manual/libunistring.html
+
+extra:
+  recipe-maintainers:
+    - stefan-balke
+    - bgruening
+    - chenghlee

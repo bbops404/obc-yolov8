@@ -1,0 +1,23 @@
+fortran_compiler:          # [win]
+  - flang                  # [win]
+fortran_compiler_version:  # [win]
+  - 20.1.8                 # [win]
+
+c_compiler:          # [osx]
+  - clang_bootstrap  # [osx]
+cxx_compiler:        # [osx]    
+  - clang_bootstrap  # [osx]
+
+c_compiler_version:    # [osx]
+  - 20.1.8             # [osx]
+cxx_compiler_version:  # [osx]
+  - 20.1.8             # [osx]
+
+# Keep consistent with llvmdev and clangdev
+c_compiler:        # [win]
+  - vs2022         # [win]
+cxx_compiler:      # [win]
+  - vs2022         # [win]
+
+c_stdlib_version:  # [win]
+  - 2022.14        # [win]

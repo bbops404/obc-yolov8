@@ -1,0 +1,56 @@
+{% set name = "fmt" %}
+{% set version = "11.2.0" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: https://github.com/fmtlib/{{ name }}/archive/{{ version }}.tar.gz
+  sha256: bc23066d87ab3168f27cef3e97d545fa63314f5c79df5ea444d41d56f962c6af
+  patches:
+    - disable-isnan-test.patch  # [osx-arm64]
+
+build:
+  number: 0
+  skip: true  # [win and vc<14]
+  run_exports:
+    - {{ pin_subpackage('fmt', max_pin='x') }}
+
+requirements:
+  build:
+    - {{ compiler('cxx') }}
+    - {{ stdlib('c') }}
+    - cmake
+    - ninja-base
+
+test:
+  commands:
+    - test -d ${PREFIX}/include/fmt                     # [unix]
+    - test -f ${PREFIX}/include/fmt/core.h              # [unix]
+    - test -f ${PREFIX}/include/fmt/format.h            # [unix]
+    - test -f ${PREFIX}/lib/cmake/fmt/fmt-config.cmake  # [unix]
+    - test -f ${PREFIX}/lib/libfmt.so                   # [linux]
+    - test -f ${PREFIX}/lib/libfmt.dylib                # [osx]
+    - if exist %LIBRARY_PREFIX%\include\fmt\core.h (exit 0) else (exit 1)          # [win]
+    - if exist %LIBRARY_PREFIX%\include\fmt\format.h (exit 0) else (exit 1)        # [win]
+    - if exist %LIBRARY_PREFIX%\lib\cmake\fmt-config.cmake (exit 0) else (exit 1)  # [win]
+    - if exist %LIBRARY_PREFIX%\bin\fmt.dll (exit 0) else (exit 1)                 # [win]
+
+about:
+  home: https://fmt.dev/latest/
+  license: MIT
+  license_family: MIT
+  license_file: LICENSE
+  summary: '{fmt} is an open-source formatting library for C++'
+  description: |
+    {fmt} is an open-source formatting library for C++.
+    It can be used as a safe and fast alternative to (s)printf and iostreams.
+  dev_url: https://github.com/fmtlib/fmt
+  doc_url: https://fmt.dev/latest/
+
+extra:
+  recipe-maintainers:
+    - tdegeus
+    - vitaut
+    - saraedum

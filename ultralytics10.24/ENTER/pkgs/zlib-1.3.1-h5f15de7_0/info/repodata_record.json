@@ -1,0 +1,23 @@
+{
+  "arch": "arm64",
+  "build": "h5f15de7_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64/",
+  "constrains": [],
+  "depends": [
+    "__osx >=11.1",
+    "libzlib 1.3.1 h5f15de7_0"
+  ],
+  "fn": "zlib-1.3.1-h5f15de7_0.conda",
+  "license": "Zlib",
+  "license_family": "OTHER",
+  "md5": "eb0fb89b08890d755421c26fae5a8909",
+  "name": "zlib",
+  "platform": "darwin",
+  "sha256": "0af76c0fbf1697cfd54ada59547e8d086ab113b6dfcc9360aab573a6eb711771",
+  "size": 78512,
+  "subdir": "osx-arm64",
+  "timestamp": 1756475938000,
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/zlib-1.3.1-h5f15de7_0.conda",
+  "version": "1.3.1"
+}

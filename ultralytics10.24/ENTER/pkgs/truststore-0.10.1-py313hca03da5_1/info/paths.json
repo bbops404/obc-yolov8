@@ -1,0 +1,125 @@
+{
+  "paths": [
+    {
+      "_path": "lib/python3.13/site-packages/truststore-0.10.1.dist-info/INSTALLER",
+      "path_type": "hardlink",
+      "sha256": "d0edee15f91b406f3f99726e44eb990be6e34fd0345b52b910c568e0eef6a2a8",
+      "size_in_bytes": 5
+    },
+    {
+      "_path": "lib/python3.13/site-packages/truststore-0.10.1.dist-info/METADATA",
+      "path_type": "hardlink",
+      "sha256": "d27968f447cd1289f2ddf937d8b3225ac11156432055dbe08f9d55b6006909ed",
+      "size_in_bytes": 4440
+    },
+    {
+      "_path": "lib/python3.13/site-packages/truststore-0.10.1.dist-info/RECORD",
+      "path_type": "hardlink",
+      "sha256": "35991a233e17c32911e9c22a3da62212b6c24c44eea7eace9cd3f9a1baed5247",
+      "size_in_bytes": 1469
+    },
+    {
+      "_path": "lib/python3.13/site-packages/truststore-0.10.1.dist-info/REQUESTED",
+      "path_type": "hardlink",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_in_bytes": 0
+    },
+    {
+      "_path": "lib/python3.13/site-packages/truststore-0.10.1.dist-info/WHEEL",
+      "path_type": "hardlink",
+      "sha256": "1b68144734c4b66791f27add5d425f3620775585718a03d0f9b110ba3a4d88db",
+      "size_in_bytes": 82
+    },
+    {
+      "_path": "lib/python3.13/site-packages/truststore-0.10.1.dist-info/direct_url.json",
+      "path_type": "hardlink",
+      "sha256": "11fb29eb115f001cc790682ce88d97a1ce8d808ee0b35b8fff20a4a56046b640",
+      "size_in_bytes": 89
+    },
+    {
+      "_path": "lib/python3.13/site-packages/truststore-0.10.1.dist-info/licenses/LICENSE",
+      "path_type": "hardlink",
+      "sha256": "33be7b7e8fa4fd19b1760e1a8ed8a668bdab852c91b692dd41424bcb725a9fca",
+      "size_in_bytes": 1086
+    },
+    {
+      "_path": "lib/python3.13/site-packages/truststore/__init__.py",
+      "path_type": "hardlink",
+      "sha256": "db04525628e34733cb5575335aabdd64b36c10e8437e8a4a2ddd8428060bc0a5",
+      "size_in_bytes": 1320
+    },
+    {
+      "_path": "lib/python3.13/site-packages/truststore/__pycache__/__init__.cpython-313.pyc",
+      "path_type": "hardlink",
+      "sha256": "6f97e21484c6d7b682371d2690f6f5139638f6bcdbcfc0f0a8ee58df6f201740",
+      "size_in_bytes": 1443
+    },
+    {
+      "_path": "lib/python3.13/site-packages/truststore/__pycache__/_api.cpython-313.pyc",
+      "path_type": "hardlink",
+      "sha256": "33bf7a5a9212dd8bd9558e2297168cfc45ffa8e028ce4f07d7a735f569b3d1c1",
+      "size_in_bytes": 17027
+    },
+    {
+      "_path": "lib/python3.13/site-packages/truststore/__pycache__/_macos.cpython-313.pyc",
+      "path_type": "hardlink",
+      "sha256": "d7ff6ba29e6decc8cd0da8d3f3362fc1edaba0e6ccaf1fac0d4caa2b6853241a",
+      "size_in_bytes": 19256
+    },
+    {
+      "_path": "lib/python3.13/site-packages/truststore/__pycache__/_openssl.cpython-313.pyc",
+      "path_type": "hardlink",
+      "sha256": "ebdc3774fd5e7d7cd048d171576ae2d8a06039bf320372a9cc70c3d04075d22e",
+      "size_in_bytes": 2243
+    },
+    {
+      "_path": "lib/python3.13/site-packages/truststore/__pycache__/_ssl_constants.cpython-313.pyc",
+      "path_type": "hardlink",
+      "sha256": "13fbb5af4b727f51f1d2af381fa0940c047d841891cb44bd9c68a46111a37c5c",
+      "size_in_bytes": 1054
+    },
+    {
+      "_path": "lib/python3.13/site-packages/truststore/__pycache__/_windows.cpython-313.pyc",
+      "path_type": "hardlink",
+      "sha256": "3bb5911aff926c8bb316ad066ec184b579aa5d484d5a7c9eb7de1ffcf6a33949",
+      "size_in_bytes": 16200
+    },
+    {
+      "_path": "lib/python3.13/site-packages/truststore/_api.py",
+      "path_type": "hardlink",
+      "sha256": "ae6a248d508d0b59856593a4ba613e9aba5203e91b8597cf20d779d1bc6d7601",
+      "size_in_bytes": 11172
+    },
+    {
+      "_path": "lib/python3.13/site-packages/truststore/_macos.py",
+      "path_type": "hardlink",
+      "sha256": "9d994b90e9accd413483aaf2470055198e423b33f2b9d72c889b4359aacce4b4",
+      "size_in_bytes": 20503
+    },
+    {
+      "_path": "lib/python3.13/site-packages/truststore/_openssl.py",
+      "path_type": "hardlink",
+      "sha256": "2cb519ed919a8a8fa2e5da4a2a328249e4ae7e69fa4fca62f650dc167bd2caad",
+      "size_in_bytes": 2324
+    },
+    {
+      "_path": "lib/python3.13/site-packages/truststore/_ssl_constants.py",
+      "path_type": "hardlink",
+      "sha256": "3540f87d529d483d36ae2efe75bd2d9ced15a8b3fd687bb3992b5c5bbb40974f",
+      "size_in_bytes": 1130
+    },
+    {
+      "_path": "lib/python3.13/site-packages/truststore/_windows.py",
+      "path_type": "hardlink",
+      "sha256": "ac01f22980fc33bb7e6d77c6f1580e55add3a5f85585bb78ad94253b8e58b8ff",
+      "size_in_bytes": 17993
+    },
+    {
+      "_path": "lib/python3.13/site-packages/truststore/py.typed",
+      "path_type": "hardlink",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_in_bytes": 0
+    }
+  ],
+  "paths_version": 1
+}

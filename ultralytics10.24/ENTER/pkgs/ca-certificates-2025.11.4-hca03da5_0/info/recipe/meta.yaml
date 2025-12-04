@@ -1,0 +1,44 @@
+# This file created by conda-build 25.1.2
+# meta.yaml template originally from:
+# /Users/ec2-user/tasks/task_176226838532838/ca-certificates-feedstock/recipe, last modified Tue Nov  4 15:18:53 2025
+# ------------------------------------------------
+
+package:
+  name: ca-certificates
+  version: 2025.11.4
+source:
+  fn: cacert.pem
+  sha256: 8ac40bdd3d3e151a6b4078d2b2029796e8f843e3f86fbf2adbc4dd9f05e79def
+  url: https://curl.se/ca/cacert-2025-11-04.pem
+build:
+  number: '0'
+  string: hca03da5_0
+requirements:
+  build: []
+  run: []
+test:
+  requires:
+    - curl
+about:
+  description: Certificates for use with other packages.
+  dev_url: https://github.com/curl/curl/blob/master/scripts/mk-ca-bundle.pl
+  doc_url: https://github.com/curl/curl/blob/master/docs/SSLCERTS.md
+  home: https://curl.se/docs/caextract.html
+  license: MPL-2.0
+  license_family: Other
+  license_file: LICENSE.txt
+  summary: Certificates for use with other packages.
+extra:
+  copy_test_source_files: true
+  final: true
+  recipe-maintainers:
+    - jakirkham
+    - jjhelmus
+    - msarahan
+    - mwcraig
+    - ocefpaf
+    - patricksnape
+    - pelson
+    - scopatz
+  skip-lints:
+    - missing_section

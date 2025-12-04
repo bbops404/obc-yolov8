@@ -1,0 +1,23 @@
+{
+  "arch": "arm64",
+  "build": "py313hca03da5_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/osx-arm64/",
+  "constrains": [],
+  "depends": [
+    "python >=3.13,<3.14.0a0",
+    "python_abi 3.13.* *_cp313"
+  ],
+  "fn": "pycparser-2.23-py313hca03da5_0.conda",
+  "license": "BSD-3-Clause",
+  "license_family": "BSD",
+  "md5": "3f7785ee029c046c4c5c709cd077fc6e",
+  "name": "pycparser",
+  "platform": "darwin",
+  "sha256": "f40cb7be188e935d453c833162b7ffe4c1761b7b53443f3a6e8a5fc07e3a3ff0",
+  "size": 267938,
+  "subdir": "osx-arm64",
+  "timestamp": 1757496068000,
+  "url": "https://repo.anaconda.com/pkgs/main/osx-arm64/pycparser-2.23-py313hca03da5_0.conda",
+  "version": "2.23"
+}
