@@ -373,12 +373,10 @@ def train_ptq(
             except AttributeError as e:
                 LOGGER.error(f"!!! Could not find module at path '{index_str}' (CoordAtt) for manual skip. Error: {e}")
 
-    # --- BoTNet partial skip: keep fc1 and attention q/k/v in FP32 even if BoTNet is quantized ---
+    # --- BoTNet partial skip: keep fc1 in FP32 even if BoTNet is quantized ---
+    # Note: key, query, and value layers are now included in PTQ quantization
     botnet_skip_names = {
         "model.10.m.0.fc1",
-        "model.10.m.0.cv2.0.key",
-        "model.10.m.0.cv2.0.query",
-        "model.10.m.0.cv2.0.value",
     }
     botnet_cleared = 0
     for name, module in model_for_manual_skip.named_modules():
@@ -391,7 +389,7 @@ def train_ptq(
                     child.qconfig = None
                     botnet_cleared += 1
     if botnet_cleared > 0:
-        LOGGER.info(f"!!! BoTNet attention fc1/q/k/v qconfig cleared for {botnet_cleared} modules (kept FP32).")
+        LOGGER.info(f"!!! BoTNet attention fc1 qconfig cleared for {botnet_cleared} modules (kept FP32).")
 
     # --- ODConv SKIP: ensure ALL ODConv-related modules stay FP32 ---
     # The ODConv block is at index 1 in this architecture (model.1.*).
