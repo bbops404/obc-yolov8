@@ -1385,9 +1385,22 @@ class DetectionModel(BaseModel):
                                 )
                                 
                                 # Copy weights and bias
-                                qat_conv.weight = torch.nn.Parameter(conv2d_module.weight.data.clone())
-                                if conv2d_module.bias is not None:
-                                    qat_conv.bias = torch.nn.Parameter(conv2d_module.bias.data.clone())
+                                # QNNPACK backend requires CPU tensors for quantization
+                                backend = getattr(torch.backends.quantized, 'engine', 'qnnpack')
+                                original_device = conv2d_module.weight.device
+                                weight_data = conv2d_module.weight.data.clone()
+                                bias_data = conv2d_module.bias.data.clone() if conv2d_module.bias is not None else None
+                                
+                                if backend == 'qnnpack' and original_device.type == 'cuda':
+                                    LOGGER.debug(f"  [{module_name}] Moving QAT module to CPU for QNNPACK backend")
+                                    weight_data = weight_data.cpu()
+                                    if bias_data is not None:
+                                        bias_data = bias_data.cpu()
+                                    qat_conv = qat_conv.cpu()
+                                
+                                qat_conv.weight = torch.nn.Parameter(weight_data)
+                                if bias_data is not None:
+                                    qat_conv.bias = torch.nn.Parameter(bias_data)
                                 
                                 LOGGER.debug(f"  [{module_name}] Preparing QAT module...")
                                 # Prepare QAT module (this attaches FakeQuantize)
@@ -1398,6 +1411,8 @@ class DetectionModel(BaseModel):
                                 # Run a dummy forward pass to calibrate observers
                                 LOGGER.debug(f"  [{module_name}] Running dummy forward pass for calibration...")
                                 dummy_input = torch.randn(1, conv2d_module.in_channels, 3, 3)
+                                if backend == 'qnnpack' and original_device.type == 'cuda':
+                                    dummy_input = dummy_input.cpu()
                                 with torch.no_grad():
                                     _ = qat_conv(dummy_input)
                                 
@@ -1477,7 +1492,16 @@ class DetectionModel(BaseModel):
                         
                         # Quantize the weight tensor
                         LOGGER.debug(f"  [{module_name}] Quantizing weight tensor...")
+                        # QNNPACK backend requires CPU tensors for quantization
+                        backend = getattr(torch.backends.quantized, 'engine', 'qnnpack')
+                        original_device = weight.device
+                        if backend == 'qnnpack' and weight.device.type == 'cuda':
+                            LOGGER.debug(f"  [{module_name}] Moving weight to CPU for QNNPACK backend quantization")
+                            weight = weight.cpu()
                         weight_quantized = quantize_per_tensor(weight, scale, zero_point, torch.qint8)
+                        # Move back to original device if needed (though quantized tensors are typically CPU)
+                        if backend == 'qnnpack' and original_device.type == 'cuda':
+                            LOGGER.debug(f"  [{module_name}] Quantized tensor remains on CPU (QNNPACK requirement)")
                         
                         # Create QuantizedConv2d using _packed_params
                         LOGGER.debug(f"  [{module_name}] Creating QuantizedConv2d module...")
