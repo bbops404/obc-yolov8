@@ -1,0 +1,2 @@
+timestamp,backend,imgsz,batch,device,int8_path,map50,map,precision,recall,total_time_s,avg_latency_ms,fps
+2025-12-06T19:57:25.323347,fbgemm,640,8,cpu,/home/ubuntu/obc-yolov8/obc-yolov8/runs/detect/ptq/senstivity/botnet/fold2/weights/ptq_int8.pt,,,,,320.7224999150003,320722.4999150003,0.0031179602312436006

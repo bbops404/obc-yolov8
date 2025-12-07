@@ -8,10 +8,12 @@ This is a short fine-tuning phase (1-5 epochs) that recovers accuracy lost durin
 from __future__ import annotations
 import torch
 import argparse
+import time
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, Optional, List
 
+import numpy as np
 import torch
 import torch.nn as nn
 from torch.backends import quantized as torch_quantized_backends
@@ -729,7 +731,7 @@ def train_hybrid_qat(
     batch: Optional[int] = None,
     workers: Optional[int] = None,
     device: Any = 0,
-    backend: str = "qnnpack",
+    backend: str = "fbgemm",
     save_dir: Optional[Path] = None,
     run_name: Optional[str] = None,
     epochs: int = 5,
@@ -2490,148 +2492,195 @@ def train_hybrid_qat(
                         LOGGER.warning(f"  mAP@0.5:      Not available")
                     if current_map is not None:
                         LOGGER.info(f"  mAP@0.5:0.95: {current_map:.4f} ({current_map*100:.2f}%)")
+                    
+                    # Log speed metrics from evaluation
+                    if hasattr(eval_results, 'speed') and isinstance(eval_results.speed, dict):
+                        speed = eval_results.speed
+                        infer = speed.get("inference")
+                        prep = speed.get("preprocess")
+                        post = speed.get("postprocess")
                         
-                        # Check improvement
-                        if ptq_map is not None:
-                            improvement = (current_map - ptq_map) * 100
-                            LOGGER.info(f"  Improvement:  {improvement:+.2f}% from PTQ baseline")
+                        LOGGER.info(f"\n  Ultralytics Speed Breakdown:")
+                        LOGGER.info(f"  Preprocess:   {prep:.2f} ms/img" if prep is not None else "  Preprocess:   N/A")
+                        LOGGER.info(f"  Inference:    {infer:.2f} ms/img" if infer is not None else "  Inference:    N/A")
+                        LOGGER.info(f"  Postprocess: {post:.2f} ms/img" if post is not None else "  Postprocess: N/A")
+                    
+                    # Run manual latency benchmark
+                    LOGGER.info(f"\n  Running manual latency benchmark (perf_counter)...")
+                    manual_times = []
+                    warmup_runs = 10
+                    for _ in range(warmup_runs):
+                        _ = model.predict(
+                            source=torch.randn(1, 3, imgsz, imgsz),
+                            imgsz=imgsz,
+                            device=eval_device,
+                            verbose=False
+                        )
+                    
+                    measurement_runs = 100
+                    for _ in range(measurement_runs):
+                        dummy_input = torch.randn(1, 3, imgsz, imgsz)
+                        start = time.perf_counter()
+                        _ = model.predict(
+                            source=dummy_input,
+                            imgsz=imgsz,
+                            device=eval_device,
+                            verbose=False
+                        )
+                        end = time.perf_counter()
+                        manual_times.append((end - start) * 1000)
+                    
+                    manual_times = np.array(manual_times)
+                    manual_mean = np.mean(manual_times)
+                    manual_std = np.std(manual_times)
+                    manual_min = np.min(manual_times)
+                    manual_max = np.max(manual_times)
+                    manual_fps = 1000.0 / manual_mean if manual_mean > 0 else 0.0
+                    
+                    LOGGER.info(f"\n  Manual Wall-Clock Performance (perf_counter):")
+                    LOGGER.info(f"  Mean Latency: {manual_mean:.2f} ± {manual_std:.2f} ms")
+                    LOGGER.info(f"  Min Latency:  {manual_min:.2f} ms")
+                    LOGGER.info(f"  Max Latency:  {manual_max:.2f} ms")
+                    LOGGER.info(f"  FPS:          {manual_fps:.2f}")
+                    
+                    # Check improvement
+                    if ptq_map is not None:
+                        improvement = (current_map - ptq_map) * 100
+                        LOGGER.info(f"  Improvement:  {improvement:+.2f}% from PTQ baseline")
+                    
+                    # Save best model
+                    if current_map > best_map:
+                        best_map = current_map
+                        best_epoch = epoch + 1
+                        epochs_without_improvement = 0
                         
-                        # Save best model
-                        if current_map > best_map:
-                            best_map = current_map
-                            best_epoch = epoch + 1
-                            epochs_without_improvement = 0
-                            
-                            if save_best:
-                                best_path = weights_dir / "best.pt"
-                                LOGGER.info(f"  ✓ New best mAP! Saving to {best_path}")
-                                torch.save({
-                                    "model": detection_model,
-                                    "model_state_dict": detection_model.state_dict(),
-                                    "epoch": epoch + 1,
-                                    "best_fitness": current_map,
-                                    "optimizer": optimizer.state_dict(),
-                                    "date": datetime.now().isoformat(),
-                                    "ptq": False,
-                                    "hybrid_qat": True,
-                                    "backend": backend,
-                                }, best_path)
-                        else:
-                            epochs_without_improvement += 1
-                            LOGGER.info(f"  No improvement for {epochs_without_improvement} epoch(s)")
-                            
-                            # Early stopping
-                            if epochs_without_improvement >= patience:
-                                LOGGER.info(f"\n⚠️  Early stopping triggered (patience={patience})")
-                                LOGGER.info(f"   Best mAP: {best_map:.4f} at epoch {best_epoch}")
-                                break
+                        if save_best:
+                            # Ensure weights directory exists before saving
+                            weights_dir.mkdir(parents=True, exist_ok=True)
+                            best_path = weights_dir / "best.pt"
+                            LOGGER.info(f"  ✓ New best mAP! Saving to {best_path}")
+                            torch.save({
+                                "model": detection_model,
+                                "model_state_dict": detection_model.state_dict(),
+                                "epoch": epoch + 1,
+                                "best_fitness": current_map,
+                                "optimizer": optimizer.state_dict(),
+                                "date": datetime.now().isoformat(),
+                                "ptq": False,
+                                "hybrid_qat": True,
+                                "backend": backend,
+                            }, best_path)
                     else:
-                        LOGGER.warning(f"  mAP@0.5:0.95: Not available - eval_results type: {type(eval_results)}")
-                        if hasattr(eval_results, '__dict__'):
-                            LOGGER.debug(f"  eval_results attributes: {list(eval_results.__dict__.keys())}")
-                else:
-                    LOGGER.warning(f"Evaluation returned None or empty results")
-                
-                # CRITICAL: Set model back to train mode immediately after evaluation
-                # This is essential - FakeQuantize behaves differently in train vs eval mode
-                detection_model.train()
-                LOGGER.debug("Model set back to train mode after evaluation")
-                
-                # CRITICAL: Restore FakeQuantize state for QAT modules
-                # Ensure fake_quant_enabled and observer_enabled are correct for training
-                from torch.ao.quantization import FakeQuantize
-                fakequant_state_restored = 0
-                for name, module in detection_model.named_modules():
-                    if isinstance(module, FakeQuantize):
-                        # Check if this is a QAT module (should have observer enabled)
-                        is_qat_module = any(pattern in name for pattern in qat_modules)
+                        epochs_without_improvement += 1
+                        LOGGER.info(f"  No improvement for {epochs_without_improvement} epoch(s)")
                         
-                        try:
-                            # Ensure fake quantization is enabled (required for training)
-                            if hasattr(module, 'enable_fake_quant'):
-                                module.enable_fake_quant()
-                            elif hasattr(module, 'fake_quant_enabled'):
-                                module.fake_quant_enabled = True
+                        # Early stopping
+                        if epochs_without_improvement >= patience:
+                            LOGGER.info(f"\n⚠️  Early stopping triggered (patience={patience})")
+                            LOGGER.info(f"   Best mAP: {best_map:.4f} at epoch {best_epoch}")
+                            break
+                else:
+                    LOGGER.warning(f"  mAP@0.5:0.95: Not available - eval_results type: {type(eval_results)}")
+                    if hasattr(eval_results, '__dict__'):
+                        LOGGER.debug(f"  eval_results attributes: {list(eval_results.__dict__.keys())}")
+            except Exception as eval_error:
+                LOGGER.warning(f"Evaluation failed: {eval_error}")
+                LOGGER.debug(f"Full traceback: {traceback.format_exc()}")
+            
+            # CRITICAL: Set model back to train mode immediately after evaluation
+            # This is essential - FakeQuantize behaves differently in train vs eval mode
+            detection_model.train()
+            LOGGER.debug("Model set back to train mode after evaluation")
+            
+            # CRITICAL: Restore FakeQuantize state for QAT modules
+            # Ensure fake_quant_enabled and observer_enabled are correct for training
+            from torch.ao.quantization import FakeQuantize
+            fakequant_state_restored = 0
+            for name, module in detection_model.named_modules():
+                if isinstance(module, FakeQuantize):
+                    # Check if this is a QAT module (should have observer enabled)
+                    is_qat_module = any(pattern in name for pattern in qat_modules)
+                    
+                    try:
+                        # Ensure fake quantization is enabled (required for training)
+                        if hasattr(module, 'enable_fake_quant'):
+                            module.enable_fake_quant()
+                        elif hasattr(module, 'fake_quant_enabled'):
+                            module.fake_quant_enabled = True
+                        
+                        # For QAT modules, ensure observer is enabled (to update scales during training)
+                        if is_qat_module:
+                            if hasattr(module, 'enable_observer'):
+                                module.enable_observer()
+                            elif hasattr(module, 'observer_enabled'):
+                                module.observer_enabled = True
+                        
+                        fakequant_state_restored += 1
+                    except Exception as e:
+                        LOGGER.debug(f"Could not restore FakeQuantize state for {name}: {e}")
+            
+            if fakequant_state_restored > 0:
+                LOGGER.debug(f"Restored FakeQuantize state for {fakequant_state_restored} modules")
+            
+            # CRITICAL: Clean up inference tensors created during evaluation
+            # Reload model state from before evaluation to clear inference tensors
+            LOGGER.debug("Cleaning up inference tensors after evaluation...")
+            
+            # CRITICAL: Explicitly exit any inference mode context
+            torch.set_grad_enabled(True)
+            
+            with torch.enable_grad():
+                # Manually replace each parameter to avoid inplace updates to inference tensors
+                # We need to replace the Parameter object itself, not just the data
+                replaced_params = 0
+                for name, param in detection_model.named_parameters():
+                    if name in model_state_before_eval:
+                        saved_param = model_state_before_eval[name]
+                        if isinstance(saved_param, torch.Tensor):
+                            # Clone the saved parameter - ensure it's detached from inference mode
+                            cloned_param = saved_param.clone().detach()
+                            # Preserve requires_grad setting
+                            cloned_param.requires_grad_(param.requires_grad)
+                            # Create a new Parameter object to replace the inference tensor
+                            new_param = nn.Parameter(cloned_param, requires_grad=param.requires_grad)
                             
-                            # For QAT modules, ensure observer is enabled (to update scales during training)
-                            if is_qat_module:
-                                if hasattr(module, 'enable_observer'):
-                                    module.enable_observer()
-                                elif hasattr(module, 'observer_enabled'):
-                                    module.observer_enabled = True
-                            
-                            fakequant_state_restored += 1
-                        except Exception as e:
-                            LOGGER.debug(f"Could not restore FakeQuantize state for {name}: {e}")
+                            # Replace the parameter in the module's _parameters dict
+                            parts = name.split('.')
+                            module = detection_model
+                            for part in parts[:-1]:
+                                module = getattr(module, part)
+                            param_name = parts[-1]
+                            if hasattr(module, '_parameters') and param_name in module._parameters:
+                                module._parameters[param_name] = new_param
+                                replaced_params += 1
                 
-                if fakequant_state_restored > 0:
-                    LOGGER.debug(f"Restored FakeQuantize state for {fakequant_state_restored} modules")
+                # Also handle buffers (like BatchNorm running_mean, running_var)
+                replaced_buffers = 0
+                for name, buffer in detection_model.named_buffers():
+                    if name in model_state_before_eval:
+                        saved_buffer = model_state_before_eval[name]
+                        if isinstance(saved_buffer, torch.Tensor):
+                            cloned_buffer = saved_buffer.clone().detach()
+                            # Replace buffer in module's _buffers dict
+                            parts = name.split('.')
+                            module = detection_model
+                            for part in parts[:-1]:
+                                module = getattr(module, part)
+                            buffer_name = parts[-1]
+                            if hasattr(module, '_buffers') and buffer_name in module._buffers:
+                                module._buffers[buffer_name] = cloned_buffer
+                                replaced_buffers += 1
                 
-                # CRITICAL: Clean up inference tensors created during evaluation
-                # Reload model state from before evaluation to clear inference tensors
-                LOGGER.debug("Cleaning up inference tensors after evaluation...")
-                
-                # CRITICAL: Explicitly exit any inference mode context
-                torch.set_grad_enabled(True)
-                
-                with torch.enable_grad():
-                    # Manually replace each parameter to avoid inplace updates to inference tensors
-                    # We need to replace the Parameter object itself, not just the data
-                    replaced_params = 0
-                    for name, param in detection_model.named_parameters():
-                        if name in model_state_before_eval:
-                            saved_param = model_state_before_eval[name]
-                            if isinstance(saved_param, torch.Tensor):
-                                # Clone the saved parameter - ensure it's detached from inference mode
-                                cloned_param = saved_param.clone().detach()
-                                # Preserve requires_grad setting
-                                cloned_param.requires_grad_(param.requires_grad)
-                                # Create a new Parameter object to replace the inference tensor
-                                new_param = nn.Parameter(cloned_param, requires_grad=param.requires_grad)
-                                
-                                # Replace the parameter in the module's _parameters dict
-                                parts = name.split('.')
-                                module = detection_model
-                                for part in parts[:-1]:
-                                    module = getattr(module, part)
-                                param_name = parts[-1]
-                                if hasattr(module, '_parameters') and param_name in module._parameters:
-                                    module._parameters[param_name] = new_param
-                                    replaced_params += 1
-                    
-                    # Also handle buffers (like BatchNorm running_mean, running_var)
-                    replaced_buffers = 0
-                    for name, buffer in detection_model.named_buffers():
-                        if name in model_state_before_eval:
-                            saved_buffer = model_state_before_eval[name]
-                            if isinstance(saved_buffer, torch.Tensor):
-                                cloned_buffer = saved_buffer.clone().detach()
-                                # Replace buffer in module's _buffers dict
-                                parts = name.split('.')
-                                module = detection_model
-                                for part in parts[:-1]:
-                                    module = getattr(module, part)
-                                buffer_name = parts[-1]
-                                if hasattr(module, '_buffers') and buffer_name in module._buffers:
-                                    module._buffers[buffer_name] = cloned_buffer
-                                    replaced_buffers += 1
-                    
-                    if replaced_params > 0 or replaced_buffers > 0:
-                        LOGGER.debug(f"  Replaced {replaced_params} parameters and {replaced_buffers} buffers")
-                
-                # CRITICAL: Ensure model is in training mode and gradients are enabled
-                detection_model.train()
-                torch.set_grad_enabled(True)
-                    
-            except Exception as e:
-                LOGGER.warning(f"Evaluation failed: {e}")
-                import traceback
-                LOGGER.debug(traceback.format_exc())
-                # CRITICAL: Even if evaluation failed, ensure model is in train mode
-                detection_model.train()
-                LOGGER.debug("Model set back to train mode after evaluation failure")
+                if replaced_params > 0 or replaced_buffers > 0:
+                    LOGGER.debug(f"  Replaced {replaced_params} parameters and {replaced_buffers} buffers")
+            
+            # CRITICAL: Ensure model is in training mode and gradients are enabled
+            detection_model.train()
+            torch.set_grad_enabled(True)
         
         # Save last checkpoint
+        # Ensure weights directory exists before saving
+        weights_dir.mkdir(parents=True, exist_ok=True)
         last_path = weights_dir / "last.pt"
         torch.save({
             "model": detection_model,
@@ -3007,7 +3056,12 @@ def train_hybrid_qat(
                 
                 # Store INT8 model for evaluation (qat_model is now INT8)
                 int8_model_for_eval = qat_model
+                # --- MOVE MODEL TO CPU BEFORE EVALUATION ---
                 
+                if backend in ["fbgemm", "qnnpack"]:
+                    int8_model_for_eval.to("cpu")
+                    LOGGER.info(f"Moved INT8 model to CPU for evaluation using {backend} backend")
+
                 # Note: Only converting last.pt to INT8 (best.pt conversion skipped)
                 
                 # Evaluate INT8 model
@@ -3018,7 +3072,7 @@ def train_hybrid_qat(
                     
                     try:
                         # For qnnpack backend, evaluation must use CPU
-                        eval_device = "cpu" if backend == "qnnpack" else device_str
+                        eval_device = "cpu" if backend in ["fbgemm", "qnnpack"] else device_str
                         if eval_device != device_str:
                             LOGGER.info(f"Using {eval_device} for evaluation (required for {backend} backend)")
                         
@@ -3181,9 +3235,9 @@ def main():
     parser.add_argument(
         "--backend",
         type=str,
-        default="qnnpack",
+        default="fbgemm",
         choices=["qnnpack", "fbgemm"],
-        help="Quantization backend (default: qnnpack)",
+        help="Quantization backend (default: fbgemm)",
     )
     parser.add_argument(
         "--save-dir",
