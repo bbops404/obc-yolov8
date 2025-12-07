@@ -23,6 +23,7 @@ def run_fold(
     warmup_epochs: float = None,
     optimizer: str = None,
     pretrained: bool = None,
+    patience: int = None,
     extra_args: list = None,
 ):
     """Run QAT training for a specific fold."""
@@ -60,6 +61,8 @@ def run_fold(
         cmd.extend(["--optimizer", optimizer])
     if pretrained is not None:
         cmd.extend(["--pretrained", str(pretrained).lower()])
+    if patience is not None:
+        cmd.extend(["--patience", str(patience)])
 
     if extra_args:
         cmd.extend(extra_args)
@@ -117,7 +120,7 @@ Examples:
 
     # Training parameters
     parser.add_argument("--epochs", type=int, default=1, help="Number of epochs per fold (default: 1)")
-    parser.add_argument("--backend", default="qnnpack", choices=["qnnpack", "fbgemm"], help="Quantization backend (default: qnnpack)")
+    parser.add_argument("--backend", default="fbgemm", choices=["qnnpack", "fbgemm"], help="Quantization backend (default: fbgemm for x86)")
     parser.add_argument("--device", default="0", help="Device to use (default: 0)")
     parser.add_argument("--batch", type=int, default=None, help="Batch size")
     parser.add_argument("--workers", type=int, default=None, help="Number of workers")
@@ -127,6 +130,7 @@ Examples:
     parser.add_argument("--warmup-epochs", type=float, default=None, help="Warmup epochs")
     parser.add_argument("--optimizer", type=str, default=None, help="Optimizer (SGD, Adam, AdamW, etc.)")
     parser.add_argument("--pretrained", type=lambda x: x.lower() in ['true', '1', 'yes'], default=None, help="Use pretrained weights (true/false)")
+    parser.add_argument("--patience", type=int, default=None, help="Early stopping patience (default: None)")
 
     # Control options
     parser.add_argument(
@@ -167,6 +171,7 @@ Examples:
             warmup_epochs=args.warmup_epochs,
             optimizer=args.optimizer,
             pretrained=args.pretrained,
+            patience=args.patience,
             extra_args=extra_args,
         )
         results[fold_num] = success

@@ -223,6 +223,7 @@ def train_qat(
     warmup_bias_lr: Optional[float] = None,
     optimizer: Optional[str] = None,
     pretrained: Optional[bool] = None,
+    patience: Optional[int] = None,
     **train_kwargs: Any,
 ) -> Dict[str, Optional[Path]]:
     """Run QAT training and optionally export an INT8 model.
@@ -291,6 +292,8 @@ def train_qat(
         train_args["optimizer"] = optimizer
     if pretrained is not None:
         train_args["pretrained"] = pretrained
+    if patience is not None:
+        train_args["patience"] = patience
 
     overrides = {**model.overrides, **train_args}
     overrides["task"] = model.task
@@ -483,6 +486,7 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--warmup-bias-lr", type=float, default=None, dest="warmup_bias_lr", help="Warmup bias LR override")
     parser.add_argument("--optimizer", type=str, default=None, help="Optimizer name (SGD, Adam, AdamW, etc.). Default: auto")
     parser.add_argument("--pretrained", type=lambda x: x.lower() in ['true', '1', 'yes'], default=None, metavar='BOOL', help="Use pretrained weights (true/false/1/0). Default: True (YOLO default). Use --pretrained false to disable.")
+    parser.add_argument("--patience", type=int, default=None, help="Early stopping patience (epochs to wait after fitness stops improving). Set to 0 to disable early stopping.")
     return parser.parse_args()
 
 
