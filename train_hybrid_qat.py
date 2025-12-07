@@ -2492,8 +2492,11 @@ def train_hybrid_qat(
                         LOGGER.warning(f"  mAP@0.5:      Not available")
                     if current_map is not None:
                         LOGGER.info(f"  mAP@0.5:0.95: {current_map:.4f} ({current_map*100:.2f}%)")
+                    else:
+                        LOGGER.warning(f"  mAP@0.5:0.95: Not available")
                     
                     # Log speed metrics from evaluation
+                    LOGGER.info("\n  Checking for speed metrics...")
                     if hasattr(eval_results, 'speed') and isinstance(eval_results.speed, dict):
                         speed = eval_results.speed
                         infer = speed.get("inference")
@@ -2504,6 +2507,8 @@ def train_hybrid_qat(
                         LOGGER.info(f"  Preprocess:   {prep:.2f} ms/img" if prep is not None else "  Preprocess:   N/A")
                         LOGGER.info(f"  Inference:    {infer:.2f} ms/img" if infer is not None else "  Inference:    N/A")
                         LOGGER.info(f"  Postprocess: {post:.2f} ms/img" if post is not None else "  Postprocess: N/A")
+                    else:
+                        LOGGER.warning("  ⚠️  Speed metrics not available in eval_results")
                     
                     # Run manual latency benchmark
                     LOGGER.info(f"\n  Running manual latency benchmark (perf_counter)...")
